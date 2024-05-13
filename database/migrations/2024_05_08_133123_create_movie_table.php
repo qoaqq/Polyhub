@@ -13,10 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('movie', function (Blueprint $table) {
+        Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->timestamp('duration');
+            $table->string('director');
+            $table->date('premiere_date');
             $table->timestamps();
         });
     }

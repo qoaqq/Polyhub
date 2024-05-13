@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('attribute_value', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('attribute_id')->constrained();
+            $table->string('value');
             $table->timestamps();
         });
     }

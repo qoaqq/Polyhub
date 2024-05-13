@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('city', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('movie_id')->constrained();
+            $table->foreignId('seat_id')->constrained();
+            $table->foreignId('room_id')->constrained();
+            $table->foreignId('cinema_id')->constrained();
+            $table->timestamp('time_start');
             $table->timestamps();
         });
     }
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('city');
+        Schema::dropIfExists('ticket');
     }
 };

@@ -13,8 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attribute', function (Blueprint $table) {
+        Schema::create('attributes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('movie_id')->constrained();
+            $table->string('name');
             $table->timestamps();
         });
     }

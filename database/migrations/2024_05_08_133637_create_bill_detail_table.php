@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('bill_detail', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('bill_id')->constrained();
+            $table->foreignId('ticket_id')->constrained();
+            $table->foreignId('food_combos_id')->constrained();
+            $table->decimal('total');
             $table->timestamps();
         });
     }
