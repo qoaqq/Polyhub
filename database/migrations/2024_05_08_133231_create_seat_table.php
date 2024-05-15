@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('status');
+            $table->boolean('status');
             $table->string('type');
             $table->timestamps();
         });

@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('showing_release', function (Blueprint $table) {
             $table->id();
             $table->foreignId('movie_id')->constrained();
-            $table->foreignId('ticket_id')->constrained();
             $table->foreignId('seat_id')->constrained();
             $table->foreignId('room_id')->constrained();
+            $table->foreignId('time_release_id')->constrained();
+            $table->foreignId('date_release_id')->constrained();
             $table->timestamps();
         });
     }

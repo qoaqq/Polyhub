@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('history', function (Blueprint $table) {
             $table->id();
             $table->foreignId('users_id')->constrained();
+            $table->foreignId('bill_id')->constrained();
             $table->string('update_content');
             $table->timestamps();
         });

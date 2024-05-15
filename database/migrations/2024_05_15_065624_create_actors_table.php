@@ -16,8 +16,6 @@ return new class extends Migration
         Schema::create('actors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('age');
-            $table->date('date_of_birth');
             $table->foreignId('movie_id')->constrained();
             $table->timestamps();
         });
