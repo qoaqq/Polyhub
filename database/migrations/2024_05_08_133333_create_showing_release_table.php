@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('showing_release', function (Blueprint $table) {
+        Schema::create('showing_releases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('movie_id')->constrained();
             $table->foreignId('seat_id')->constrained();
             $table->foreignId('room_id')->constrained();
-            $table->foreignId('time_release_id')->constrained();
-            $table->foreignId('date_release_id')->constrained();
+            $table->timestamp('time_release');
+            $table->date('date_release');
             $table->timestamps();
         });
     }

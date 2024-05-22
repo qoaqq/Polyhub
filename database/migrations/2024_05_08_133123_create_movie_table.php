@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamp('duration');
-            $table->string('director');
             $table->date('premiere_date');
             $table->timestamps();
         });

@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('checkin', function (Blueprint $table) {
+        Schema::create('director', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('checkin_code');
-            $table->string('type');
+            $table->integer('age');
+            $table->date('date_of_birth');
+            $table->foreignId('movie_id')->constrained();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('checkin');
+        Schema::dropIfExists('director');
     }
 };

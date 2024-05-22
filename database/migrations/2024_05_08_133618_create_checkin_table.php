@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('time_releases', function (Blueprint $table) {
+        Schema::create('checkins', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('time_movie_release');
+            $table->string('name');
+            $table->text('checkin_code');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('time_release');
+        Schema::dropIfExists('checkin');
     }
 };

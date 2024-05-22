@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('seat_id')->constrained();
             $table->foreignId('room_id')->constrained();
             $table->foreignId('cinema_id')->constrained();
+            $table->foreignId('showing_release_id')->constrained();
             $table->timestamp('time_start');
             $table->timestamps();
         });
