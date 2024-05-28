@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<<html lang="en" dir="ltr" data-bs-theme="dark" data-color-theme="Blue_Theme" data-layout="vertical">
+<html lang="en" dir="ltr" data-bs-theme="dark" data-color-theme="Blue_Theme" data-layout="vertical">
 
 <head>
   <!-- Required meta tags -->
@@ -25,7 +25,7 @@
     @include('backend.components.preloader')
 
     <div id="main-wrapper">
-        @include('backend.includes.sidebar')
+        @include('backend.includes.sidebar_1')
 
         <div class="page-wrapper">
             @include('backend.includes.sidebar_2')
