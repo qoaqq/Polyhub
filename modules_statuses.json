@@ -1,0 +1,22 @@
+{
+    "Movies": true,
+    "Movie": true,
+    "Director": true,
+    "Seat": true,
+    "Room": true,
+    "City": true,
+    "Cinema": true,
+    "CinemaType": true,
+    "ShowingRelease": true,
+    "Ticket": true,
+    "Category": true,
+    "Attibute": true,
+    "AttributeValue": true,
+    "Blog": true,
+    "FoodCombo": true,
+    "Checkin": true,
+    "Bill": true,
+    "BillDetail": true,
+    "RankMember": true,
+    "Actor": true
+}

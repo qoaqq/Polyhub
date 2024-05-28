@@ -1,0 +1,13 @@
+{
+    "name": "BillDetail",
+    "alias": "billdetail",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BillDetail\\Providers\\BillDetailServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
