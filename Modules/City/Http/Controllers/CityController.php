@@ -5,9 +5,17 @@ namespace Modules\City\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\City\Repositories\CityRepository;
 
 class CityController extends Controller
 {
+
+    protected $repository;
+    public function __construct(CityRepository $cityRepository)
+    {
+        $this->repository = $cityRepository;
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

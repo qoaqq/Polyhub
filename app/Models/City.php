@@ -10,4 +10,10 @@ class City extends Model
     use HasFactory;
 
     protected $table = 'city';
+
+    protected $fillable = ['name'];
+
+    public function cinemas(){
+        return $this->hasMany(Cinema::class);
+    }
 }

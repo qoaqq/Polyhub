@@ -4,6 +4,7 @@ namespace Modules\City\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\City\Repositories\CityRepositoryEloquent;
 
 class CityServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,7 @@ class CityServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->singleton(CityRepositoryEloquent::class);
     }
 
     /**

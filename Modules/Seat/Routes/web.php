@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\Seat\Http\Controllers\SeatController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +14,9 @@
 |
 */
 
-Route::prefix('seat')->group(function() {
-    Route::get('/', 'SeatController@index');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('seat')->name('seat.')->group(function () {
+        Route::get('/', [SeatController::class, 'index'])->name('index');
+        Route::get('/detail{id}', [SeatController::class, 'show'])->name('detail');
+    });
 });

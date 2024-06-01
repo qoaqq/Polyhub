@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\City\Http\Controllers\CityController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +14,11 @@
 |
 */
 
-Route::prefix('city')->group(function() {
-    Route::get('/', 'CityController@index');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('city')->name('city.')->group(function () {
+        Route::get('/', [CityController::class, 'index'])->name('index');
+        Route::get('/create', [CityController::class, 'create'])->name('create');
+        Route::post('/create', [CityController::class, 'store'])->name('create');
+        Route::get('/detail{id}', [CityController::class, 'show'])->name('detail');
+    });
 });
