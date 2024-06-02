@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\City\Repositories\Traits;
+namespace App\Repositories\Traits;
 
 use Illuminate\Support\Facades\DB;
 

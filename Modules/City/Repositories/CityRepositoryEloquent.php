@@ -1,10 +1,11 @@
 <?php
 namespace Modules\City\Repositories;
 
-use App\Models\City;
+use App\Repositories\Traits\RepositoryTraits;
+use Modules\City\Entities\City;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Modules\City\Repositories\Traits\RepositoryTraits;
+
 
 /**
  * Class ExampleRepositoryEloquent.
@@ -50,6 +51,10 @@ class CityRepositoryEloquent extends BaseRepository implements CityRepository
         }
 
         return $model;
+    }
+
+    public function store(array $data){
+        return $this->model->create($data);
     }
 
 }

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\City\Repositories\CityRepository;
+use Modules\City\Repositories\CityRepositoryEloquent;
 
 class CityController extends Controller
 {
@@ -41,7 +42,9 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $this->repository->create($data);
+        return redirect()->route('admin.city.index');
     }
 
     /**
