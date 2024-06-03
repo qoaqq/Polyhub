@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Seat\Database\Seeders;
+namespace Modules\City\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class SeatDatabaseSeeder extends Seeder
+class SeedFakeCityTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +16,6 @@ class SeatDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(SeedFakeSeatTableSeeder::class);
+        // $this->call("OthersTableSeeder");
     }
 }

@@ -5,16 +5,17 @@ namespace Modules\City\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\City\Entities\City;
 use Modules\City\Repositories\CityRepository;
 use Modules\City\Repositories\CityRepositoryEloquent;
 
 class CityController extends Controller
 {
 
-    protected $repository;
-    public function __construct(CityRepository $cityRepository)
+    protected $model;
+    public function __construct(City $model)
     {
-        $this->repository = $cityRepository;
+        $this->model = $model;
     }
 
     /**
@@ -43,7 +44,7 @@ class CityController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $this->repository->create($data);
+        $this->model->create($data);
         return redirect()->route('admin.city.index');
     }
 

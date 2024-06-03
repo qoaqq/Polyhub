@@ -5,16 +5,23 @@ namespace Modules\Seat\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Seat\Entities\Seat;
 
 class SeatController extends Controller
 {
+    protected $model;
+    public function __construct(Seat $model)
+    {
+        $this->model = $model;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('seat::index');
+        $seats = $this->model->all()->groupBy('row');
+        return view('seat::index', compact('seats'));
     }
 
     /**
