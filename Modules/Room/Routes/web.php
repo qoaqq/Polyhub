@@ -11,6 +11,17 @@
 |
 */
 
-Route::prefix('room')->group(function() {
-    Route::get('/', 'RoomController@index');
+use Illuminate\Support\Facades\Route;
+use Modules\Room\Http\Controllers\RoomController;
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::prefix('room')->name('room.')->group(function () {
+        Route::get('/', [RoomController::class, 'index'])->name('index');
+        Route::get('/create', [RoomController::class, 'create'])->name('create');
+        Route::post('/create', [RoomController::class, 'store'])->name('create');
+        Route::get('/detail/{id}', [RoomController::class, 'show'])->name('detail');
+        Route::post('/update/{id}', [RoomController::class, 'update'])->name('update');
+        Route::get('/delete/{id}', [RoomController::class, 'destroy'])->name('delete');
+    });
 });
+

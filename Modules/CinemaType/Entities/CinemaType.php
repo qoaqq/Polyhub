@@ -1,18 +1,18 @@
 <?php
 
-namespace Modules\Seat\Entities;
+namespace Modules\CinemaType\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Seat extends Model
+class CinemaType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['row', 'column','status', 'type'];
+    protected $fillable = [];
     
     protected static function newFactory()
     {
-        return \Modules\Seat\Database\factories\SeatFactory::new();
+        return \Modules\CinemaType\Database\factories\CinemaTypeFactory::new();
     }
 }

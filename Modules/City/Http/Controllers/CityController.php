@@ -24,7 +24,8 @@ class CityController extends Controller
      */
     public function index()
     {
-        return view('city::index');
+        $cities = $this->model->all();
+        return view('city::index', compact('cities'));
     }
 
     /**
@@ -55,7 +56,8 @@ class CityController extends Controller
      */
     public function show($id)
     {
-        return view('city::show');
+        $city = $this->model->find($id);
+        return view('city::show', compact('city'));
     }
 
     /**
@@ -76,7 +78,9 @@ class CityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $this->model->find($id)->update($data);
+        return redirect()->route('admin.city.index');
     }
 
     /**
@@ -86,6 +90,7 @@ class CityController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->model->find($id)->delete();
+        return redirect()->route('admin.city.index');
     }
 }

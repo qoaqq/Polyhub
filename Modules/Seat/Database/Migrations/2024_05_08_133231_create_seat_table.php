@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('row');
             $table->boolean('status');
             $table->string('type');
+            $table->unique(['row', 'column']);
             $table->timestamps();
         });
     }

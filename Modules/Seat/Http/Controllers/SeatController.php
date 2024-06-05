@@ -40,7 +40,18 @@ class SeatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $data = $request->all();
+        $data['status'] = 1;
+        if($data['row'] == 'a' || $data['row'] == 'b'|| $data['row'] == 'c') {
+            $data['type'] = 1;
+        }else if($data['row'] == 'd' || $data['row'] == 'e'|| $data['row'] == 'f'){
+            $data['type'] = 2;
+        }else if($data['row'] == 'g'){
+            $data['type'] = 2;
+        }
+        $this->model->create($data);
+        return redirect()->route('admin.seat.index');
     }
 
     /**
@@ -50,7 +61,8 @@ class SeatController extends Controller
      */
     public function show($id)
     {
-        return view('seat::show');
+        $seat = $this->model->find($id);
+        return view('seat::detail', compact('seat'));
     }
 
     /**
@@ -71,7 +83,11 @@ class SeatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $seat = $this->model->find($id);
+        $seat->row = $request->row;
+        $seat->column = $request->column;
+        $seat->save();
+        return redirect()->route('admin.seat.index');
     }
 
     /**
@@ -81,6 +97,7 @@ class SeatController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->model->findOrFail($id)->delete();
+        return redirect()->route('admin.seat.index');   
     }
 }
