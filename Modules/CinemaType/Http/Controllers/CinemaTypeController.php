@@ -5,16 +5,25 @@ namespace Modules\CinemaType\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Cinema\Entities\Cinema;
+use Modules\CinemaType\Entities\CinemaType;
 
 class CinemaTypeController extends Controller
 {
+
+    protected $model;
+
+    public function __construct(CinemaType $model){
+        $this->model = $model;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('cinematype::index');
+        $cinemaTypes = $this->model->with('cinema')->get();
+        return view('cinematype::index', compact('cinemaTypes'));
     }
 
     /**
@@ -23,7 +32,8 @@ class CinemaTypeController extends Controller
      */
     public function create()
     {
-        return view('cinematype::create');
+        $cinemas = Cinema::all();
+        return view('cinematype::create', compact('cinemas'));
     }
 
     /**
@@ -33,7 +43,9 @@ class CinemaTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $this->model->create($data);
+        return redirect()->route('admin.cinematype.index');
     }
 
     /**
@@ -74,6 +86,7 @@ class CinemaTypeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->model->find($id)->delete();
+        return redirect()->back(); 
     }
 }
