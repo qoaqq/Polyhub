@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('points')->default(0);
             $table->unsignedBigInteger('rank_member_id')->nullable();
+            $table->boolean('activated')->default(true);
             $table->rememberToken();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();

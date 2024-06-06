@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
+
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,8 +17,14 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $title = "User management";
-        $users = User::where('name', 'like', '%' . $request->get('q') . '%')->orderBy('created_at', 'desc')->paginate(15);
-        return view('backend.user.index',compact('title','users'));
+        $sort = $request->get('sort'); // Lấy giá trị sắp xếp từ yêu cầu
+        $direction = $request->get('direction', 'desc'); // Mặc định là sắp xếp giảm dần
+
+        // Lọc dữ liệu theo tìm kiếm và sắp xếp
+        $users = User::search($request->get('q', '')) // Lọc theo tên
+            ->sort($sort, $direction) // Sắp xếp theo cột và hướng sắp xếp
+            ->paginate(15); // Phân trang
+        return view('Backend.user.index', compact('title', 'users'));
     }
 
     /**
@@ -28,7 +35,7 @@ class UserController extends Controller
     public function create()
     {
         $title = "User create";
-        return view('backend.user.create',compact('title'));
+        return view('Backend.user.create', compact('title'));
     }
 
     /**
@@ -79,7 +86,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $title = "User edit";
-        return view('backend.user.edit',compact('user','title'));
+        return view('backend.user.edit', compact('user', 'title'));
     }
 
     /**
@@ -94,10 +101,10 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'. $user->id.'',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id . '',
         ]);
         $user = User::findOrFail($id);
-        $user->fill($request->except(['_token','password']));
+        $user->fill($request->except(['_token', 'password']));
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $fileName = $avatar->getClientOriginalName();
@@ -118,5 +125,13 @@ class UserController extends Controller
     {
         User::where('id', $id)->delete();
         return redirect()->route('user.index');
+    }
+
+    public function toggleActivation(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->activated = $request->input('is_active');
+        $user->save();
+        return back();
     }
 }

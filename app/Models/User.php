@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +13,7 @@ use Modules\RankMember\Entities\RankMember;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -45,6 +46,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function scopeSearch(Builder $query, $search)
+    {
+        return $query->where('name', 'like', '%' . $search . '%');
+    }
+
+    public function scopeSort(Builder $query, $sort, $direction)
+    {
+        if (!$sort) {
+            $sort = 'created_at'; // Mặc định sắp xếp theo created_at nếu không có cột được chỉ định
+        }
+        return $query->orderBy($sort, $direction);
+    }
     protected static function boot()
     {
         parent::boot();

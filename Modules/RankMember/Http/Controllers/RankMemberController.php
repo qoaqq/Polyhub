@@ -16,7 +16,11 @@ class RankMemberController extends Controller
     public function index(Request $request)
     {
         $title = "RankMember management";
-        $rankmembers = RankMember::where('rank', 'like', '%' . $request->get('q') . '%')->orderBy('created_at', 'desc')->paginate(15);
+        $sort = $request->get('sort');
+        $direction = $request->get('direction', 'desc');
+        $rankmembers = RankMember::search($request->get('q', ''))
+            ->sort($sort, $direction) 
+            ->paginate(15);
         return view('rankmember::index',compact('title','rankmembers'));
     }
 

@@ -1,4 +1,4 @@
-@extends('backend.layouts.app')
+@extends('Backend.layouts.app')
 
 @section('content')
 <div class="row">
@@ -43,7 +43,16 @@
               <thead class="text-dark fs-4">
                 <tr>
                   <th>Rank</th>
-                  <th>Min Point</th>
+                  <th onclick="sortTable('min_points')" style="cursor: pointer;">
+                    Min Point
+                    @if (request('sort') == 'min_points')
+                        @if (request('direction') == 'asc')
+                            <i class="bi bi-caret-up-fill"></i>
+                        @else
+                            <i class="bi bi-caret-down-fill"></i>
+                        @endif
+                    @endif
+                </th>
                   <th></th>
                 </tr>
               </thead>
@@ -90,37 +99,23 @@
             </table>
           </div>
           <div class="d-flex align-items-center justify-content-between mt-4">
-            <p class="mb-0 fw-normal">
-                {{ $rankmembers->firstItem() }}-{{ $rankmembers->lastItem() }} of {{ $rankmembers->total() }}
-            </p>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination mb-0 align-items-center">
-                        <li class="page-item">
-                            <a class="page-link border-0 d-flex align-items-center text-muted fw-normal" href="{{ $rankmembers->previousPageUrl() }}" rel="prev">
-                                <iconify-icon icon="solar:alt-arrow-left-line-duotone" class="fs-5"></iconify-icon>Previous
-                            </a>
-                        </li>
-                    @foreach ($rankmembers->getUrlRange(1, $rankmembers->lastPage()) as $page => $url)
-                        @if ($page == $rankmembers->currentPage())
-                            <li class="page-item active" aria-current="page">
-                                <span class="page-link">{{ $page }}</span>
-                            </li>
-                        @else
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                            </li>
-                        @endif
-                    @endforeach
-                        <li class="page-item">
-                            <a class="page-link border-0 d-flex align-items-center fw-normal" href="{{ $rankmembers->nextPageUrl() }}" rel="next">
-                                Next<iconify-icon icon="solar:alt-arrow-right-line-duotone" class="fs-5"></iconify-icon>
-                            </a>
-                        </li>
-                </ul>
-            </nav>
+            <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
+            {{ $rankmembers->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links() }}
+
         </div>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    function sortTable(column) {
+        const urlParams = new URLSearchParams(window.location.search);
+        let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
+
+        urlParams.set('sort', column);
+        urlParams.set('direction', direction);
+
+        window.location.href = window.location.pathname + '?' + urlParams.toString();
+    }
+</script>
 @endsection

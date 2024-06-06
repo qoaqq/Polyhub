@@ -22,6 +22,8 @@ Route::get('/', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/', [BackendControllerBase::class, 'index'])->name('admin.index');
+
+    //User
     Route::resource('/user', UserController::class)->names([
         'index'   => 'user.index',
         'create'  => 'user.create',
@@ -31,11 +33,14 @@ Route::prefix('admin')->group(function () {
         'update'  => 'user.update',
         'destroy' => 'user.destroy',
     ]);
+    Route::controller(UserController::class)->group(function () {
+    Route::patch('user/{user}/active', 'toggleActivation')->name('user.active');
+    });
 
-    
-Route::prefix('auth')->group(function () {
-    Route::get('/login', [AuthController::class, 'index'])->name('auth.login');
-    Route::post('/login', [AuthController::class, 'login'])->name('auth.login.post');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+    //Auth
+    Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'index')->name('auth.login');
+    Route::post('/login', 'login')->name('auth.login.post');
+    Route::get('/logout', 'logout')->name('auth.logout');
 });
 });
