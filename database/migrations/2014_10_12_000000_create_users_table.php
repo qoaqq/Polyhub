@@ -17,10 +17,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('avatar')->nullable();
+            $table->string('address')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('points')->default(0);
+            $table->unsignedBigInteger('rank_member_id')->nullable();
             $table->rememberToken();
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
+
+            // Tạo khóa ngoại
+            $table->foreign('rank_member_id')->references('id')->on('rank_members')->onDelete('set null');
         });
     }
 
@@ -31,6 +39,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['rank_id']);
+            $table->dropColumn('points');
+            $table->dropColumn('rank_id');
+        });
     }
 };

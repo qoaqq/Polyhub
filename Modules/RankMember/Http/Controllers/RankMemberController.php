@@ -5,6 +5,7 @@ namespace Modules\RankMember\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\RankMember\Entities\RankMember;
 
 class RankMemberController extends Controller
 {
@@ -12,9 +13,11 @@ class RankMemberController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('rankmember::index');
+        $title = "RankMember management";
+        $rankmembers = RankMember::where('rank', 'like', '%' . $request->get('q') . '%')->orderBy('created_at', 'desc')->paginate(15);
+        return view('rankmember::index',compact('title','rankmembers'));
     }
 
     /**
@@ -23,7 +26,8 @@ class RankMemberController extends Controller
      */
     public function create()
     {
-        return view('rankmember::create');
+        $title = "RankMember create";
+        return view('rankmember::create',compact('title'));
     }
 
     /**
@@ -33,7 +37,14 @@ class RankMemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'rank' => 'required|max:255',
+            'min_points' => 'required|integer|min:0',
+        ]);
+        $rankmember = new RankMember();
+        $rankmember->fill($request->except(['_token']));
+        $rankmember->save();
+        return redirect()->route('rankmember.index');
     }
 
     /**
@@ -53,7 +64,9 @@ class RankMemberController extends Controller
      */
     public function edit($id)
     {
-        return view('rankmember::edit');
+        $title = "RankMember edit";
+        $rankmember = RankMember::findOrFail($id);
+        return view('rankmember::edit',compact('title','rankmember'));
     }
 
     /**
@@ -64,7 +77,14 @@ class RankMemberController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'rank' => 'required|max:255',
+            'min_points' => 'required|integer|min:0',
+        ]);
+        $rankmember = RankMember::findOrFail($id);
+        $rankmember->fill($request->except(['_token']));
+        $rankmember->save();
+        return redirect()->route('rankmember.index');
     }
 
     /**
@@ -74,6 +94,7 @@ class RankMemberController extends Controller
      */
     public function destroy($id)
     {
-        //
+        RankMember::where('id', $id)->delete();
+        return redirect()->route('rankmember.index');
     }
 }

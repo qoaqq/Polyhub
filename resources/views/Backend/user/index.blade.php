@@ -1,7 +1,6 @@
 @extends('backend.layouts.app')
-
 @section('content')
-<div class="row">
+  <div class="row">
     <div class="col-12">
       <div class="card mb-0">
         <div class="card-body">
@@ -23,7 +22,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('rankmember.create') }}"><i
+                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('user.create') }}"><i
                         class="fs-4 ti ti-plus"></i>Add</a>
                   </li>
                   <li>
@@ -42,24 +41,42 @@
             <table class="table mb-0 align-middle text-nowrap table-bordered">
               <thead class="text-dark fs-4">
                 <tr>
-                  <th>Rank</th>
-                  <th>Min Point</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Avatar</th>
+                  <th>Address</th>
+                  <th>Status</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($rankmembers as $rankmember)
+                @foreach ($users as $user)
                 <tr>  
                   <td>
                       <div class="ms-3 product-title">
-                        <h6 class="fs-4 mb-0 text-truncate-2">{{$rankmember->rank}}</h6>
+                        <h6 class="fs-4 mb-0 text-truncate-2">{{$user->name}}</h6>
                       </div>
                     </div>
                   </td>
                   <td>
                     <div class="d-flex align-items-center text-truncate">
-                        <h6 class="mb-0 fw-light">{{$rankmember->min_points}}</h6>
+                        <h6 class="mb-0 fw-light">{{$user->email}}</h6>
                     </div>
+                  </td>
+                  <td>
+                    @if(!empty($user->avatar))
+                    <img src="{{ asset('storage/user/'.$user->avatar) }}" alt=""
+                    class="img-fluid flex-shrink-0" width="32" height="32">
+                    @endif
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center text-truncate">
+                      <h6 class="mb-0 fw-light">{{$user->address}}</h6>
+                    </div>
+                  </td>
+                  <td>
+                    <span
+                      class="badge rounded-pill bg-success-subtle text-success border-success border">Confirmed</span>
                   </td>
                   <td>
                     <div class="dropdown dropstart">
@@ -69,11 +86,11 @@
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li>
-                          <a class="dropdown-item d-flex align-items-center gap-3" href="{{route('rankmember.edit',$rankmember->id)}}"><i
+                          <a class="dropdown-item d-flex align-items-center gap-3" href="{{route('user.edit',$user->id)}}"><i
                               class="fs-4 ti ti-edit"></i>Edit</a>
                         </li>
                         <li>
-                          <form action="{{route('rankmember.destroy',$rankmember->id)}}" method="post">
+                          <form action="{{route('user.destroy',$user->id)}}" method="post">
                             @csrf
                             @method('delete')
                             <button  class="dropdown-item d-flex align-items-center gap-3" type="submit"
@@ -91,17 +108,17 @@
           </div>
           <div class="d-flex align-items-center justify-content-between mt-4">
             <p class="mb-0 fw-normal">
-                {{ $rankmembers->firstItem() }}-{{ $rankmembers->lastItem() }} of {{ $rankmembers->total() }}
+                {{ $users->firstItem() }}-{{ $users->lastItem() }} of {{ $users->total() }}
             </p>
             <nav aria-label="Page navigation example">
                 <ul class="pagination mb-0 align-items-center">
                         <li class="page-item">
-                            <a class="page-link border-0 d-flex align-items-center text-muted fw-normal" href="{{ $rankmembers->previousPageUrl() }}" rel="prev">
+                            <a class="page-link border-0 d-flex align-items-center text-muted fw-normal" href="{{ $users->previousPageUrl() }}" rel="prev">
                                 <iconify-icon icon="solar:alt-arrow-left-line-duotone" class="fs-5"></iconify-icon>Previous
                             </a>
                         </li>
-                    @foreach ($rankmembers->getUrlRange(1, $rankmembers->lastPage()) as $page => $url)
-                        @if ($page == $rankmembers->currentPage())
+                    @foreach ($users->getUrlRange(1, $users->lastPage()) as $page => $url)
+                        @if ($page == $users->currentPage())
                             <li class="page-item active" aria-current="page">
                                 <span class="page-link">{{ $page }}</span>
                             </li>
@@ -112,7 +129,7 @@
                         @endif
                     @endforeach
                         <li class="page-item">
-                            <a class="page-link border-0 d-flex align-items-center fw-normal" href="{{ $rankmembers->nextPageUrl() }}" rel="next">
+                            <a class="page-link border-0 d-flex align-items-center fw-normal" href="{{ $users->nextPageUrl() }}" rel="next">
                                 Next<iconify-icon icon="solar:alt-arrow-right-line-duotone" class="fs-5"></iconify-icon>
                             </a>
                         </li>
