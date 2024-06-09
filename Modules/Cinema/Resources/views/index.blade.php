@@ -59,5 +59,8 @@
                 </tbody>
             </table>
             </div>
+            <div>
+              {{ $cinemas->links('cinema::layouts.pagination')}}
+            </div>
     </section>
 @endsection
