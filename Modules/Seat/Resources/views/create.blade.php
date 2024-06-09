@@ -57,11 +57,13 @@
                         </div>
                     </div>
                     @if ($errors->any())
-                        <ul class="errors">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                        <div>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li><span class="text-danger">{{ $error }}</span></li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
                 </form>
             </div>

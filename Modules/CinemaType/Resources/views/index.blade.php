@@ -4,13 +4,13 @@
     {{-- nav start --}}
     <div class="card shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body d-flex align-items-center justify-content-between p-4">
-            <h4 class="fw-semibold mb-0">Add new</h4>
+            <h4 class="fw-semibold mb-0">List cinema types</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
                         <a class="text-muted text-decoration-none" href="../dark/index.html">Home</a>
                     </li>
-                    <li class="breadcrumb-item" aria-current="page">seat</li>
+                    <li class="breadcrumb-item" aria-current="page">cinema type</li>
                 </ol>
             </nav>
         </div>
@@ -44,7 +44,7 @@
                                   <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinematype.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                 </li>
                                 <li>
-                                  <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
+                                  <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinematype.detail', [$cinemaType->id]) }}"><i class="fs-4 ti ti-edit"></i>Detail</a>
                                 </li>
                                 <li>
                                   <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinematype.delete',[$cinemaType->id]) }}"><i class="fs-4 ti ti-trash"></i>Delete</a>
@@ -57,5 +57,8 @@
                 </tbody>
             </table>
             </div>
+            <div>
+              {{ $cinemaTypes->links('cinematype::layouts.pagination') }}
+          </div>
     </section>
 @endsection

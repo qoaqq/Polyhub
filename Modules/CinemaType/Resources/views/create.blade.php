@@ -51,6 +51,15 @@
                         </div>
                     </div>
                 </div>
+                @if ($errors->any())
+                <div>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li><span class="text-danger">{{ $error }}</span></li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             </div>
         </form>
 

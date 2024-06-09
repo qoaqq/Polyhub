@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\City\Entities\City;
+use Modules\City\Http\Requests\CreateCityRequest;
+use Modules\City\Http\Requests\UpdateCityRequest;
 use Modules\City\Repositories\CityRepository;
 use Modules\City\Repositories\CityRepositoryEloquent;
 
@@ -24,7 +26,7 @@ class CityController extends Controller
      */
     public function index()
     {
-        $cities = $this->model->all();
+        $cities = $this->model->paginate(10);
         return view('city::index', compact('cities'));
     }
 
@@ -42,8 +44,9 @@ class CityController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateCityRequest $request)
     {
+        $request->validated();
         $data = $request->all();
         $this->model->create($data);
         return redirect()->route('admin.city.index');
@@ -76,8 +79,9 @@ class CityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCityRequest $request, $id)
     {
+        $request->validated();
         $data = $request->all();
         $this->model->find($id)->update($data);
         return redirect()->route('admin.city.index');

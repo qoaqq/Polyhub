@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Seat\Entities\Seat;
+use Modules\Seat\Http\Requests\CreateSeatRequest;
+use Modules\Seat\Http\Requests\UpdateSeatRequest;
 
 class SeatController extends Controller
 {
@@ -38,9 +40,9 @@ class SeatController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateSeatRequest $request)
     {
-
+        $request->validated();
         $data = $request->all();
         $data['status'] = 1;
         if($data['row'] == 'a' || $data['row'] == 'b'|| $data['row'] == 'c') {
@@ -81,7 +83,7 @@ class SeatController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateSeatRequest $request, $id)
     {
         $seat = $this->model->find($id);
         $seat->row = $request->row;

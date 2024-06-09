@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Cinema\Entities\Cinema;
 use Modules\Room\Entities\Room;
+use Modules\Room\Http\Requests\CreateRoomRequest;
+use Modules\Room\Http\Requests\UpdateRoomRequest;
 
 class RoomController extends Controller
 {
@@ -22,7 +24,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = $this->model->with('cinema')->get();
+        $rooms = $this->model->with('cinema')->paginate(10);
         return view('room::index', compact('rooms'));
     }
 
@@ -41,7 +43,7 @@ class RoomController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateRoomRequest $request)
     {
         $data = $request->all();
         $this->model->create($data);
@@ -55,7 +57,9 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        return view('room::show');
+        $cinemas = Cinema::all();
+        $room = $this->model->find($id);
+        return view('room::detail', compact('room','cinemas'));
     }
 
     /**
@@ -74,9 +78,11 @@ class RoomController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRoomRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $this->model->findOrFail($id)->update($data);
+        return redirect()->route('admin.room.index');
     }
 
     /**
@@ -87,6 +93,6 @@ class RoomController extends Controller
     public function destroy($id)
     {
         $this->model->findOrFail($id)->delete();
-        return redirect('admin.room.index')->with('success','đã xoá phòng');
+        return redirect()->route('admin.room.index');
     }
 }

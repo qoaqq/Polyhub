@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Cinema\Entities\Cinema;
 use Modules\CinemaType\Entities\CinemaType;
+use Modules\CinemaType\Http\Requests\CreateCinemaTypeRequest;
+use Modules\CinemaType\Http\Requests\UpdateCinemaTypeRequest;
 
 class CinemaTypeController extends Controller
 {
@@ -22,7 +24,7 @@ class CinemaTypeController extends Controller
      */
     public function index()
     {
-        $cinemaTypes = $this->model->with('cinema')->get();
+        $cinemaTypes = $this->model->with('cinema')->paginate(10);
         return view('cinematype::index', compact('cinemaTypes'));
     }
 
@@ -41,7 +43,7 @@ class CinemaTypeController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateCinemaTypeRequest $request)
     {
         $data = $request->all();
         $this->model->create($data);
@@ -55,7 +57,9 @@ class CinemaTypeController extends Controller
      */
     public function show($id)
     {
-        return view('cinematype::show');
+        $cinemaType = $this->model->find($id);
+        $cinemas = Cinema::all();
+        return view('cinematype::detail', compact('cinemaType', 'cinemas'));
     }
 
     /**
@@ -74,9 +78,11 @@ class CinemaTypeController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCinemaTypeRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $this->model->find($id)->update($data);
+        return redirect()->route('admin.cinematype.index');
     }
 
     /**

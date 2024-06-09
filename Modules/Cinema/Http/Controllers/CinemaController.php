@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Cinema\Entities\Cinema;
+use Modules\Cinema\Http\Requests\CreateCinemaRequest;
+use Modules\Cinema\Http\Requests\UpdateCinemaRequest;
 use Modules\City\Entities\City;
 
 class CinemaController extends Controller
@@ -41,7 +43,7 @@ class CinemaController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateCinemaRequest $request)
     {
         $data = $request->all();
         $data['rate_point'] = 0;
@@ -56,7 +58,9 @@ class CinemaController extends Controller
      */
     public function show($id)
     {
-        return view('cinema::show');
+        $cinema = $this->model->find($id);
+        $cities = City::get();
+        return view('cinema::update', compact('cinema', 'cities'));
     }
 
     /**
@@ -66,6 +70,7 @@ class CinemaController extends Controller
      */
     public function edit($id)
     {
+        
         return view('cinema::edit');
     }
 
@@ -75,9 +80,11 @@ class CinemaController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCinemaRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $this->model->find($id)->update($data);
+        return redirect()->route('admin.cinema.index');
     }
 
     /**

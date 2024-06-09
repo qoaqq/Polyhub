@@ -21,7 +21,7 @@
     <section class="container">
         <div class="card">
             <div class="card-body">
-                <h5 class="mb-3">Add new seat</h5>
+                <h5 class="mb-3">Add new room</h5>
                 <form action="" method="POST">
                     @csrf
                     <div class="row">
@@ -42,7 +42,7 @@
                                 <div class="ms-auto mt-3 mt-md-0">
                                     <button type="submit" class="btn btn-primary  rounded-pill px-4">
                                         <div class="d-flex align-items-center">
-                                            Submit
+                                            Add new
                                         </div>
                                     </button>
                                 </div>
@@ -52,7 +52,7 @@
                     @if ($errors->any())
                         <ul class="errors">
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                <li><span class="text-danger">{{ $error }}</span></li>
                             @endforeach
                         </ul>
                     @endif

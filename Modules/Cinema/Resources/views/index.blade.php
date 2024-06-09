@@ -46,7 +46,7 @@
                                   <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                 </li>
                                 <li>
-                                  <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i class="fs-4 ti ti-edit"></i>Edit</a>
+                                  <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.detail', [$cinema->id]) }}"><i class="fs-4 ti ti-edit"></i>Detail</a>
                                 </li>
                                 <li>
                                   <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.delete',[$cinema->id]) }}"><i class="fs-4 ti ti-trash"></i>Delete</a>

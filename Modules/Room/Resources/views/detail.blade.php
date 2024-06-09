@@ -1,49 +1,40 @@
 @extends('Backend.layouts.app')
+
 @section('content')
     {{-- nav start --}}
     <div class="card shadow-none position-relative overflow-hidden mb-4">
         <div class="card-body d-flex align-items-center justify-content-between p-4">
-            <h4 class="fw-semibold mb-0">Add new</h4>
+            <h4 class="fw-semibold mb-0">List room</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
                         <a class="text-muted text-decoration-none" href="../dark/index.html">Home</a>
                     </li>
-                    <li class="breadcrumb-item" aria-current="page">seat</li>
+                    <li class="breadcrumb-item" aria-current="page">room</li>
                 </ol>
             </nav>
         </div>
     </div>
     {{-- nav end --}}
 
-
+    {{-- content start --}}
     <section class="container">
         <div class="card">
             <div class="card-body">
-                <h5 class="mb-3">Add new seat</h5>
-                <form action="{{ route('admin.seat.update', [$seat->id]) }}" method="POST">
+                <h5 class="mb-3">Room detail</h5>
+                <form action="{{ route('admin.room.update', [$room->id]) }}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col input-group">
-                            <span class="input-group-text">Hàng</span>
-                            <select name="row" class="form-select" id="inputGroupSelect04">
-                                <option value="{{ $seat->row }}">{{ $seat->row }}</option>
-                                <option value="a">a</option>
-                                <option value="b">b</option>
-                                <option value="c">c</option>
-                                <option value="d">d</option>
-                                <option value="e">e</option>
-                                <option value="f">f</option>
-                                <option value="g">g</option>
-                            </select>
+                            <span class="input-group-text">name</span>
+                           <input class="form-control" type="text" name="name" value="{{ $room->name }}">
                         </div>
                         <div class="col input-group">
-                            <span class="input-group-text">Cột</span>
-                            <select name="column" class="form-select" id="inputGroupSelect04">
-                                <option value="{{ $seat->column }}">{{ $seat->column }}</option>
-                                @for ($i = 1; $i <= 12; $i++)
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
+                            <span class="input-group-text">Cinema</span>
+                            <select name="cinema_id" class="form-select" id="inputGroupSelect04">
+                               @foreach ($cinemas as $cinema)
+                                   <option class="{{ $room->cinema_id == $cinema->id ? 'text-danger' : '' }}" value="{{ $cinema->id }}" {{ $room->cinema_id == $cinema->id ? 'selected' : '' }}>{{ $cinema->name }}</option>
+                               @endforeach
                             </select>
                         </div>
                         <div class="col-12 my-4">
@@ -51,7 +42,7 @@
                                 <div class="ms-auto mt-3 mt-md-0">
                                     <button type="submit" class="btn btn-primary  rounded-pill px-4">
                                         <div class="d-flex align-items-center">
-                                            Submit
+                                            Update
                                         </div>
                                     </button>
                                 </div>
@@ -69,4 +60,5 @@
             </div>
         </div>
     </section>
+    {{-- content end --}}
 @endsection
