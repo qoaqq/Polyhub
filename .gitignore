@@ -13,3 +13,8 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+/resources/views/vendor/
+/Modules/Actor/resources/assets
+/Modules/Attribute/resources/assets
+/Modules/AttributeValue/resources/assets
+/public/modules
