@@ -4,6 +4,7 @@ namespace Modules\Director\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Director\Entities\Director;
 
 class DirectorDatabaseSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class DirectorDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+        Director::factory(5)->create();
         // $this->call("OthersTableSeeder");
     }
 }

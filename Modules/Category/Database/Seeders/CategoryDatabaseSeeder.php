@@ -4,6 +4,7 @@ namespace Modules\Category\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Category\Entities\Category;
 
 class CategoryDatabaseSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class CategoryDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+        Category::factory(2)->create();
         // $this->call("OthersTableSeeder");
     }
 }

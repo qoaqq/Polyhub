@@ -5,6 +5,9 @@ namespace Modules\Movie\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Modules\Director\Entities\Director;
+use Modules\Movie\Entities\Movie;
 
 class MovieController extends Controller
 {
@@ -12,9 +15,26 @@ class MovieController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('movie::index');
+        $title = "list Movies";
+        $director = Director::all();
+        
+        // Truy vấn phim với điều kiện lọc theo đạo diễn nếu có
+        $query = Movie::with('director');
+        
+        if ($request->filled('director_id')) {
+            $query->where('director_id', $request->director_id);
+        }
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+        
+        $movie = $query->latest('id')->paginate(5);
+        
+        return view('movie::index', compact('movie', 'director', 'title'));
     }
 
     /**
@@ -22,8 +42,10 @@ class MovieController extends Controller
      * @return Renderable
      */
     public function create()
-    {
-        return view('movie::create');
+    {   
+        $title = "Add Movies";
+        $director = Director::query()->pluck('name','id')->all();
+        return view('movie::create',compact('title','director'));
     }
 
     /**
@@ -33,7 +55,21 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'duration' => 'required|numeric|min:60|max:240',
+            'premiere_date' => 'required|date',
+        ]);
+    
+        // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        Movie::query()->create($request->all());
+        return redirect('/admin/movie')->with('success', 'Movie created successfully.');
     }
 
     /**
@@ -43,7 +79,9 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        return view('movie::show');
+        $title = "Detail Movie";
+        $movie = Movie::find($id);
+        return view('movie::show', compact('movie','title'));
     }
 
     /**
@@ -53,7 +91,10 @@ class MovieController extends Controller
      */
     public function edit($id)
     {
-        return view('movie::edit');
+        $title = "Edit Movie";
+        $movie = Movie::find($id);
+        $director = Director::query()->pluck('name','id')->all();
+        return view('movie::edit', compact('movie','title','director'));
     }
 
     /**
@@ -64,7 +105,23 @@ class MovieController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'duration' => 'required|numeric|min:60|max:240',
+            'premiere_date' => 'required|date',
+        ]);
+    
+        // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $movie = Movie::find($id);
+        $movie ->update($request->all());
+        $movie->save();
+        return redirect('/admin/movie')->with('success', 'Updated Movie Successfully');
     }
 
     /**
@@ -74,6 +131,8 @@ class MovieController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $movie = Movie::find($id);
+        $movie -> delete();
+        return redirect('/admin/movie')->with('success', 'Deleted successfully !');
     }
 }

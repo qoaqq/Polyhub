@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('director', function (Blueprint $table) {
+        Schema::create('directors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->integer('age');
             $table->date('date_of_birth');
-            $table->foreignId('movie_id')->constrained();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
