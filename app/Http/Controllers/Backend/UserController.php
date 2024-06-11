@@ -17,14 +17,12 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $title = "User management";
-        $sort = $request->get('sort'); // Lấy giá trị sắp xếp từ yêu cầu
-        $direction = $request->get('direction', 'desc'); // Mặc định là sắp xếp giảm dần
-
-        // Lọc dữ liệu theo tìm kiếm và sắp xếp
-        $users = User::search($request->get('q', '')) // Lọc theo tên
-            ->sort($sort, $direction) // Sắp xếp theo cột và hướng sắp xếp
-            ->paginate(15); // Phân trang
-        return view('Backend.user.index', compact('title', 'users'));
+        $sort = $request->get('sort');
+        $direction = $request->get('direction', 'desc');
+        $users = User::search($request->get('q', ''))
+        ->sort($sort, $direction)->paginate();
+        $page = User::paginate();
+        return view('Backend.user.index', compact('title', 'users' , 'page'));
     }
 
     /**

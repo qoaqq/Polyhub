@@ -130,7 +130,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-between mt-4">
                     <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
-                    {{ $users->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links() }}
+                    {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
 
                 </div>
             </div>

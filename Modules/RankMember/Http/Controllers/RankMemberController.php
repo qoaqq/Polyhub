@@ -20,8 +20,9 @@ class RankMemberController extends Controller
         $direction = $request->get('direction', 'desc');
         $rankmembers = RankMember::search($request->get('q', ''))
             ->sort($sort, $direction) 
-            ->paginate(15);
-        return view('rankmember::index',compact('title','rankmembers'));
+            ->paginate();
+        $page = RankMember::paginate();
+        return view('rankmember::index',compact('title','rankmembers','page'));
     }
 
     /**
