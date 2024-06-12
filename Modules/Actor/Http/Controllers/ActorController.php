@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Actor\Entities\Actor;
-use Modules\Actor\Entities\Movie;
+use Modules\Movie\Entities\Movie;
 class ActorController extends Controller
 {
     /**

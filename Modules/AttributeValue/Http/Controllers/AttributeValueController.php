@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\AttributeValue\Entities\AttributeValue;
 use Modules\Attribute\Entities\Attribute;
-use Modules\Actor\Entities\Movie;
+use Modules\Movie\Entities\Movie;
 
 class AttributeValueController extends Controller
 {
