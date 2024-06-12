@@ -27,7 +27,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
+                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('actor.create') }}"><i
                                                 class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     <li>
