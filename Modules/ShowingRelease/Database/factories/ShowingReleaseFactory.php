@@ -26,7 +26,6 @@ class ShowingReleaseFactory extends Factory
 
         return [
             'movie_id' => Movie::pluck('id')->random(),
-            'seat_id' => Seat::pluck('id')->random(),
             'room_id' => Room::pluck('id')->random(),
             'time_release' => $this->faker->randomElement($Times),
             'date_release' => $this->faker->date(),

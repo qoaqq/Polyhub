@@ -75,7 +75,6 @@
                                 <tr>
                                     <th></th>
                                     <th>Movie</th>
-                                    <th>Seat</th>
                                     <th>Room</th>
                                     <th>Time</th>
                                     <th>Date</th>
@@ -87,7 +86,6 @@
                                 <tr>
                                     <td><input type="checkbox" name="ticket_id[]" value="{{ $show->id }}"></td>
                                     <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $show->movie->name }}</h6></td>
-                                    <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $show->seat->column }}</h6></td>
                                     <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $show->room->name }}</h6></td>
                                     <td><h6 class="fs-4 mb-0 text-truncate-2">{{ \Carbon\Carbon::parse($show->time_release)->format('H:i')}}</h6></td>
                                     <td><h6 class="fs-4 mb-0 text-truncate-2">{{ date('d/m/Y', strtotime($show->date_release)) }}</h6></td>

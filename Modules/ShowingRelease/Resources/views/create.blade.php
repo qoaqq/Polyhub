@@ -3,16 +3,17 @@
 @section('content')
 
 <div class="container">
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+  
     <h1>Create</h1>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <div class="card">
         <div class="card-body">
             <form action="{{ route('showingrelease.store') }}" method="POST">
@@ -22,15 +23,6 @@
                     <select name="movie_id" id="movie_id" class="form-control select-movie mt-2">
                         <option value="0">--Chọn phim--</option>
                         @foreach($movie as $id => $name)
-                            <option value="{{ $id }}">{{ $name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="seat_id">Ghế</label>
-                    <select name="seat_id" id="seat_id" class="form-control select-movie mt-2">
-                        <option value="0">--Chọn ghế--</option>
-                        @foreach($seat as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>

@@ -23,7 +23,7 @@ class ShowingReleaseController extends Controller
     public function index(Request $request)
     {
         $movies = Movie::all();
-        $query = ShowingRelease::with('movie', 'seat', 'room')->search($request->get('search'));
+        $query = ShowingRelease::with('movie','room')->search($request->get('search'));
         if ($request->filled('movie_id')) {
             $query->where('movie_id', $request->input('movie_id'));
         }
@@ -39,10 +39,9 @@ class ShowingReleaseController extends Controller
     public function create()
     {
         $movie = Movie::pluck('name', 'id');
-        $seat = Seat::pluck('column', 'id');
         $room = Room::pluck('name', 'id');
         $data = ShowingRelease::all();
-        return view('showingrelease::create', compact('data', 'seat', 'room', 'movie'));
+        return view('showingrelease::create', compact('data', 'room', 'movie'));
     }
 
     /**
@@ -54,7 +53,6 @@ class ShowingReleaseController extends Controller
     {
         $showingRelease = new ShowingRelease();
         $showingRelease->movie_id = $request->movie_id;
-        $showingRelease->seat_id = $request->seat_id;
         $showingRelease->room_id = $request->room_id;
         $showingRelease->date_release = Carbon::createFromFormat('Y-m-d', $request->date_release);
         $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
@@ -70,7 +68,7 @@ class ShowingReleaseController extends Controller
      */
     public function show($id)
     {
-        $showingRelease = ShowingRelease::with('seat', 'room', 'movie')->find($id);
+        $showingRelease = ShowingRelease::with('room', 'movie')->find($id);
         return view('showingrelease::show', compact('showingRelease'));
     }
 
@@ -83,9 +81,8 @@ class ShowingReleaseController extends Controller
     {
         $show = ShowingRelease::find($id);
         $movie = Movie::pluck('name', 'id');
-        $seat = Seat::pluck('column', 'id');
         $room = Room::pluck('name', 'id');
-        return view('showingrelease::edit', compact('show', 'movie', 'seat', 'room'));
+        return view('showingrelease::edit', compact('show', 'movie', 'room'));
     }
 
     /**
@@ -98,7 +95,6 @@ class ShowingReleaseController extends Controller
     {
         $showingRelease = ShowingRelease::find($id);
         $showingRelease->movie_id = $request->movie_id;
-        $showingRelease->seat_id = $request->seat_id;
         $showingRelease->room_id = $request->room_id;
 
         $showingRelease->date_release =  $request->date_release;

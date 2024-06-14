@@ -11,10 +11,6 @@
                 <input type="text" id="movie_id" class="form-control mt-2" value="{{ $showingRelease->movie->name }}" readonly>
             </div>
             <div class="form-group mb-3">
-                <label for="seat_id">Ghế</label>
-                <input type="text" id="seat_id" class="form-control mt-2" value="{{ $showingRelease->seat->column }}" readonly>
-            </div>
-            <div class="form-group mb-3">
                 <label for="room_id">Phòng</label>
                 <input type="text" id="room_id" class="form-control mt-2" value="{{ $showingRelease->room->name }}" readonly>
             </div>

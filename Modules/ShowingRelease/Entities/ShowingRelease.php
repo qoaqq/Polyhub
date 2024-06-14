@@ -15,7 +15,6 @@ class ShowingRelease extends Model
     use HasFactory;
 
     protected $fillable = ['movie_id',
-    'seat_id',
     'room_id',
     'time_release',
     'date_release'];
@@ -25,9 +24,6 @@ class ShowingRelease extends Model
     protected static function newFactory()
     {
         return \Modules\ShowingRelease\Database\factories\ShowingReleaseFactory::new();
-    }
-    public function seat(){
-        return $this->belongsTo(Seat::class,'seat_id');
     }
     public function room(){
         return $this->belongsTo(Room::class,'room_id');
@@ -64,9 +60,6 @@ class ShowingRelease extends Model
             $search = '%' . $search . '%';
             $query->whereHas('movie', function ($query) use ($search) {
                 $query->where('name', 'like', $search);
-            })
-            ->orWhereHas('seat', function ($query) use ($search) {
-                $query->where('column', 'like', $search);
             })
             ->orWhereHas('room', function ($query) use ($search) {
                 $query->where('name', 'like', $search);

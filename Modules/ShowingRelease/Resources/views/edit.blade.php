@@ -27,15 +27,6 @@
                     </select>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="seat_id">Ghế</label>
-                    <select name="seat_id" id="seat_id" class="form-control select-movie mt-2">
-                        <option value="0">--Chọn ghế--</option>
-                        @foreach($seat as $id => $name)
-                            <option value="{{ $id }}" {{ $show->seat_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group mb-3">
                     <label for="room_id">Phòng</label>
                     <select name="room_id" id="room_id" class="form-control select-movie mt-2">
                         <option value="0">--Chọn phòng--</option>
