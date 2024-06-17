@@ -8,7 +8,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
-                        <a class="text-muted text-decoration-none" href="../dark/index.html">Home</a>
+                        <a class="text-muted text-decoration-none" href="#">Home</a>
                     </li>
                     <li class="breadcrumb-item" aria-current="page">seat</li>
                 </ol>
@@ -46,10 +46,10 @@
                                   <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                 </li>
                                 <li>
-                                  <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.detail', [$cinema->id]) }}"><i class="fs-4 ti ti-edit"></i>Detail</a>
+                                  <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.show', [$cinema->id]) }}"><i class="fs-4 ti ti-edit"></i>Detail</a>
                                 </li>
                                 <li>
-                                  <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.delete',[$cinema->id]) }}"><i class="fs-4 ti ti-trash"></i>Delete</a>
+                                  <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('admin.cinema.destroy',[$cinema->id]) }}"><i class="fs-4 ti ti-trash"></i>Delete</a>
                                 </li>
                               </ul>
                             </div>

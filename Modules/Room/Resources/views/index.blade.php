@@ -66,16 +66,11 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.room.create') }}"><i
-                                                    class="fs-4 ti ti-plus"></i>Add</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3"
                                                 href="{{ route('admin.room.detail', [$room->id]) }}"><i
                                                     class="fs-4 ti ti-edit"></i>Detail</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3"
+                                            <a onclick="return confirm('do you want to delete this room truthly')" class="dropdown-item d-flex align-items-center gap-3"
                                                 href="{{ route('admin.room.delete', [$room->id]) }}"><i
                                                     class="fs-4 ti ti-trash"></i>Delete</a>
                                         </li>

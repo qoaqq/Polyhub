@@ -60,17 +60,17 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.city.create') }}"><i
-                                                    class="fs-4 ti ti-plus"></i>Add</a>
+                                                href="{{ route('admin.city.show', [$city->id]) }}"><i
+                                                    class="fs-4 ti ti-eye"></i>detail</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.city.detail', [$city->id]) }}"><i
-                                                    class="fs-4 ti ti-edit"></i>Edit</a>
+                                                href="{{ route('admin.city.edit', [$city->id]) }}"><i
+                                                    class="fs-4 ti ti-edit"></i>edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.city.delete', [$city->id]) }}"><i
+                                                href="{{ route('admin.city.destroy', [$city->id]) }}"><i
                                                     class="fs-4 ti ti-trash"></i>Delete</a>
                                         </li>
                                     </ul>

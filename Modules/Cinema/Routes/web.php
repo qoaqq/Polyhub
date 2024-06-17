@@ -15,13 +15,6 @@ use Modules\Cinema\Http\Controllers\CinemaController;
 */
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::prefix('cinema')->name('cinema.')->group(function () {
-        Route::get('/', [CinemaController::class, 'index'])->name('index');
-        Route::get('/create', [CinemaController::class, 'create'])->name('create');
-        Route::post('/create', [CinemaController::class, 'store'])->name('create');
-        Route::get('/detail/{id}', [CinemaController::class, 'show'])->name('detail');
-        Route::post('/update/{id}', [CinemaController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [CinemaController::class, 'destroy'])->name('delete');
-    });
+    Route::resource('cinema', CinemaController::class);
 });
 

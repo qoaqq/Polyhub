@@ -58,9 +58,8 @@ class CinemaController extends Controller
      */
     public function show($id)
     {
-        $cinema = $this->model->find($id);
-        $cities = City::get();
-        return view('cinema::update', compact('cinema', 'cities'));
+        $cinema = $this->model->with('city')->find($id);
+        return view('cinema::show', compact('cinema'));
     }
 
     /**
@@ -70,8 +69,9 @@ class CinemaController extends Controller
      */
     public function edit($id)
     {
-        
-        return view('cinema::edit');
+        $cinema = $this->model->find($id);
+        $cities = City::get();
+        return view('cinema::update', compact('cinema', 'cities'));
     }
 
     /**

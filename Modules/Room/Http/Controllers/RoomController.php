@@ -5,6 +5,7 @@ namespace Modules\Room\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Cinema\Entities\Cinema;
 use Modules\Room\Entities\Room;
 use Modules\Room\Http\Requests\CreateRoomRequest;
@@ -46,7 +47,27 @@ class RoomController extends Controller
     public function store(CreateRoomRequest $request)
     {
         $data = $request->all();
-        $this->model->create($data);
+        $room = $this->model->create($data);
+        $rows = [
+            'a' => 1, 'b' => 1, 'c' => 1,
+            'd' => 2, 'e' => 2, 'f' => 2,
+            'g' => 3
+        ];
+        $seats = [];
+
+        for ($column = 1; $column <= 12; $column++) {
+            foreach ($rows as $row => $type) {
+                $seats[] = [
+                    'row' => $row,
+                    'column' => $column,
+                    'type' => $type,
+                    'status' => 0,
+                    'room_id' => $room->id,
+                 ];
+            }
+        }
+
+        DB::table('seats')->insert($seats);
         return redirect()->route('admin.room.index');
     }
 
@@ -58,8 +79,9 @@ class RoomController extends Controller
     public function show($id)
     {
         $cinemas = Cinema::all();
-        $room = $this->model->find($id);
-        return view('room::detail', compact('room','cinemas'));
+        $room = $this->model->with('seats')->find($id);
+        $seats = $room->seats->groupBy('row');;
+        return view('room::detail', compact('room','cinemas', 'seats'));
     }
 
     /**

@@ -63,7 +63,7 @@ class SeatController extends Controller
      */
     public function show($id)
     {
-        $seat = $this->model->find($id);
+        $seat = $this->model->with('room')->find($id);
         return view('seat::detail', compact('seat'));
     }
 
@@ -86,10 +86,10 @@ class SeatController extends Controller
     public function update(UpdateSeatRequest $request, $id)
     {
         $seat = $this->model->find($id);
-        $seat->row = $request->row;
-        $seat->column = $request->column;
+        $seat->type = $request->type;
+        $seat->status = $request->status;
         $seat->save();
-        return redirect()->route('admin.seat.index');
+        return redirect()->route('admin.room.detail', [$request->room_id]);
     }
 
     /**

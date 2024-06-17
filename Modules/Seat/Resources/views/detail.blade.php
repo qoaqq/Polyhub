@@ -23,25 +23,20 @@
                 <h5 class="mb-3">Add new seat</h5>
                 <form action="{{ route('admin.seat.update', [$seat->id]) }}" method="POST">
                     @csrf
+                    <input type="hidden" name="room_id" value="{{ $seat->room->id }}">
                     <div class="row">
                         <div class="col input-group">
-                            <span class="input-group-text">Hàng</span>
-                            <select name="row" class="form-select" id="inputGroupSelect04">
-                                <option value="{{ $seat->row }}">{{ $seat->row }}</option>
-                                <option value="a">a</option>
-                                <option value="b">b</option>
-                                <option value="c">c</option>
-                                <option value="d">d</option>
-                                <option value="e">e</option>
-                                <option value="f">f</option>
-                                <option value="g">g</option>
+                            <span class="input-group-text">Status</span>
+                            <select name="status" class="form-select" id="inputGroupSelect04">
+                                <option value="1" {{ $seat->status == 1 ? "selected" : ''  }}>placed</option>
+                                <option value="0" {{ $seat->status == 0 ? "selected" : ''  }}>not place yet</option>
                             </select>
                         </div>
                         <div class="col input-group">
-                            <span class="input-group-text">Cột</span>
-                            <select name="column" class="form-select" id="inputGroupSelect04">
-                                <option value="{{ $seat->column }}">{{ $seat->column }}</option>
-                                @for ($i = 1; $i <= 12; $i++)
+                            <span class="input-group-text">Type</span>
+                            <select name="type" class="form-select" id="inputGroupSelect04">
+                                <option value="{{ $seat->type }}">{{ $seat->type }}</option>
+                                @for ($i = 1; $i <= 3; $i++)
                                     <option value="{{ $i }}">{{ $i }}</option>
                                 @endfor
                             </select>

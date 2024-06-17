@@ -17,25 +17,59 @@
     </div>
     {{-- nav end --}}
 
+    <section class="container">
+        <div class="my-5">
+            <h2>Name : {{ $city->name }}</h2>
+        </div>
+    </section>
     {{-- content start --}}
     <section>
-
-        <form action="{{ route('admin.city.update', [$city->id]) }}" class="mt-4" method="POST">
-            @csrf
-            <div class="col-md-12">
-                <div class="mb-3">
-                    <label class="form-label" for="tb-fname">Name</label>
-                    <input name="name" value="{{ $city->name }}" type="text" class="form-control rounded-pill" id="tb-fname">
-                </div>
-                @if ($errors->has('name'))
-                    <span class="text-danger">{{ $errors->first('name') }}</span>
-                @endif
-            </div>
-            <button class="btn btn-primary rounded-pill px-4 mt-3" type="submit">
-                Update
+        {{-- table cinemas start --}}
+        <div class="my-3">
+            <button type="button" class="btn btn-rounded btn-outline-success">
+                Add new cinema for this city
             </button>
-        </form>
+        </div>
+        <div class="table-responsive mb-4">
+            <h5>List cinemas of city</h5>
+            <table class="table border text-nowrap mb-0 align-middle">
+                <thead class="text-dark fs-4">
+                    <tr>
+                        <th>
+                            <h6 class="fs-4 fw-semibold mb-0">Name</h6>
+                        </th>
+                        <th>
+                            <h6 class="fs-4 fw-semibold mb-0">Rate point</h6>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
 
-    </section>
-    {{-- content end --}}
-@endsection
+                    @foreach ($city->cinemas as $cinema)
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="ms-3">
+                                        <h6 class="fs-4 fw-semibold mb-0">{{ $cinema->name }}</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span
+                                        class="badge text-bg-primary rounded-3 fw-semibold fs-2">{{ $cinema->rate_point }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{{ route('admin.cinema.show', [$cinema->id]) }}" class="text-muted">
+                                    <i class="ti ti-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        {{-- table cinemas end --}}
+</section {{-- content end --}} @endsection

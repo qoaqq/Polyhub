@@ -15,8 +15,8 @@ class UpdateSeatRequest extends FormRequest
     public function rules()
     {
         return [
-            'column' => 'required',
-            'row' => 'required',
+            'type' => 'required',
+            'status' => 'required',
         ];
     }
 
@@ -28,21 +28,5 @@ class UpdateSeatRequest extends FormRequest
     public function authorize()
     {
         return true;
-    }
-
-    protected function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-            if ($this->seatExists()) {
-                $validator->errors()->add('row', 'This seat already exists');
-            }
-        });
-    }
-
-    protected function seatExists()
-    {
-        return Seat::where('row', $this->row)
-                   ->where('column', $this->column)
-                   ->exists();
     }
 }

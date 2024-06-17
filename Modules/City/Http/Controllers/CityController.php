@@ -59,7 +59,7 @@ class CityController extends Controller
      */
     public function show($id)
     {
-        $city = $this->model->find($id);
+        $city = $this->model->with('cinemas')->findOrFail($id);
         return view('city::show', compact('city'));
     }
 
@@ -70,7 +70,8 @@ class CityController extends Controller
      */
     public function edit($id)
     {
-        return view('city::edit');
+        $city = $this->model->find($id);
+        return view('city::edit', compact('city'));
     }
 
     /**
