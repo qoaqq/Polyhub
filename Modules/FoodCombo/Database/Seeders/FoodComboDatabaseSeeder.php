@@ -15,7 +15,7 @@ class FoodComboDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+        FoodCombo::factory()->count(3)->create();
         // $this->call("OthersTableSeeder");
     }
 }

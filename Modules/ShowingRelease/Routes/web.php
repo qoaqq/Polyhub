@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\ShowingRelease\Http\Controllers\ShowingReleaseController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,7 +12,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('showingrelease')->group(function() {
-    Route::get('/', 'ShowingReleaseController@index');
+Route::prefix('admin')->group(function(){
+    Route::resource('showingrelease', ShowingReleaseController::class);
 });
