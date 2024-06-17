@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\Route;
+use Modules\FoodCombo\Http\Controllers\FoodComboController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,7 +11,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('foodcombo')->group(function() {
-    Route::get('/', 'FoodComboController@index');
+Route::prefix('admin')->group(function(){
+    Route::resource('foodcombos', FoodComboController::class);
 });
+
+

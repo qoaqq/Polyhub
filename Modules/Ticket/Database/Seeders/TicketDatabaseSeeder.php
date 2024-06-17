@@ -4,6 +4,7 @@ namespace Modules\Ticket\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Ticket\Entities\Ticket;
 
 class TicketDatabaseSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class TicketDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+        Ticket::factory()->count(5)->create();
         // $this->call("OthersTableSeeder");
     }
 }

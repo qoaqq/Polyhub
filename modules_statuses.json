@@ -18,5 +18,6 @@
     "Bill": true,
     "BillDetail": true,
     "RankMember": true,
-    "Actor": true
+    "Actor": true,
+    "Attribute": true
 }
