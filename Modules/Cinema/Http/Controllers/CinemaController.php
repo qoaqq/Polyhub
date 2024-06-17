@@ -5,16 +5,27 @@ namespace Modules\Cinema\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Cinema\Entities\Cinema;
+use Modules\Cinema\Http\Requests\CreateCinemaRequest;
+use Modules\Cinema\Http\Requests\UpdateCinemaRequest;
+use Modules\City\Entities\City;
 
 class CinemaController extends Controller
 {
+    protected $model;
+
+    public function __construct(Cinema $model)
+    {
+        $this->model = $model;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('cinema::index');
+        $cinemas = $this->model->with('city')->paginate(10);
+        return view('cinema::index', compact('cinemas'));
     }
 
     /**
@@ -23,7 +34,8 @@ class CinemaController extends Controller
      */
     public function create()
     {
-        return view('cinema::create');
+        $cities = City::get();
+        return view('cinema::create',compact('cities'));
     }
 
     /**
@@ -31,9 +43,12 @@ class CinemaController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateCinemaRequest $request)
     {
-        //
+        $data = $request->all();
+        $data['rate_point'] = 0;
+        $this->model->create($data);
+        return redirect()->route('admin.cinema.index');
     }
 
     /**
@@ -43,7 +58,8 @@ class CinemaController extends Controller
      */
     public function show($id)
     {
-        return view('cinema::show');
+        $cinema = $this->model->with('city')->find($id);
+        return view('cinema::show', compact('cinema'));
     }
 
     /**
@@ -53,7 +69,9 @@ class CinemaController extends Controller
      */
     public function edit($id)
     {
-        return view('cinema::edit');
+        $cinema = $this->model->find($id);
+        $cities = City::get();
+        return view('cinema::update', compact('cinema', 'cities'));
     }
 
     /**
@@ -62,9 +80,11 @@ class CinemaController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCinemaRequest $request, $id)
     {
-        //
+        $data = $request->all();
+        $this->model->find($id)->update($data);
+        return redirect()->route('admin.cinema.index');
     }
 
     /**
@@ -74,6 +94,7 @@ class CinemaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->model->findOrFail($id)->delete();
+        return redirect()->back();
     }
 }

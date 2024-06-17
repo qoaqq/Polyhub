@@ -1,4 +1,4 @@
-@extends('backend.layouts.app')
+@extends('Backend.layouts.app')
 @section('content')
   <div class="row">
     <div class="col-lg-6 d-flex align-items-stretch">

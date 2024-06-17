@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('row');
             $table->boolean('status');
             $table->string('type');
+            $table->unique(['row', 'column', 'room_id']);
+            $table->unsignedInteger('room_id');
             $table->timestamps();
         });
     }

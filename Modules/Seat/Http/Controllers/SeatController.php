@@ -5,16 +5,25 @@ namespace Modules\Seat\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Seat\Entities\Seat;
+use Modules\Seat\Http\Requests\CreateSeatRequest;
+use Modules\Seat\Http\Requests\UpdateSeatRequest;
 
 class SeatController extends Controller
 {
+    protected $model;
+    public function __construct(Seat $model)
+    {
+        $this->model = $model;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('seat::index');
+        $seats = $this->model->all()->groupBy('row');
+        return view('seat::index', compact('seats'));
     }
 
     /**
@@ -31,9 +40,20 @@ class SeatController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateSeatRequest $request)
     {
-        //
+        $request->validated();
+        $data = $request->all();
+        $data['status'] = 1;
+        if($data['row'] == 'a' || $data['row'] == 'b'|| $data['row'] == 'c') {
+            $data['type'] = 1;
+        }else if($data['row'] == 'd' || $data['row'] == 'e'|| $data['row'] == 'f'){
+            $data['type'] = 2;
+        }else if($data['row'] == 'g'){
+            $data['type'] = 2;
+        }
+        $this->model->create($data);
+        return redirect()->route('admin.seat.index');
     }
 
     /**
@@ -43,7 +63,8 @@ class SeatController extends Controller
      */
     public function show($id)
     {
-        return view('seat::show');
+        $seat = $this->model->with('room')->find($id);
+        return view('seat::detail', compact('seat'));
     }
 
     /**
@@ -62,9 +83,13 @@ class SeatController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateSeatRequest $request, $id)
     {
-        //
+        $seat = $this->model->find($id);
+        $seat->type = $request->type;
+        $seat->status = $request->status;
+        $seat->save();
+        return redirect()->route('admin.room.detail', [$request->room_id]);
     }
 
     /**
@@ -74,6 +99,7 @@ class SeatController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->model->findOrFail($id)->delete();
+        return redirect()->route('admin.seat.index');   
     }
 }
