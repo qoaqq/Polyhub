@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use Modules\Movie\Http\Controllers\MovieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +13,6 @@
 |
 */
 
-Route::prefix('movie')->group(function() {
-    Route::get('/', 'MovieController@index');
+Route::prefix('admin')->group(function() {
+    Route::resource('/movie', MovieController::class);
 });

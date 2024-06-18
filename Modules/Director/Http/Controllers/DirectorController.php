@@ -5,6 +5,8 @@ namespace Modules\Director\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Modules\Director\Entities\Director;
 
 class DirectorController extends Controller
 {
@@ -12,9 +14,19 @@ class DirectorController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('director::index');
+        $title = "list Movies";
+
+        $query = Director::query();
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+
+        $director = $query->latest('id')->paginate(6);
+        return view('director::index', compact('director','title'));
     }
 
     /**
@@ -22,8 +34,9 @@ class DirectorController extends Controller
      * @return Renderable
      */
     public function create()
-    {
-        return view('director::create');
+    {   
+        $title = "Add Director";
+        return view('director::create',compact('title'));
     }
 
     /**
@@ -33,7 +46,20 @@ class DirectorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'age' => 'required|numeric|min:18|max:90',
+            'date_of_birth' => 'required|date',
+        ]);
+    
+        // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        Director::query()->create($request->all());
+        return redirect('/admin/director')->with('success', 'Director created successfully.');
     }
 
     /**
@@ -42,8 +68,10 @@ class DirectorController extends Controller
      * @return Renderable
      */
     public function show($id)
-    {
-        return view('director::show');
+    {   
+        $title = "Detail Director";
+        $director = Director::find($id);
+        return view('director::show', compact('title','director'));
     }
 
     /**
@@ -52,8 +80,10 @@ class DirectorController extends Controller
      * @return Renderable
      */
     public function edit($id)
-    {
-        return view('director::edit');
+    {   
+        $title = "Edit Director";
+        $director = Director::find($id);
+        return view('director::edit',compact('director','title'));
     }
 
     /**
@@ -64,7 +94,24 @@ class DirectorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'age' => 'required|numeric|min:18|max:90',
+            'date_of_birth' => 'required|date',
+        ]);
+    
+        // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $director = Director::find($id);
+        $director->name = $request->input('name');
+        $director->age = $request->input('age');
+        $director->date_of_birth = $request->input('date_of_birth');
+        $director->save();
+        return redirect('/admin/director')->with('success', 'Director Edit Successfully!');
     }
 
     /**
@@ -74,6 +121,8 @@ class DirectorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $director = Director::find($id);
+        $director -> delete();
+        return redirect('/admin/director')->with('success', 'Deleted Director Successfully!');
     }
 }

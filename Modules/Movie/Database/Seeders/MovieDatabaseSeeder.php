@@ -3,7 +3,7 @@
 namespace Modules\Movie\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
+use Modules\Movie\Entities\Movie;
 
 class MovieDatabaseSeeder extends Seeder
 {
@@ -14,8 +14,7 @@ class MovieDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
-        // $this->call("OthersTableSeeder");
+        // Sử dụng factory để tạo 10 bản ghi
+        Movie::factory(10)->create();
     }
 }
