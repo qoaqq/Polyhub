@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\Route;
+use Modules\Ticket\Http\Controllers\TicketController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,7 +11,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('ticket')->group(function() {
-    Route::get('/', 'TicketController@index');
+Route::prefix('admin')->group(function(){
+    Route::resource('ticket', TicketController::class);
 });

@@ -16,6 +16,6 @@ class SeatDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        $this->call(SeedFakeSeatTableSeeder::class);
     }
 }

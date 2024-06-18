@@ -5,16 +5,29 @@ namespace Modules\City\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\City\Entities\City;
+use Modules\City\Http\Requests\CreateCityRequest;
+use Modules\City\Http\Requests\UpdateCityRequest;
+use Modules\City\Repositories\CityRepository;
+use Modules\City\Repositories\CityRepositoryEloquent;
 
 class CityController extends Controller
 {
+
+    protected $model;
+    public function __construct(City $model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('city::index');
+        $cities = $this->model->paginate(10);
+        return view('city::index', compact('cities'));
     }
 
     /**
@@ -31,9 +44,12 @@ class CityController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateCityRequest $request)
     {
-        //
+        $request->validated();
+        $data = $request->all();
+        $this->model->create($data);
+        return redirect()->route('admin.city.index');
     }
 
     /**
@@ -43,7 +59,8 @@ class CityController extends Controller
      */
     public function show($id)
     {
-        return view('city::show');
+        $city = $this->model->with('cinemas')->findOrFail($id);
+        return view('city::show', compact('city'));
     }
 
     /**
@@ -53,7 +70,8 @@ class CityController extends Controller
      */
     public function edit($id)
     {
-        return view('city::edit');
+        $city = $this->model->find($id);
+        return view('city::edit', compact('city'));
     }
 
     /**
@@ -62,9 +80,12 @@ class CityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCityRequest $request, $id)
     {
-        //
+        $request->validated();
+        $data = $request->all();
+        $this->model->find($id)->update($data);
+        return redirect()->route('admin.city.index');
     }
 
     /**
@@ -74,6 +95,7 @@ class CityController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->model->find($id)->delete();
+        return redirect()->route('admin.city.index');
     }
 }

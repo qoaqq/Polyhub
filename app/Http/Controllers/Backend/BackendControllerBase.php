@@ -9,6 +9,6 @@ class BackendControllerBase extends Controller
 {
     //
     public function index() {
-        return view('backend.index');
+        return view('Backend.index');
     }
 }

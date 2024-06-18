@@ -16,6 +16,6 @@ class RoomDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        $this->call(RoomSeederTableSeeder::class);
     }
 }

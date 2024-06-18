@@ -3,7 +3,7 @@
 namespace Modules\City\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+
 
 class CityServiceProvider extends ServiceProvider
 {

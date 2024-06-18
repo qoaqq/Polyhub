@@ -22,17 +22,17 @@
   <link rel="stylesheet" href="{{ asset('assets/libs/jvectormap/jquery-jvectormap.css') }}">
 </head>
 <body>
-    @include('backend.components.preloader')
+    @include('Backend.components.preloader')
 
     <div id="main-wrapper">
-        @include('backend.includes.sidebar_1')
+        @include('Backend.includes.sidebar_1')
 
         <div class="page-wrapper">
-            @include('backend.includes.sidebar_2')
+            @include('Backend.includes.sidebar_2')
 
             <div class="body-wrapper">
                 <div class="container-fluid">
-                    @include('backend.includes.header')
+                    @include('Backend.includes.header')
 
                     @yield('content')
                 </div>
@@ -44,9 +44,9 @@
                 }
             </script>
 
-            @include('backend.components.setting_button')
+            @include('Backend.components.setting_button')
 
-            @include('backend.components.customize_layout_table')
+            @include('Backend.components.customize_layout_table')
         </div>
 
         <div class="dark-transparent sidebartoggler"></div>
