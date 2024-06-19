@@ -705,7 +705,7 @@
         </div>
 
         <div class="py-6 px-7 mb-1">
-            <a href="../dark/authentication-login.html" class="btn btn-primary w-100">Log Out</a>
+            <a href="{{route('auth.logout')}}" class="btn btn-primary w-100">Log Out</a>
         </div>
         </div>
                 </div>
