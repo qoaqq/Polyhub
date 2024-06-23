@@ -20,7 +20,7 @@
     {{-- content start --}}
     <section>
 
-        <form action="" class="mt-4" method="POST">
+        <form action="{{ route('admin.city.store') }}" class="mt-4" method="POST">
             @csrf
             <div class="col-md-12">
                 <div class="mb-3">

@@ -26,10 +26,41 @@
     <section>
         {{-- table cinemas start --}}
         <div class="my-3">
-            <button type="button" class="btn btn-rounded btn-outline-success">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Add new cinema for this city
             </button>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form class="modal-content" action="{{ route('admin.cinema.store') }}" method="post">
+                    @csrf
+                    <div>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add new cinema for {{ $city->name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-7">
+                                <label for="exampleInputEmail1" class="form-label text-dark fw-bold">Name</label>
+                                <input type="text" name="name" class="form-control py-6" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp">
+                                @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                        <input type="hidden" name="city_id" value="{{ $city->id }}">
+                        <input type="hidden" name="city_page" value="{{ $city->id }}">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add new</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{-- modal end --}}
         <div class="table-responsive mb-4">
             <h5>List cinemas of city</h5>
             <table class="table border text-nowrap mb-0 align-middle">
