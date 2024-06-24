@@ -19,5 +19,7 @@ class Attribute extends Model
     protected static function newFactory()
     {
         return \Modules\Attribute\Database\factories\AttributeFactory::new();
+        // return \Modules\Actor\Database\factories\ActorFactory::new();
     }
+    
 }
