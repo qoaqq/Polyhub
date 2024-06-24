@@ -5,6 +5,7 @@ namespace Modules\Category\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Category\Entities\Category;
 
 class CategoryController extends Controller
 {
@@ -12,9 +13,16 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    protected $categories;
+
+    public function __construct() {
+        $this->categories = new Category();
+    }
     public function index()
     {
-        return view('category::index');
+        $categories = $this->categories->all();
+        return view('category::index', compact('categories'));
     }
 
     /**
@@ -23,7 +31,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category::create');
+        $categories = $this->categories->all();
+        return view('category::create', compact('categories'));
     }
 
     /**
@@ -34,6 +43,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $this->categories->name = $request->name;
+        $this->categories->category_id = $request->category_id;
+        $this->categories->save();
+
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -42,8 +56,10 @@ class CategoryController extends Controller
      * @return Renderable
      */
     public function show($id)
-    {
-        return view('category::show');
+    {   
+        $category = $this->categories->find($id);
+
+        return view('category::show', compact('category'));
     }
 
     /**
@@ -53,7 +69,10 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        return view('category::edit');
+        $category = $this->categories->find($id);
+        $categories = $this->categories->all();
+
+        return view('category::edit', compact('category', 'categories'));
     }
 
     /**
@@ -65,6 +84,12 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $category = $this->categories->find($id);
+        $category->name = $request->name;
+        $category->category_id = $request->category_id;
+        $category->save();
+
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -75,5 +100,8 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+        $this->categories->find($id)->delete();
+
+        return redirect()->route('categories.index');
     }
 }
