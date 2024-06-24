@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\City\Http\Controllers\CityController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +14,6 @@
 |
 */
 
-Route::prefix('city')->group(function() {
-    Route::get('/', 'CityController@index');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('city', CityController::class);
 });

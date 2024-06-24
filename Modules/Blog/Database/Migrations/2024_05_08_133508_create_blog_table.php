@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('blog', function (Blueprint $table) {
+        Schema::create('blogs', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('content');
             $table->text('image')->nullable();
             $table->foreignId('categories_id')->constrained();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

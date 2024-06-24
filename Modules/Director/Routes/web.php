@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use Modules\Director\Http\Controllers\DirectorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +13,6 @@
 |
 */
 
-Route::prefix('director')->group(function() {
-    Route::get('/', 'DirectorController@index');
+Route::prefix('admin')->group(function() {
+    Route::resource('/director', DirectorController::class);
 });

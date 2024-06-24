@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use Modules\RankMember\Http\Controllers\RankMemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +13,14 @@
 |
 */
 
-Route::prefix('rankmember')->group(function() {
-    Route::get('/', 'RankMemberController@index');
+Route::prefix('admin')->group(function() {
+    Route::resource('/rankmember', RankMemberController::class)->names([
+        'index'   => 'rankmember.index',
+        'create'  => 'rankmember.create',
+        'store'   => 'rankmember.store',
+        'show'    => 'rankmember.show',
+        'edit'    => 'rankmember.edit',
+        'update'  => 'rankmember.update',
+        'destroy' => 'rankmember.destroy',
+    ]);
 });
