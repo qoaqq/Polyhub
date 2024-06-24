@@ -23,13 +23,17 @@ class ShowingReleaseController extends Controller
     public function index(Request $request)
     {
         $movies = Movie::all();
-        $query = ShowingRelease::with('movie','room')->search($request->get('search'));
+        $query = ShowingRelease::with(['movie' => function($query) {
+            // Nếu không cần điều kiện `deleted_at`, loại bỏ chúng
+            $query->withoutGlobalScope('notDeleted'); // Nếu có phạm vi toàn cục
+        }, 'room'])->search($request->get('search'));
+
         if ($request->filled('movie_id')) {
             $query->where('movie_id', $request->input('movie_id'));
         }
-    
+
         $list = $query->latest('id')->paginate(8);
-        return view('showingrelease::index', compact('list','movies'));
+        return view('showingrelease::index', compact('list', 'movies'));
     }
 
     /**
@@ -57,7 +61,7 @@ class ShowingReleaseController extends Controller
         $showingRelease->date_release = Carbon::createFromFormat('Y-m-d', $request->date_release);
         $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
         $showingRelease->save();
-
+    
         return redirect()->route('showingrelease.index')->with('success', 'Thêm thành công');
     }
 

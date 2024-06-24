@@ -15,7 +15,7 @@ class CityDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+    
         // $this->call("OthersTableSeeder");
     }
 }
