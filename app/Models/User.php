@@ -54,6 +54,15 @@ class User extends Authenticatable
         return $query->where('name', 'like', '%' . $search . '%');
     }
 
+    public function scopeFilter(Builder $query, $filter)
+    {
+        if (!empty($filter)) {
+            return $query->where('rank_member_id', $filter);
+        }
+
+        return $query;
+    }
+
     public function scopeSort(Builder $query, $sort, $direction)
     {
         if (!$sort) {

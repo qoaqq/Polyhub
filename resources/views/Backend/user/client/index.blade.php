@@ -10,10 +10,10 @@
                         </div>
                         <div class="d-flex align-items-center">
                             <form id="filter-form" class="position-relative me-3 w-100" method="GET">
-                                <select name="director_id" class="form-select" onchange="this.form.submit()">
+                                <select name="rank_member_id" class="form-select" onchange="this.form.submit()">
                                     <option value="">All Rank</option>
                                     @foreach ($ranks as $rank)
-                                    <option value="{{$rank->id}}">{{$rank->rank}}</option>
+                                    <option value="{{$rank->id}}" @if(request('rank_member_id') == $rank->id) selected @endif>{{$rank->rank}}</option>
                                     @endforeach
                                 </select>
                             </form>
@@ -119,7 +119,7 @@
                 </div>
                 <div class="d-flex align-items-center justify-content-between mt-4">
                     <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
-                    {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
+                    {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction'), 'rank_member_id' => request()->get('rank_member_id')])->links('vendor.pagination.bootstrap-5') }}
 
                 </div>
             </div>

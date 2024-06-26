@@ -17,11 +17,11 @@ class UserClientController extends Controller
     public function index(Request $request)
     {
         $title = "User management";
-        $sort = $request->get('sort');
         $ranks = RankMember::all();
+        $sort = $request->get('sort');
         $direction = $request->get('direction', 'desc');
         $users = User::onlyClients()->search($request->get('q', ''))
-        ->sort($sort, $direction)->paginate();
+        ->sort($sort, $direction)->filter($request->get('rank_member_id'))->paginate();
         $page = User::onlyClients()->paginate();
         return view('Backend.user.client.index', compact('title', 'users' , 'page','ranks'));
     }
