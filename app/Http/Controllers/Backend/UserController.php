@@ -19,10 +19,10 @@ class UserController extends Controller
         $title = "User management";
         $sort = $request->get('sort');
         $direction = $request->get('direction', 'desc');
-        $users = User::search($request->get('q', ''))
+        $users = User::onlyAdmins()->search($request->get('q', ''))
         ->sort($sort, $direction)->paginate();
-        $page = User::paginate();
-        return view('Backend.user.index', compact('title', 'users' , 'page'));
+        $page = User::onlyAdmins()->paginate();
+        return view('Backend.user.admin.index', compact('title', 'users' , 'page'));
     }
 
     /**
@@ -33,7 +33,7 @@ class UserController extends Controller
     public function create()
     {
         $title = "User create";
-        return view('Backend.user.create', compact('title'));
+        return view('Backend.user.admin.create', compact('title'));
     }
 
     /**
@@ -84,7 +84,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $title = "User edit";
-        return view('backend.user.edit', compact('user', 'title'));
+        return view('Backend.user.admin.edit', compact('user', 'title'));
     }
 
     /**
