@@ -26,6 +26,9 @@ class User extends Authenticatable
         'password',
         'address',
         'avatar',
+        'user_type',
+        'client_specific_field',
+        'user_specific_field',
     ];
 
     /**
@@ -58,6 +61,7 @@ class User extends Authenticatable
         }
         return $query->orderBy($sort, $direction);
     }
+
     protected static function boot()
     {
         parent::boot();
@@ -69,5 +73,32 @@ class User extends Authenticatable
             // Đặt rank mặc định cho người dùng mới
             $user->rank_member_id = $defaultRank->id;
         });
+    }
+
+    public function isClient()
+    {
+        return $this->user_type === 'client';
+    }
+
+    public function isAdmin()
+    {
+        return $this->user_type === 'admin';
+    }
+
+     // Scope để lọc user có user_type là 'admin'
+     public function scopeOnlyAdmins($query)
+     {
+         return $query->where('user_type', 'admin');
+     }
+
+      // Scope để lọc user có user_type là 'client'
+      public function scopeOnlyClients($query)
+      {
+          return $query->where('user_type', 'client');
+      }
+
+       public function rankMember()
+    {
+        return $this->belongsTo(RankMember::class, 'rank_member_id');
     }
 }

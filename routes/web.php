@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\BackendControllerBase;
+use App\Http\Controllers\backend\UserClientController;
 use App\Http\Controllers\Backend\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,12 @@ Route::prefix('admin')->group(function () {
     ]);
     Route::controller(UserController::class)->group(function () {
     Route::patch('user/{user}/active', 'toggleActivation')->name('user.active');
+    });
+
+    //UserClient
+    Route::resource('/user-client', UserClientController::class)->names(['index'   => 'user.client.index']);
+    Route::controller(UserClientController::class)->group(function () {
+        Route::patch('user-client/{user}/active', 'toggleActivation')->name('user.client.active');
     });
 
     //Auth
