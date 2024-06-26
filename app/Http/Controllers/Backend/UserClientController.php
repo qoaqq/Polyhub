@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\backend;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Modules\RankMember\Entities\RankMember;
 
 class UserClientController extends Controller
 {
@@ -17,11 +18,12 @@ class UserClientController extends Controller
     {
         $title = "User management";
         $sort = $request->get('sort');
+        $ranks = RankMember::all();
         $direction = $request->get('direction', 'desc');
         $users = User::onlyClients()->search($request->get('q', ''))
         ->sort($sort, $direction)->paginate();
         $page = User::onlyClients()->paginate();
-        return view('Backend.user.client.index', compact('title', 'users' , 'page'));
+        return view('Backend.user.client.index', compact('title', 'users' , 'page','ranks'));
     }
 
     /**

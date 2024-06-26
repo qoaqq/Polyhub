@@ -9,6 +9,14 @@
                             <h5 class="card-title">{{ $title }}</h5>
                         </div>
                         <div class="d-flex align-items-center">
+                            <form id="filter-form" class="position-relative me-3 w-100" method="GET">
+                                <select name="director_id" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Rank</option>
+                                    @foreach ($ranks as $rank)
+                                    <option value="{{$rank->id}}">{{$rank->rank}}</option>
+                                    @endforeach
+                                </select>
+                            </form>
                             <form class="position-relative me-3 w-100" method="GET">
                                 <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
                                     placeholder="Search" name='q'>
@@ -84,21 +92,25 @@
                         </div>
                     </td>
                     <td class="text-center">
-                      <form action="{{ route('user.active', [$user->id]) }}" method="post">
-                        @csrf
-                        @method('patch')
-                        @if($user->activated)
-                            <button type="submit" class="badge rounded-pill bg-success-subtle text-success border-success border" data-bs-toggle="tooltip">
-                                Confirmed
-                            </button>
-                            <input type="hidden" name="is_active" value="0">
-                        @else
-                            <button type="submit" class="badge rounded-pill bg-danger-subtle text-danger border-danger border" data-bs-toggle="tooltip">
-                                Cancelled
-                            </button>
-                            <input type="hidden" name="is_active" value="1">
-                        @endif
-                    </form>
+                        <form action="{{ route('user.active', [$user->id]) }}" method="post">
+                            @csrf
+                            @method('patch')
+                            @if ($user->activated)
+                                <button type="submit"
+                                    class="badge rounded-pill bg-success-subtle text-success border-success border"
+                                    data-bs-toggle="tooltip">
+                                    Confirmed
+                                </button>
+                                <input type="hidden" name="is_active" value="0">
+                            @else
+                                <button type="submit"
+                                    class="badge rounded-pill bg-danger-subtle text-danger border-danger border"
+                                    data-bs-toggle="tooltip">
+                                    Cancelled
+                                </button>
+                                <input type="hidden" name="is_active" value="1">
+                            @endif
+                        </form>
                     </td>
                     </tr>
                     @endforeach

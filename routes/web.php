@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Backend\AuthController;
 use App\Http\Controllers\Backend\BackendControllerBase;
-use App\Http\Controllers\backend\UserClientController;
+use App\Http\Controllers\Backend\UserClientController;
 use App\Http\Controllers\Backend\UserController;
 use Illuminate\Support\Facades\Route;
 
