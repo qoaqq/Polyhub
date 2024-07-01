@@ -48,6 +48,9 @@ class CinemaController extends Controller
         $data = $request->all();
         $data['rate_point'] = 0;
         $this->model->create($data);
+        if(isset($data['city_page'])){
+        return redirect()->route('admin.city.show', [$data['city_id']]);
+        }
         return redirect()->route('admin.cinema.index');
     }
 

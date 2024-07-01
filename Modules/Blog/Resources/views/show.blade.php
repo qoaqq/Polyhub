@@ -1,4 +1,4 @@
-@extends('backend.layouts.app')
+@extends('Backend.layouts.app')
 @section('content')
 <h1 class="mt-4 ml-4">{{$title}}</h1>
 <div class="ml-4 mb-5">

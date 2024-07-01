@@ -1,6 +1,5 @@
 
-@extends('backend.layouts.app')
-
+@extends('Backend.layouts.app')
 @section('content')
 @if (session('success'))
 <script>
