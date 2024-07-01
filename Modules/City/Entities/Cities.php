@@ -13,6 +13,6 @@ class Cities extends Model
     
     protected static function newFactory()
     {
-        return \Modules\City\Database\factories\CitiesFactory::new();
+        return \Modules\City\Database\factories\CityFactory::new();
     }
 }

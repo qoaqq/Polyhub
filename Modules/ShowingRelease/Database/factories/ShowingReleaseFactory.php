@@ -23,12 +23,14 @@ class ShowingReleaseFactory extends Factory
     public function definition()
     {
         $Times = ['09:00', '10:00', '12:00', '14:00', '16:00'];
+        $randomTime = $this->faker->randomElement($Times);
+        $dateRelease = $this->faker->date();
 
         return [
             'movie_id' => Movie::pluck('id')->random(),
             'room_id' => Room::pluck('id')->random(),
-            'time_release' => $this->faker->randomElement($Times),
-            'date_release' => $this->faker->date(),
+            'time_release' => $dateRelease . ' ' . $randomTime . ':00', // Combine date and time
+            'date_release' => $dateRelease,
         ];
     }
 }

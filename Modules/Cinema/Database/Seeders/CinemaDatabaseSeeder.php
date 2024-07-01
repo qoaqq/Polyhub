@@ -4,6 +4,7 @@ namespace Modules\Cinema\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Cinema\Entities\Cinema;
 
 class CinemaDatabaseSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class CinemaDatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
-
+        
         // $this->call("OthersTableSeeder");
     }
 }

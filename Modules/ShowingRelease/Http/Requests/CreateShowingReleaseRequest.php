@@ -4,7 +4,7 @@ namespace Modules\ShowingRelease\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\ShowingRelease\Entities\ShowingRelease;
-
+use Carbon\Carbon;
 class CreateShowingReleaseRequest extends FormRequest
 {
     /**
@@ -18,7 +18,7 @@ class CreateShowingReleaseRequest extends FormRequest
             'movie_id' => 'required|exists:movies,id',
             'room_id' => 'required|exists:rooms,id',
             'time_release' => 'required|date_format:H:i',
-            'date_release' => 'required|date',
+            'date_release' => 'required|date_format:Y-m-d',
         ];
     }
 
@@ -31,25 +31,19 @@ class CreateShowingReleaseRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if ($this->hasConflict()) {
-                $validator->errors()->add('date_release', 'Ngày này đã có suất chiếu');
-                $validator->errors()->add('time_release', 'Giờ này đã có suất chiếu');
-                $validator->errors()->add('room_id', 'Phòng này đã có suất chiếu');
+            $roomId = $this->input('room_id');
+            $dateRelease = $this->input('date_release');
+            $timeRelease = $this->input('time_release');
+
+            $existingRelease = ShowingRelease::where('room_id', $roomId)
+                ->whereDate('date_release', Carbon::createFromFormat('Y-m-d', $dateRelease))
+                ->whereTime('time_release', Carbon::createFromFormat('H:i', $timeRelease))
+                ->first();
+
+            if ($existingRelease) {
+                $validator->errors()->add('time_release', 'Buổi chiếu đã tồn tại trong phòng này vào ngày và giờ đã chọn.');
             }
         });
-    }
-
-    /**
-     * Check if there is a conflict with another showing release.
-     *
-     * @return bool
-     */
-    protected function hasConflict()
-    {
-        return ShowingRelease::where('room_id', $this->room_id)
-            ->where('date_release', $this->date_release)
-            ->where('time_release', $this->time_release)
-            ->exists();
     }
 
     /**

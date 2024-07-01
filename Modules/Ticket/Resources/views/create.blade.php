@@ -29,8 +29,8 @@
                     <label for="seat_id">Ghế</label>
                     <select name="seat_id" id="seat_id" class="form-control select-movie mt-2">
                         <option value="0">--Chọn ghế--</option>
-                        @foreach($seat as $id => $name)
-                            <option value="{{ $id }}">{{ $name }}</option>
+                        @foreach($seat as $seat)
+                            <option value="{{ $seat->id }}">{{ $seat->column }}{{ $seat->row }}</option>
                         @endforeach
                     </select>
                 </div>
