@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Cinema\Http\Controllers\Api\CinemaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,5 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/cinema', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('cinemas', CinemaController::class);
