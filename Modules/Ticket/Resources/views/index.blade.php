@@ -87,10 +87,10 @@
                     <tr>
                         <td><input type="checkbox" name="ticket_id[]" value="{{ $ticket->id }}"></td>
                         <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->movie->name }}</h6></td>
-                        <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->seat->column }}</h6></td>
+                        <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->seat->column }}{{$ticket->seat->row}}</h6></td>
                         <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->room->name }}</h6></td>
                         <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->cinema->name }}</h6></td>
-                        <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->showingrelease->time_release }} - {{ date('d/m/Y', strtotime($ticket->showingrelease->date_release)) }}</h6></td>
+                        <td><h6 class="fs-4 mb-0 text-truncate-2">{{ $ticket->showingrelease->time_release }}</h6></td>
                         <td><h6 class="fs-4 mb-0 text-truncate-2">{{ \Carbon\Carbon::parse($ticket->time_start)->format('H:i') }}</h6></td>         
                         <td>
                             <div class="dropdown dropstart">

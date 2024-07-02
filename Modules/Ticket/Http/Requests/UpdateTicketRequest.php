@@ -3,6 +3,7 @@
 namespace Modules\Ticket\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Ticket\Entities\Ticket;
 
 class UpdateTicketRequest extends FormRequest
 {
@@ -22,7 +23,29 @@ class UpdateTicketRequest extends FormRequest
             'time_start' => 'required|date_format:H:i',
         ];
     }
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $movieId = $this->input('movie_id');
+            $seatId = $this->input('seat_id');
+            $roomId = $this->input('room_id');
+            $cinemaId = $this->input('cinema_id');
+            $showingReleaseId = $this->input('showing_release_id');
+            // $timeStart = $this->input('time_start');
 
+            $existingTicket = Ticket::where('movie_id', $movieId)
+                ->where('seat_id', $seatId)
+                ->where('room_id', $roomId)
+                ->where('cinema_id', $cinemaId)
+                ->where('showing_release_id', $showingReleaseId)
+                // ->whereTime('time_start', Carbon::createFromFormat('H:i', $timeStart))
+                ->first();
+
+            if ($existingTicket) {
+                $validator->errors()->add('showing_release_id', 'Vé đã tồn tại với thông tin đã cung cấp.');
+            }
+        });
+    }
     /**
      * Determine if the user is authorized to make this request.
      *

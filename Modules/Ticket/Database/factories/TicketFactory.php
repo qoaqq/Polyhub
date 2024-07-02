@@ -24,13 +24,16 @@ class TicketFactory extends Factory
      */
     public function definition()
     {
+        $Times = ['09:00', '10:00', '12:00', '14:00', '16:00'];
+        $randomTime = $this->faker->randomElement($Times);
+        $dateRelease = $this->faker->date();
         return [
-                'movie_id' => Movie::pluck('id')->random(),
-                'seat_id' => Seat::pluck('id')->random(),
-                'room_id' => Room::pluck('id')->random(),
-                'showing_release_id'=>ShowingRelease::pluck('id')->random(),
-                'cinema_id' => Cinema::pluck('id')->random(),
-                'time_start' => $this->faker->time(),
+            'movie_id' => Movie::pluck('id')->random(),
+            'seat_id' => Seat::pluck('id')->random(),
+            'room_id' => Room::pluck('id')->random(),
+            'showing_release_id' => ShowingRelease::pluck('id')->random(),
+            'cinema_id' => Cinema::pluck('id')->random(),
+            'time_start' => $dateRelease . ' ' . $randomTime . ':00', 
         ];
     }
 }

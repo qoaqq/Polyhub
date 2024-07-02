@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Cinema\Entities\Cinema;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
@@ -40,18 +41,13 @@ class TicketController extends Controller
     public function create()
     {
         $movie = Movie::pluck('name', 'id');
-        $seat = Seat::pluck('column', 'id');
+        $seat = Seat::all();
         $room = Room::pluck('name', 'id');
         $cinema = Cinema::pluck('name', 'id');
-        $showingReleases = ShowingRelease::select('id', 'time_release', 'date_release')->get();
-
-        // Tạo mảng kết hợp với id làm khóa và chuỗi thời gian/ngày làm giá trị
-        $show = $showingReleases->mapWithKeys(function ($item) {
-            $formattedDate = Carbon::parse($item['date_release'])->format('d/m/Y');
-            return [$item['id'] => $item['time_release'] . '--date: ' . $formattedDate];
-        });
+        $show = ShowingRelease::pluck('time_release','id');
+       
         $data = Ticket::all();
-        return view('ticket::create', compact('data', 'seat', 'room', 'movie', 'cinema', 'show'));
+        return view('ticket::create', compact('data', 'seat', 'room', 'movie', 'cinema','show'));
     }
 
     /**
@@ -73,6 +69,7 @@ class TicketController extends Controller
         return redirect()->route('ticket.index')->with('success', 'Thêm thành công');
     }
 
+
     /**
      * Show the specified resource.
      * @param int $id
@@ -93,18 +90,12 @@ class TicketController extends Controller
     {
         $ticket = Ticket::find($id);
         $movie = Movie::pluck('name', 'id');
-        $seat = Seat::pluck('column', 'id');
+        $seat = Seat::all();
         $room = Room::pluck('name', 'id');
         $cinema = Cinema::pluck('name', 'id');
-        $showingReleases = ShowingRelease::select('id', 'time_release', 'date_release')->get();
+        $show = ShowingRelease::pluck('time_release','id');
 
-        // Tạo mảng kết hợp với id làm khóa và chuỗi thời gian/ngày làm giá trị
-        $show = $showingReleases->mapWithKeys(function ($item) {
-            $formattedDate = Carbon::parse($item['date_release'])->format('d/m/Y');
-            return [$item['id'] => $item['time_release'] . '--date: ' . $formattedDate];
-        });
-
-        return view('ticket::edit', compact('movie', 'seat', 'room', 'cinema', 'show', 'ticket'));
+        return view('ticket::edit', compact('movie', 'seat', 'room', 'cinema', 'ticket','show'));
     }
 
     /**

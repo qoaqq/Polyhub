@@ -4,6 +4,7 @@ namespace Modules\FoodCombo\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\FoodCombo\Entities\FoodCombo;
 
 class FoodComboDatabaseSeeder extends Seeder
 {
