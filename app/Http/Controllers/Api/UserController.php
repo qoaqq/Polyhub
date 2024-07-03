@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -14,15 +14,13 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $title = "User management";
-        $sort = $request->get('sort');
-        $direction = $request->get('direction', 'desc');
-        $users = User::onlyAdmins()->search($request->get('q', ''))
-        ->sort($sort, $direction)->paginate();
-        $page = User::onlyAdmins()->paginate();
-        return view('Backend.user.admin.index', compact('title', 'users' , 'page'));
+        // Lấy toàn bộ user có user_type là 'client'
+        $users = User::where('user_type', 'client')->get();
+
+        // Trả về danh sách user dưới dạng JSON
+        return response()->json($users);
     }
 
     /**
@@ -32,8 +30,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $title = "User create";
-        return view('Backend.user.admin.create', compact('title'));
+        //
     }
 
     /**
@@ -51,16 +48,13 @@ class UserController extends Controller
             're-password' => 'required|same:password',
         ]);
         $user = new User();
-        $user->fill($request->except(['_token']));
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $fileName = $avatar->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs('/public/user', $fileName);
-            $user->avatar =  $fileName;
-        }
+        $user->fill($request->except(['_token', 'password', 're-password', 'avatar']));
+
+        // Thiết lập user_type là 'client'
+        $user->user_type = 'client';
         $user->password = Hash::make($request->input('password'));
         $user->save();
-        return redirect()->route('user.index');
+        return response()->json($user, 201);
     }
 
     /**
@@ -71,7 +65,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        // Lấy thông tin của người dùng có user_type là 'client' và id là $id
+        $user = User::where('user_type', 'client')->findOrFail($id);
+
+        // Trả về thông tin người dùng dưới dạng JSON
+        return response()->json($user);
     }
 
     /**
@@ -82,9 +80,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        $title = "User edit";
-        return view('Backend.user.admin.edit', compact('user', 'title'));
+        //
     }
 
     /**
@@ -98,18 +94,26 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id . '',
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'sometimes|string|min:8',
+            're-password' => 'sometimes|string|same:password',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-        $user->fill($request->except(['_token', 'password']));
+        $user->fill($request->except(['_token', 'password', 're-password', 'avatar']));
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $fileName = $avatar->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs('/public/user', $fileName);
-            $user->avatar =  $fileName;
+            $fileName = time() . '_' . $avatar->getClientOriginalName();
+            $path = $avatar->storeAs('public/user', $fileName);
+            $user->avatar = $fileName;
+        }
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
         }
         $user->save();
-        return redirect()->route('user.index');
+
+        return response()->json($user);
     }
 
     /**
@@ -120,15 +124,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        User::where('id', $id)->delete();
-        return redirect()->route('user.index');
-    }
-
-    public function toggleActivation(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $user->activated = $request->input('is_active');
-        $user->save();
-        return back();
+        //
     }
 }

@@ -24,6 +24,9 @@ return new class extends Migration
             $table->integer('points')->default(0);
             $table->unsignedBigInteger('rank_member_id')->nullable();
             $table->boolean('activated')->default(true);
+            $table->enum('user_type', ['admin', 'client']);
+            $table->string('client_specific_field')->nullable();
+            $table->string('user_specific_field')->nullable();
             $table->rememberToken();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
