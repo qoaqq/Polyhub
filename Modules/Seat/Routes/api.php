@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Seat\Http\Controllers\Api\SeatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,5 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/seat', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('cities', SeatController::class);
