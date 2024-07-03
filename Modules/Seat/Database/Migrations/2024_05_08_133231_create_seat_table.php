@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('column');
             $table->string('row');
-            $table->boolean('status');
+            $table->boolean('status')->default(false);
             $table->string('type');
             $table->unique(['row', 'column', 'room_id']);
             $table->unsignedInteger('room_id');

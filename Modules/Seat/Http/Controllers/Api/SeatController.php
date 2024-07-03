@@ -51,17 +51,7 @@ class SeatController extends Controller
      */
     public function store(ApiCreateSeatRequest $request)
     {
-        $dataCreate = $request->all();
-        $seat = $this->model->create([
-            'column' => $dataCreate['column'],
-            'row' => $dataCreate['row'],
-            'room_id' => $dataCreate['room_id'],
-        ]);
         
-        $seatResource = new SeatResource($seat);
-        return response()->json([
-            'data' => $seatResource,
-        ], Response::HTTP_OK);
     }
 
     /**

@@ -19,6 +19,7 @@ class ApiCreateSeatRequest extends FormRequest
         return [
             'column' => 'required',
             'row' => 'required',
+            'type' => 'required',
         ];
     }
 

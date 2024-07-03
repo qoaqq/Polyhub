@@ -18,4 +18,4 @@ Route::middleware('auth:api')->get('/seat', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('cities', SeatController::class);
+Route::apiResource('seats', SeatController::class);
