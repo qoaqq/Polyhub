@@ -46,6 +46,7 @@ class CinemaController extends Controller
             'name' => $dataCreate['name'],
             'city_id' => $dataCreate['city_id'],
         ]);
+        
         $cinemaResource = new CinemaResource($cinema);
         return response()->json([
             'data' => $cinemaResource
