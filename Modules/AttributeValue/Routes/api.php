@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
+use Modules\AttributeValue\Http\Controllers\API\AttributeValueController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/attributevalue', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/attributevalue', function (Request $request) {
+//     return $request->user();
+// });
+Route::resource('attributevalue', AttributeValueController::class);

@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Attibute\Database\factories;
+namespace Modules\Attribute\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Movie\Entities\Movie;
@@ -23,7 +23,7 @@ class AttributeFactory extends Factory
         return [
             //
             'movie_id' => Movie::pluck('id')->random(),
-            'name' => $this->faker->randomElement(['Image','OST']),
+            'name' => $this->faker->randomElement(['Image','Trailer']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

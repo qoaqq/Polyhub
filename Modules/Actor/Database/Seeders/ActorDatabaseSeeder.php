@@ -17,6 +17,6 @@ class ActorDatabaseSeeder extends Seeder
         Model::unguard();
 
         // $this->call("OthersTableSeeder");
-        Actor::factory()->count(10)->create();
+        Actor::factory()->count(20)->create();
     }
 }

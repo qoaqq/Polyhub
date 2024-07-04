@@ -2,6 +2,7 @@
 
 namespace Modules\Ticket\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Ticket\Entities\Ticket;
 
@@ -26,19 +27,21 @@ class UpdateTicketRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $ticketId = $this->route('ticket');
             $movieId = $this->input('movie_id');
             $seatId = $this->input('seat_id');
             $roomId = $this->input('room_id');
             $cinemaId = $this->input('cinema_id');
             $showingReleaseId = $this->input('showing_release_id');
-            // $timeStart = $this->input('time_start');
+            $timeStart = $this->input('time_start');
 
             $existingTicket = Ticket::where('movie_id', $movieId)
                 ->where('seat_id', $seatId)
                 ->where('room_id', $roomId)
                 ->where('cinema_id', $cinemaId)
                 ->where('showing_release_id', $showingReleaseId)
-                // ->whereTime('time_start', Carbon::createFromFormat('H:i', $timeStart))
+                ->whereTime('time_start', '=', Carbon::createFromFormat('H:i', $timeStart)->format('H:i:s'))
+                ->where('id', '<>', $ticketId)  // Loại trừ vé hiện tại đang được cập nhật
                 ->first();
 
             if ($existingTicket) {
