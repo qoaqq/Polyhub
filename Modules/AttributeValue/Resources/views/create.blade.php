@@ -4,7 +4,7 @@
     <div class="mx-2">
         <div class="card shadow-none position-relative overflow-hidden mb-4">
             <div class="card-body d-flex align-items-center justify-content-between p-4">
-               <a href="{{ route('indexAttrV') }}"> <h4 class="fw-semibold mb-0"> {{ $title }} </h4></a>
+               <a href="{{ route('attributevalue.list') }}"> <h4 class="fw-semibold mb-0"> {{ $title }} </h4></a>
 
             </div>
         </div>
@@ -14,7 +14,7 @@
                 <div class="mb-4 pb-2 align-items-center">
                     <h5 class="mb-0"> {{ $title2 }} </h5>
                 </div>
-                <form action="{{ route('storeAttrV') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('attributevalue.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
 
                     <div>
@@ -73,7 +73,7 @@
                                 <button type="submit" class="btn btn-success rounded-pill px-4">
                                     Save
                                 </button>
-                               <a href=" {{ route('indexAttrV') }} ">
+                               <a href=" {{ route('attributevalue.list') }} ">
                                 <button type="button" class="btn bg-danger-subtle text-danger rounded-pill px-4 ms-6">
                                     Cancel
                                 </button>
