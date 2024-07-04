@@ -2,7 +2,7 @@
 namespace Modules\AttributeValue\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Attibute\Entities\Attribute;
+use Modules\Attribute\Entities\Attribute;
 class AttributeValueFactory extends Factory
 {
     /**

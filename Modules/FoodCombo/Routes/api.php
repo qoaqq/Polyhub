@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Modules\FoodCombo\Entities\FoodCombo;
+use Modules\FoodCombo\Http\Controllers\api\FoodComboController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/foodcombo', function (Request $request) {
-    return $request->user();
+Route::prefix('admin')->group(function () {
+    Route::apiResource('foodcombo', FoodComboController::class);
 });

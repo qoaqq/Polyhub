@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Modules\Ticket\Http\Controllers\api\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/ticket', function (Request $request) {
-    return $request->user();
+
+Route::prefix('admin')->group(function () {
+    Route::apiResource('ticket', TicketController::class);
 });

@@ -1,6 +1,7 @@
 <?php
-
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Modules\ShowingRelease\Http\Controllers\api\ShowingReleaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/showingrelease', function (Request $request) {
-    return $request->user();
+Route::prefix('admin')->group(function () {
+    Route::apiResource('showingrelease', ShowingReleaseController::class);
 });

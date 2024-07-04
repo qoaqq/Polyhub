@@ -4,7 +4,7 @@ namespace Modules\AttributeValue\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-
+use Modules\AttributeValue\Entities\AttributeValue;
 class AttributeValueDatabaseSeeder extends Seeder
 {
     /**
@@ -17,5 +17,6 @@ class AttributeValueDatabaseSeeder extends Seeder
         Model::unguard();
 
         // $this->call("OthersTableSeeder");
+        AttributeValue::factory()->count(5)->create();
     }
 }
