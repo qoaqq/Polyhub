@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Room\Http\Controllers\Api\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,5 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/room', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('rooms', RoomController::class);

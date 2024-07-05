@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Cinema\Http\Requests;
+namespace Modules\City\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
-class CreateCinemaRequest extends FormRequest
+class ApiUpdateCityRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,8 +17,7 @@ class CreateCinemaRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'city_id' => 'required',
+            'name' => 'required|max:100',
         ];
     }
 
@@ -30,5 +29,14 @@ class CreateCinemaRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = new Response([
+            'errors' => $validator->errors()
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        throw (new ValidationException($validator, $response));
     }
 }

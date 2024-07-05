@@ -3,6 +3,8 @@ namespace Modules\Attribute\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Movie\Entities\Movie;
+
+
 class AttributeFactory extends Factory
 {
     /**

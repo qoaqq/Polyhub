@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Cinema\Http\Requests;
+namespace Modules\Room\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
-class CreateCinemaRequest extends FormRequest
+class ApiCreateRoomRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,7 +18,7 @@ class CreateCinemaRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'city_id' => 'required',
+            'cinema_id' => 'required',
         ];
     }
 
@@ -31,4 +31,15 @@ class CreateCinemaRequest extends FormRequest
     {
         return true;
     }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = new Response([
+            'errors' => $validator->errors()
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        throw (new ValidationException($validator, $response));
+    }
+
+
 }

@@ -4,12 +4,14 @@ namespace Modules\Room\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Cinema\Entities\Cinema;
 use Modules\Seat\Entities\Seat;
 
 class Room extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = "rooms";
 
