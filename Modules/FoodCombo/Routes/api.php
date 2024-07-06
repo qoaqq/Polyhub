@@ -15,7 +15,4 @@ use Modules\FoodCombo\Http\Controllers\api\FoodComboController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::prefix('admin')->group(function () {
-    Route::apiResource('foodcombo', FoodComboController::class);
-});
+Route::apiResource('foodcombo', FoodComboController::class);

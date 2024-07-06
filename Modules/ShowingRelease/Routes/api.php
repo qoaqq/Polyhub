@@ -14,6 +14,4 @@ use Modules\ShowingRelease\Http\Controllers\api\ShowingReleaseController;
 |
 */
 
-Route::prefix('admin')->group(function () {
     Route::apiResource('showingrelease', ShowingReleaseController::class);
-});
