@@ -14,8 +14,4 @@ use Modules\Ticket\Http\Controllers\api\TicketController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-
-Route::prefix('admin')->group(function () {
-    Route::apiResource('ticket', TicketController::class);
-});
+Route::apiResource('ticket', TicketController::class);
