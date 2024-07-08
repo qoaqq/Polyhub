@@ -20,3 +20,7 @@ Route::middleware('auth:api')->get('/movie', function (Request $request) {
 });
 
 Route::resource('movie',MoviesController::class);
+Route::get('movie-search', [MoviesController::class, 'search'])->name('search');
+Route::get('movie-categories', [MoviesController::class, 'getAllCategory']);
+Route::get('movies-by-category/{categoryID}', [MoviesController::class, 'getMovieByCategory']);
+Route::get('top-movie-in-month', [MoviesController::class, 'getTopMovies']);

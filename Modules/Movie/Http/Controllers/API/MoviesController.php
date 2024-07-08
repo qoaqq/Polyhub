@@ -2,9 +2,12 @@
 
 namespace Modules\Movie\Http\Controllers\API;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Category\Entities\Category;
 use Modules\Movie\Entities\Movie;
 
 class MoviesController extends Controller
@@ -15,13 +18,13 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::all();
+        $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
         // return KhachHangResource::collection($khachHangs);
         return response()->json([
-            'status'=>true,
+            'status'=> true,
             'message'=>'Lấy danh sách thành công',
             'data' => $movie,
-        ],200);
+        ], 200);
     }
 
     /**
@@ -41,10 +44,10 @@ class MoviesController extends Controller
      */
     public function show($id)
     {
-        $movie = Movie::find($id);
+        $movie = Movie::with('category', 'director', 'attributes.attributeValues', 'actors')->find($id);
         if (!$movie) {
             $arr = [
-                'status'=>false,
+                'status'=> false,
                 'message'=>'Không tìm thấy bài viết này',
                 'data'=>[]
             ];
@@ -77,5 +80,63 @@ class MoviesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $title = $request->get('title');
+        if(empty($title)){
+            $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
+        }else{
+            $movies = Movie::with('director', 'attributes', 'category')->where('name', 'LIKE', '%'.$title.'%')->paginate(9);
+        }
+        return response()->json([
+           'status'=> true,
+           'message'=>'Tìm kiếm thành công',
+           'data' => $movies,
+           'title' => $title
+        ], 200);
+    }
+
+    public function getMovieByCategory($categoryId)
+    {
+        $movies = Movie::with('director', 'attributes', 'category')->where('category_id', $categoryId)->paginate(9);
+        return response()->json([
+           'status'=> true,
+           'message'=>'Lấy danh sách thành công',
+           'data' => $movies
+        ], 200);
+    }
+
+    public function getAllCategory()
+    {
+        $categories = Category::withCount('movies')->get();
+        $allMovies = Movie::get()->count();
+        return response()->json([
+           'status'=> true,
+           'message'=>'Lấy danh sách thành công',
+           'data' => $categories,
+           'allMovies' => $allMovies
+        ], 200);
+    }
+
+    public function getTopMovies(){
+        $currentMonth = Carbon::now()->month;
+
+        // Truy vấn để lấy 6 phim có số lượng vé bán nhiều nhất trong tháng
+        $topSellingMovies = Movie::select('movies.*', 'categories.name as cate_name',  DB::raw('count(tickets.id) as total_quantity'))
+            ->join('tickets', 'movies.id', '=', 'tickets.movie_id')
+            ->join('categories', 'movies.category_id', '=', 'categories.id')
+            ->whereMonth('tickets.created_at', $currentMonth)
+            ->groupBy('movies.id')
+            ->orderBy('total_quantity', 'desc')
+            ->take(7)
+            ->get();
+
+            return response()->json([
+                'status'=> true,
+                'message'=>'Lấy danh sách thành công',
+                'data' => $topSellingMovies,
+             ], 200);
     }
 }
