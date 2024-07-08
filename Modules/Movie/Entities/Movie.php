@@ -5,6 +5,10 @@ namespace Modules\Movie\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Actor\Entities\Actor;
+use Modules\Attribute\Entities\Attribute;
+use Modules\AttributeValue\Entities\AttributeValue;
+use Modules\Category\Entities\Category;
 use Modules\Director\Entities\Director;
 
 class Movie extends Model
@@ -21,5 +25,32 @@ class Movie extends Model
     public function director()
     {
         return $this->belongsTo(Director::class);
+    }
+
+    public function attributes()
+    {
+        return $this->hasMany(Attribute::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function attributeValues()
+    {
+        return $this->hasManyThrough(
+            AttributeValue::class,
+            Attribute::class,
+            'movie_id',       // Foreign key on Attribute table...
+            'attribute_id',   // Foreign key on AttributeValue table...
+            'id',             // Local key on Movie table...
+            'id'              // Local key on Attribute table...
+        );
+    }
+
+    public function actors()
+    {
+        return $this->hasMany(Actor::class);
     }
 }
