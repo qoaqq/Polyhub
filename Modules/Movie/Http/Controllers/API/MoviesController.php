@@ -126,7 +126,7 @@ class MoviesController extends Controller
         // Truy vấn để lấy 6 phim có số lượng vé bán nhiều nhất trong tháng
         $topSellingMovies = Movie::select('movies.*', 'categories.name as cate_name',  DB::raw('count(tickets.id) as total_quantity'))
             ->join('tickets', 'movies.id', '=', 'tickets.movie_id')
-            ->join('categories', 'movies.category_id', '=', 'categories.id')
+            ->leftJoin('categories', 'movies.category_id', '=', 'categories.id')
             ->whereMonth('tickets.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
@@ -138,5 +138,47 @@ class MoviesController extends Controller
                 'message'=>'Lấy danh sách thành công',
                 'data' => $topSellingMovies,
              ], 200);
+    }
+
+    public function home()
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+
+        $movies = Movie::with('director', 'attributes', 'category')
+                    ->where('premiere_date', '<', $currentDate)
+                    ->paginate(8);
+
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movies,
+        ], 200);
+    }    
+public function image()
+    {
+        $movie = Movie::with('director', 'attributes', 'category')->paginate(6);
+        
+        // return KhachHangResource::collection($khachHangs);
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movie,
+        ], 200);
+    }
+    public function upcoming()
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+    $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
+
+    $movies = Movie::with('director', 'attributes', 'category')
+                ->where('premiere_date', '>', $currentDate)
+                ->where('premiere_date', '<=', $currentDatePlus10Days)
+                ->paginate(8);
+
+    return response()->json([
+        'status'=> true,
+        'message'=>'Lấy danh sách thành công',
+        'data' => $movies,
+    ], 200);
     }
 }
