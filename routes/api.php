@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\api\AuthClientController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Backend\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->group(function () {
     Route::resource('/user', UserController::class);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/login', [AuthClientController::class, 'login']);
+    Route::post('/logout', [AuthClientController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/signup', [AuthClientController::class, 'signup']);
 });
