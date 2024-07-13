@@ -58,7 +58,11 @@ class AuthClientController extends Controller
         if ($user->user_type !== 'client') {
             Auth::logout();
             return response()->json(['errors' => ['auth' => 'Unauthorized user type']], 403);
+        }else if($user->activated !== true){
+            Auth::logout();
+            return response()->json(['errors' => ['auth' => 'Account has not been activated']], 403);
         }
+        
 
         return response()->json(['message' => 'User signed in successfully', 'token' => $token]);
     }
