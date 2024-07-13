@@ -22,6 +22,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/signin', 'signin');
         Route::post('/signout', 'signout');
         Route::post('/signup', 'signup');
-        Route::get('/user', 'user')->middleware('auth:api');
+        Route::get('/user', 'getUser')->middleware('auth:api');
+        Route::put('/user', 'updateUser')->middleware('auth:api');
     });
 });
