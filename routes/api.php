@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('admin')->group(function () {
-    Route::resource('/user', UserController::class);
-    Route::post('/login', [AuthClientController::class, 'login']);
-    Route::post('/logout', [AuthClientController::class, 'logout'])->middleware('auth:sanctum');
-    Route::post('/signup', [AuthClientController::class, 'signup']);
+    //Auth
+    Route::controller(AuthClientController::class)->group(function () {
+        Route::post('/signin', 'signin');
+        Route::post('/signout', 'signout')->middleware('auth:sanctum');
+        Route::post('/signup', 'signup');
+        Route::get('/user', 'user')->middleware('auth:api');
+    });
 });
