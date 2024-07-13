@@ -20,7 +20,7 @@ Route::prefix('admin')->group(function () {
     //Auth
     Route::controller(AuthClientController::class)->group(function () {
         Route::post('/signin', 'signin');
-        Route::post('/signout', 'signout')->middleware('auth:sanctum');
+        Route::post('/signout', 'signout');
         Route::post('/signup', 'signup');
         Route::get('/user', 'user')->middleware('auth:api');
     });
