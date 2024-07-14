@@ -58,11 +58,11 @@ class AuthClientController extends Controller
         if ($user->user_type !== 'client') {
             Auth::logout();
             return response()->json(['errors' => ['auth' => 'Unauthorized user type']], 403);
-        }else if($user->activated != true){
+        } else if ($user->activated != true) {
             Auth::logout();
             return response()->json(['errors' => ['auth' => 'Account has not been activated']], 403);
         }
-        
+
 
         return response()->json(['message' => 'User signed in successfully', 'token' => $token]);
     }
@@ -82,33 +82,36 @@ class AuthClientController extends Controller
     public function updateUser(Request $request)
     {
         $user = Auth::user();
-
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phonenumber' => 'required|string|max:20',
-            'date_of_birth' => 'required|date',
             'gender' => 'required|string|in:male,female,other',
             'address' => 'nullable|string|max:255',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'avatar' => 'nullable|string',
         ]);
-
-        $user = auth()->user();
-        $user->fill($request->only(['name', 'email', 'address', 'phonenumber', 'date_of_birth', 'gender']));
-
-        // Xử lý avatar
-        if ($request->hasFile('avatar')) {
-            // Xóa ảnh cũ nếu có
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-        
-            $fileName = time() . '_' . $request->file('avatar')->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs('/public/user', $fileName);
-            $user->avatar = $path; // Lưu đường dẫn avatar vào DB
+    
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
-
+    
+        $user->fill($request->only(['name', 'email', 'address', 'phonenumber', 'gender']));
+    
+        // Xử lý avatar
+        if (isset($request->avatar) && preg_match('/^data:image\/(png|jpg|jpeg);base64,/', $request->avatar)) {
+            $avatarData = $request->avatar;
+            $avatarPath = preg_replace('/^data:image\/\w+;base64,/', '', $avatarData);
+            $avatarPath = str_replace(' ', '+', $avatarPath);
+            $image = base64_decode($avatarPath);
+            $fileName = time() . '.png';
+            $path = storage_path('app/public/user/' . $fileName);
+            file_put_contents($path, $image);
+            $user->avatar = 'user/' . $fileName;
+        }
+    
+    
         $user->save();
+    
         return response()->json(['message' => 'Successfully updated', 'user' => $user]);
     }
 }

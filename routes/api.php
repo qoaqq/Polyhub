@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->group(function () {
     //Auth
     Route::controller(AuthClientController::class)->group(function () {
-        Route::post('/signin', 'signin');
+        Route::post('/signin', 'signin')->name('signin');
         Route::post('/signout', 'signout');
         Route::post('/signup', 'signup');
         Route::get('/user', 'getUser')->middleware('auth:api');
