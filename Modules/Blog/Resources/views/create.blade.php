@@ -17,8 +17,16 @@
           </div>
           <div class="col-md-6">
             <div class="form-floating mb-3">
-              <input type="text" class="form-control" name='content' placeholder="Enter Content" />
-              <label for="">Content</label>
+              <input type="text" class="form-control" name="short_desc" placeholder="Enter Title here" />
+              <label for="">Short Description</label>
+              @error('short_desc')
+                <div class="text text-danger">{{ $message }}</div>
+              @enderror  
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <textarea name="content" id="mytextarea"></textarea>
               @error('content')
                 <div class="text text-danger">{{ $message }}</div>
               @enderror 
@@ -63,4 +71,15 @@
       </form>
     </div>
   </div>
+
+  <script>
+ tinymce.init({
+        selector: '#mytextarea',
+        apiKey: 'ucbbhja701oxqnbdgr0j3pabzgks4lk6simsn0047qsyv61m',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker code',
+        toolbar: 'undo redo | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image media | code',
+        height: 400 // Chiều cao của editor
+    });
+  </script>
+
 @endsection
