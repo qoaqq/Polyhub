@@ -29,7 +29,7 @@ class AuthClientController extends Controller
         }
         // Create new user
         $user = new User();
-        $user->fill($request->except(['_token', 'password', 'repassword', 'avatar']));
+        $user->fill($request->except(['_token']));
         $user->user_type = 'client';
         $user->password = Hash::make($request->password);
         $user->save();
@@ -74,10 +74,12 @@ class AuthClientController extends Controller
         return response()->json(['message' => 'User logged out successfully']);
     }
 
-    public function getUser(Request $request)
+    public function getUser()
     {
-        return response()->json(Auth::user());
+        $user = Auth::user()->load('rankMember'); // Tải thông tin rank
+        return response()->json($user);
     }
+
 
     public function updateUser(Request $request)
     {
@@ -89,14 +91,16 @@ class AuthClientController extends Controller
             'gender' => 'required|string|in:male,female,other',
             'address' => 'nullable|string|max:255',
             'avatar' => 'nullable|string',
+            'password' => 'nullable|string|min:6',
+            'repassword' => 'nullable|required_with:password|same:password',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-    
-        $user->fill($request->only(['name', 'email', 'address', 'phonenumber', 'gender']));
-    
+
+        $user->fill($request->except(['_token']));
+
         // Xử lý avatar
         if (isset($request->avatar) && preg_match('/^data:image\/(png|jpg|jpeg);base64,/', $request->avatar)) {
             $avatarData = $request->avatar;
@@ -108,10 +112,11 @@ class AuthClientController extends Controller
             file_put_contents($path, $image);
             $user->avatar = 'user/' . $fileName;
         }
-    
-    
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
         $user->save();
-    
+
         return response()->json(['message' => 'Successfully updated', 'user' => $user]);
     }
 }
