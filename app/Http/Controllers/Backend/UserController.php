@@ -56,7 +56,7 @@ class UserController extends Controller
             $avatar = $request->file('avatar');
             $fileName = $avatar->getClientOriginalName();
             $path = $request->file('avatar')->storeAs('/public/user', $fileName);
-            $user->avatar =  $fileName;
+            $user->avatar =  $path;
         }
         $user->password = Hash::make($request->input('password'));
         $user->save();
@@ -106,7 +106,7 @@ class UserController extends Controller
             $avatar = $request->file('avatar');
             $fileName = $avatar->getClientOriginalName();
             $path = $request->file('avatar')->storeAs('/public/user', $fileName);
-            $user->avatar =  $fileName;
+            $user->avatar =  $path;
         }
         $user->save();
         return redirect()->route('user.index');

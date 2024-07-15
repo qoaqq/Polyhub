@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\AuthClientController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('admin')->group(function () {
-    Route::resource('/user', UserController::class);
+    //Auth
+    Route::controller(AuthClientController::class)->group(function () {
+        Route::post('/signin', 'signin')->name('signin');
+        Route::post('/signout', 'signout');
+        Route::post('/signup', 'signup');
+        Route::get('/user', 'getUser')->middleware('auth:api');
+        Route::put('/user', 'updateUser')->middleware('auth:api');
+    });
 });
