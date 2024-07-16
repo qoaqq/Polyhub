@@ -123,7 +123,7 @@ class MoviesController extends Controller
     public function getTopMovies(){
         $currentMonth = Carbon::now()->month;
 
-        // Truy vấn để lấy 6 phim có số lượng vé bán nhiều nhất trong tháng
+        // Truy vấn để lấy 7 phim có số lượng vé bán nhiều nhất trong tháng
         $topSellingMovies = Movie::select('movies.*', 'categories.name as cate_name',  DB::raw('count(tickets.id) as total_quantity'))
             ->join('tickets', 'movies.id', '=', 'tickets.movie_id')
             ->leftJoin('categories', 'movies.category_id', '=', 'categories.id')
