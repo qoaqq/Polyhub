@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('status')->default(false);
             $table->string('type');
             $table->unique(['row', 'column', 'room_id']);
-            $table->unsignedInteger('room_id');
+            $table->unsignedBigInteger('room_id');
             $table->timestamps();
         });
     }
