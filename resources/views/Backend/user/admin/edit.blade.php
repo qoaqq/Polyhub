@@ -36,7 +36,7 @@
             <div class="col-md-3 mb-3">
                 <label for="formFile" class="form-label">Avatar</label>
                 <input class="form-control" type="file" id="formFile" name='avatar' onchange="previewImage(event)"/>
-                <img  id="avatar-preview" src="{{ asset('storage/user/'.$user->avatar) }}" alt="" class="form-control">
+                <img  id="avatar-preview" src="{{ asset('storage/' . str_replace('public/', '', $user->avatar)) }}" alt="" class="form-control">
             </div>
         </div>
         <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">

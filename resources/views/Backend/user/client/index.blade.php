@@ -72,7 +72,7 @@
                     </td>
                     <td>
                         @if (!empty($user->avatar))
-                            <img src="{{ asset('storage/user/' . $user->avatar) }}" alt=""
+                            <img src="{{ asset('storage/' . str_replace('public/', '', $user->avatar)) }}" alt=""
                                 class="img-fluid flex-shrink-0" width="32" height="32">
                         @endif
                     </td>
