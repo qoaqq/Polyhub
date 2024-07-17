@@ -143,17 +143,19 @@ class MoviesController extends Controller
     public function home()
     {
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
-
+        $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
+    
         $movies = Movie::with('director', 'attributes', 'category')
                     ->where('premiere_date', '<', $currentDate)
+                    ->where('premiere_date', '>=', $tenDaysAgo)
                     ->paginate(8);
-
+    
         return response()->json([
             'status'=> true,
             'message'=>'Lấy danh sách thành công',
             'data' => $movies,
         ], 200);
-    }    
+    }   
 public function image()
     {
         $movie = Movie::with('director', 'attributes', 'category')->paginate(6);
