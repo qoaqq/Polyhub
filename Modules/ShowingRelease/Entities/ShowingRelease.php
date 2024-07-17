@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
 use Modules\Seat\Entities\Seat;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 use Modules\Ticket\Entities\Ticket;
 
 class ShowingRelease extends Model
@@ -34,6 +35,11 @@ class ShowingRelease extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'showing_release_id');
+    }
+
+    public function seatShowtimeStatuses()
+    {
+        return $this->hasMany(SeatShowtimeStatus::class);
     }
 
     protected static function boot()

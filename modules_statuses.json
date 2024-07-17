@@ -19,5 +19,7 @@
     "BillDetail": true,
     "RankMember": true,
     "Actor": true,
-    "Attribute": true
+    "Attribute": true,
+    "Booking": true,
+    "SeatShowtimeStatus": true
 }
