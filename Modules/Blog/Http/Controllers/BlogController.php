@@ -57,7 +57,8 @@ class BlogController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:255',
+            'short_desc' =>'required|string',
+            'content' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
     
@@ -110,7 +111,8 @@ class BlogController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'content' => 'required|string|max:255',
+            'short_desc' =>'required',
+            'content' => 'required|string',
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
     
