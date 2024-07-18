@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Room\Entities\Room;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 
 class Seat extends Model
 {
@@ -21,5 +22,10 @@ class Seat extends Model
     protected static function newFactory()
     {
         return \Modules\Seat\Database\factories\SeatFactory::new();
+    }
+
+    public function seatShowtimeStatuses()
+    {
+        return $this->hasMany(SeatShowtimeStatus::class);
     }
 }

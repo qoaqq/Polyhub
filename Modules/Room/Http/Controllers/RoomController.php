@@ -80,7 +80,7 @@ class RoomController extends Controller
     {
         $cinemas = Cinema::all();
         $room = $this->model->with('seats')->find($id);
-        $seats = $room->seats->groupBy('row');;
+        $seats = $room->seats->groupBy('row');
         return view('room::detail', compact('room','cinemas', 'seats'));
     }
 
