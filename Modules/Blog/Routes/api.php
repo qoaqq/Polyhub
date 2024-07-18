@@ -20,3 +20,6 @@ Route::middleware('auth:api')->get('/blog', function (Request $request) {
 });
 
 Route::resource('blog',BlogController::class);
+Route::get('getAllCategory', [BlogController::class, 'getAllCategory']);
+Route::get('getBlogByCategory/{categoryId}', [BlogController::class, 'getBlogByCategory']);
+
