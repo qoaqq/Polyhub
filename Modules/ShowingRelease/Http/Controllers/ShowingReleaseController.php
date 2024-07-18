@@ -6,9 +6,11 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
 use Modules\Seat\Entities\Seat;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Modules\ShowingRelease\Http\Requests\CreateShowingReleaseRequest;
 use Modules\ShowingRelease\Http\Requests\UpdateShowingReleaseRequest;
@@ -55,13 +57,30 @@ class ShowingReleaseController extends Controller
      */
     public function store(CreateShowingReleaseRequest $request)
     {
-        $showingRelease = new ShowingRelease();
-        $showingRelease->movie_id = $request->movie_id;
-        $showingRelease->room_id = $request->room_id;
-        $showingRelease->date_release = Carbon::createFromFormat('Y-m-d', $request->date_release);
-        $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
-        $showingRelease->save();
-    
+        // create new release_seats
+        DB::beginTransaction();
+        try {
+            $showingRelease = new ShowingRelease();
+            $showingRelease->movie_id = $request->movie_id;
+            $showingRelease->room_id = $request->room_id;
+            $showingRelease->date_release = Carbon::createFromFormat('Y-m-d', $request->date_release);
+            $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
+            $showingRelease->save();
+            $seats = Seat::where('room_id', $request->room_id)
+                        ->where('status', 0)
+                        ->get();
+            foreach ($seats as $seat) {
+                SeatShowtimeStatus::create([
+                    'seat_id' => $seat->id,
+                    'showtime_id' => $showingRelease->id,
+                    'status' => 0 // 0 is not placed 
+                ]);
+            }
+            DB::commit();
+        }catch(\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('showingrelease.create')->with('error', 'Thêm không thành công');
+        }
         return redirect()->route('showingrelease.index')->with('success', 'Thêm thành công');
     }
 
@@ -73,7 +92,12 @@ class ShowingReleaseController extends Controller
     public function show($id)
     {
         $showingRelease = ShowingRelease::with('room', 'movie')->find($id);
-        return view('showingrelease::show', compact('showingRelease'));
+        $showSeats = SeatShowtimeStatus::with('seat')->where('showtime_id', $id)
+        ->get();
+        $groupedSeats = $showSeats->groupBy(function ($seatStatus) {
+            return $seatStatus->seat->row;
+        });
+        return view('showingrelease::show', compact('showingRelease', 'groupedSeats'));
     }
 
     /**

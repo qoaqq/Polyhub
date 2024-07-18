@@ -5,6 +5,7 @@ namespace Modules\Category\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Blog\Entities\Blog;
 use Modules\Movie\Entities\Movie;
 
 class Category extends Model
@@ -29,6 +30,9 @@ class Category extends Model
         return $this->hasMany(Movie::class);
     }
 
+    public function blogs() {
+        return $this->hasMany(Blog::class, 'categories_id', 'id');;
+    }
 
     public function allMovies()
     {

@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Blog\Entities\Blog;
 use Modules\Blog\Transformers\BlogResource;
+use Modules\Category\Entities\Category;
 
 class BlogController extends Controller
 {
@@ -79,7 +80,7 @@ class BlogController extends Controller
         //
     }
     public function bloghome()
-{
+    {
     // Get the 3 most recent blog posts
     $blog = Blog::orderBy('created_at', 'desc')->take(2)->get();
 
@@ -88,5 +89,28 @@ class BlogController extends Controller
         'message' => 'Lấy danh sách thành công',
         'data' => $blog,
     ], 200);
-}
+    }
+
+
+    public function getBlogByCategory($categoryId)
+    {
+        $blogs = Blog::all()->where('categories_id', $categoryId);
+        return response()->json([
+           'status'=> true,
+           'message'=>'Lấy danh sách thành công',
+           'data' => $blogs
+        ], 200);
+    }
+
+    public function getAllCategory()
+    {
+        $categories = Category::withCount('blogs')->get();
+        $allBlogs = Blog::get()->count();
+        return response()->json([
+           'status'=> true,
+           'message'=>'Lấy danh sách thành công',
+           'data' => $categories,
+           'allBlogs' => $allBlogs // Sửa lại thành allBlogs
+        ], 200);
+    }
 }

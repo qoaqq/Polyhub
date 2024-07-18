@@ -16,7 +16,11 @@ class ApiCategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return response()->json($categories);
+        return response()->json([
+            'status'=>true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $categories,
+        ],200);
     }
 
     /**
@@ -48,11 +52,20 @@ class ApiCategoryController extends Controller
     public function show($id)
     {
         $category = Category::find($id);
-        if ($category) {
-            return response()->json($category);
-        } else {
-            return response()->json(['error' => 'Category not found'], 404);
+        if (!$category) {
+            $arr = [
+                'status'=>false,
+                'message'=>'Không tìm thấy bài viết này',
+                'data'=>[]
+            ];
+            return response()->json($arr,200);
         }
+        $arr = [
+            'status'=>true,
+            'message'=>'Thông tin chi tiết bài viết',
+            'data'=>$category
+        ];
+        return response()->json($arr,200);
     }
 
     /**

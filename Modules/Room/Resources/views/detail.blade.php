@@ -123,7 +123,7 @@
                         <div class="border border-success iconlist"></div> <span>Normal</span>
                     </div>
                     <div class="col-6">
-                        <div class="border bg-secondary iconlist"></div>   <span>Placed</span>
+                        <div class="border bg-secondary iconlist"></div>   <span>Having incident</span>
                     </div>
                     <div class="col-6">
                         <div class="border border-danger iconlist"></div> <span>VIP</span>
