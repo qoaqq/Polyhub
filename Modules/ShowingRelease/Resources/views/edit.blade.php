@@ -18,18 +18,18 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group mb-3">
-                    <label for="movie_id">Phim</label>
+                    <label for="movie_id">Movies</label>
                     <select name="movie_id" id="movie_id" class="form-control select-movie mt-2">
-                        <option value="0">--Chọn phim--</option>
+                        <option value="0">--Select movies--</option>
                         @foreach($movie as $id => $name)
                             <option value="{{ $id }}" {{ $show->movie_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="room_id">Phòng</label>
+                    <label for="room_id">Room</label>
                     <select name="room_id" id="room_id" class="form-control select-movie mt-2">
-                        <option value="0">--Chọn phòng--</option>
+                        <option value="0">--Select room--</option>
                         @foreach($room as $id => $name)
                             <option value="{{ $id }}" {{ $show->room_id == $id ? 'selected' : '' }}>{{ $name }}</option>
                         @endforeach

@@ -145,7 +145,7 @@ class MoviesController extends Controller
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
         $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
     
-        $movies = Movie::with('director', 'attributes', 'category')
+        $movies = Movie::with('director', 'attributes', 'categories')
                     ->where('premiere_date', '<', $currentDate)
                     ->where('premiere_date', '>=', $tenDaysAgo)
                     ->paginate(8);
@@ -158,7 +158,7 @@ class MoviesController extends Controller
     }   
 public function image()
     {
-        $movie = Movie::with('director', 'attributes', 'category')->paginate(6);
+        $movie = Movie::with('director', 'attributes', 'categories')->paginate(6);
         
         // return KhachHangResource::collection($khachHangs);
         return response()->json([
@@ -172,7 +172,7 @@ public function image()
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
     $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
 
-    $movies = Movie::with('director', 'attributes', 'category')
+    $movies = Movie::with('director', 'attributes', 'categories')
                 ->where('premiere_date', '>', $currentDate)
                 ->where('premiere_date', '<=', $currentDatePlus10Days)
                 ->paginate(8);
