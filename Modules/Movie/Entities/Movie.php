@@ -32,9 +32,9 @@ class Movie extends Model
         return $this->hasMany(Attribute::class);
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class,'category_movie');
     }
 
     public function attributeValues()
