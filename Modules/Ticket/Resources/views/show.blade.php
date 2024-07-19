@@ -11,7 +11,7 @@
             </div>
             <div class="form-group mb-3">
                 <label for="seat_id">Ghế</label>
-                <input type="text" id="seat_id" class="form-control mt-2" value="{{ $ticket->seat->column }}" readonly>
+                <input type="text" id="seat_id" class="form-control mt-2" value="{{ $ticket->seat->column }}{{$ticket->seat->row}}" readonly>
             </div>
             <div class="form-group mb-3">
                 <label for="room_id">Phòng</label>
