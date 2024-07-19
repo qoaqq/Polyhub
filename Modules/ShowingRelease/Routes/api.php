@@ -13,5 +13,10 @@ use Modules\ShowingRelease\Http\Controllers\api\ShowingReleaseController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::prefix('admin')->group(function () {
     Route::apiResource('showingrelease', ShowingReleaseController::class);
+    Route::controller(ShowingReleaseController::class)->group(function () {
+        Route::get('showingrelease/{showtime_id}/seats', 'getSeatsByShowtime');
+        Route::post('/showingrelease/{showtime_id}/{seat_id}/status', 'updateSeatStatus');
+    });
+});

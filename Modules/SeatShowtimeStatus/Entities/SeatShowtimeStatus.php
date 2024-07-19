@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Seat\Entities\Seat;
+use Modules\ShowingRelease\Entities\ShowingRelease;
 
 class SeatShowtimeStatus extends Model
 {
@@ -20,6 +21,10 @@ class SeatShowtimeStatus extends Model
 
     public function seat(){
         return $this->belongsTo(Seat::class);
+    }
+    public function showtimeRelease()
+    {
+        return $this->belongsTo(ShowingRelease::class, 'showtime_id');
     }
 
     public $timestamp = true;
