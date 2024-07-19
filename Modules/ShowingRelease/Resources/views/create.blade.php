@@ -19,18 +19,18 @@
             <form action="{{ route('showingrelease.store') }}" method="POST">
                 @csrf
                 <div class="form-group mb-3">
-                    <label for="movie_id">Phim</label>
+                    <label for="movie_id">Movies</label>
                     <select name="movie_id" id="movie_id" class="form-control select-movie mt-2">
-                        <option value="0">--Chọn phim--</option>
+                        <option value="0">--Select movies--</option>
                         @foreach($movie as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="room_id">Phòng</label>
+                    <label for="room_id">Room</label>
                     <select name="room_id" id="room_id" class="form-control select-movie mt-2">
-                        <option value="0">--Chọn phòng--</option>
+                        <option value="0">--Select room--</option>
                         @foreach($room as $id => $name)
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
@@ -45,7 +45,7 @@
                     <input type="time" name="time_release" id="time_release" class="form-control mt-2">
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>
-                <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary">Quay lại</a>
+                <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary">Back</a>
             </form>
         </div>
     </div>

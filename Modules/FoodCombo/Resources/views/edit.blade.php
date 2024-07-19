@@ -30,8 +30,8 @@
                     <label for="price">Price</label>
                     <input type="number" name="price" id="price" class="form-control mt-2" value="{{ $foodCombo->price }}" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Quay lại</a>
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Back</a>
             </form>
         </div>
     </div>
