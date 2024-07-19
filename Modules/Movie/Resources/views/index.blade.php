@@ -51,6 +51,7 @@
                 <th>Duration</th>
                 <th>Premiere_date</th>
                 <th>Director</th>
+                <th>Category</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -62,7 +63,17 @@
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->description }}</p></td>
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->duration}}</p></td>
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->premiere_date}}</p></td>
-                <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->director->name}}</p></td>                          
+                <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->director->name}}</p></td>
+                <td>
+                  <p class="fs-4 mb-0 text-truncate-2">
+                      @foreach($mo->categories as $category)
+                          {{ $category->name }}
+                          @if (!$loop->last)
+                              ,
+                          @endif
+                      @endforeach
+                  </p>
+              </td>                          
                 <td>
                   <div class="dropdown dropstart">
                     <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown"

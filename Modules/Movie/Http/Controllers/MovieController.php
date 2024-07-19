@@ -5,7 +5,9 @@ namespace Modules\Movie\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Modules\Category\Entities\Category;
 use Modules\Director\Entities\Director;
 use Modules\Movie\Entities\Movie;
 
@@ -19,9 +21,9 @@ class MovieController extends Controller
     {
         $title = "list Movies";
         $director = Director::all();
-        
+        $categories = Category::all();
         // Truy vấn phim với điều kiện lọc theo đạo diễn nếu có
-        $query = Movie::with('director');
+        $query = Movie::with('director','categories');
         
         if ($request->filled('director_id')) {
             $query->where('director_id', $request->director_id);
@@ -34,7 +36,7 @@ class MovieController extends Controller
         
         $movie = $query->latest('id')->paginate(5);
         
-        return view('movie::index', compact('movie', 'director', 'title'));
+        return view('movie::index', compact('movie', 'director', 'title','categories'));
     }
 
     /**
@@ -45,7 +47,8 @@ class MovieController extends Controller
     {   
         $title = "Add Movies";
         $director = Director::query()->pluck('name','id')->all();
-        return view('movie::create',compact('title','director'));
+        $categories = Category::all();
+        return view('movie::create',compact('title','director','categories'));
     }
 
     /**
@@ -60,6 +63,9 @@ class MovieController extends Controller
             'description' => 'required|string|max:255',
             'duration' => 'required|numeric|min:60|max:240',
             'premiere_date' => 'required|date',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'categories' => 'required|array',
+            'categories.*' => 'exists:categories,id',
         ]);
     
         // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
@@ -68,8 +74,13 @@ class MovieController extends Controller
                         ->withErrors($validator)
                         ->withInput();
         }
-        Movie::query()->create($request->all());
-        return redirect('/admin/movie')->with('success', 'Movie created successfully.');
+
+        $movieData = $request->except(['photo', 'categories']);
+        $pathFile = Storage::putFile('movies', $request->file('photo'));
+        $movieData['photo'] = 'storage/' . $pathFile;
+        $movie= Movie::query()->create($movieData);
+        $movie->categories()->attach($request->input('categories'));
+        return redirect('/admin/movie')->with('success', 'Add Movie Successfully!');
     }
 
     /**
