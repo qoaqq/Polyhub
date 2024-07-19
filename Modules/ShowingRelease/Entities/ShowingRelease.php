@@ -39,7 +39,7 @@ class ShowingRelease extends Model
 
     public function seatShowtimeStatuses()
     {
-        return $this->hasMany(SeatShowtimeStatus::class);
+        return $this->hasMany(SeatShowtimeStatus::class,'showtime_id');
     }
 
     protected static function boot()

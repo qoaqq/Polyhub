@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Modules\ShowingRelease\Http\Requests\UpdateShowingReleaseRequest;
 
@@ -137,4 +138,36 @@ class ShowingReleaseController extends Controller
         }
         return response()->json(['error' => 'Not Found'], 404);
     }
+
+    public function getSeatsByShowtime($showtime_id)
+    {
+        // Lấy toàn bộ ghế theo showtime_id
+        $seats = SeatShowtimeStatus::where('showtime_id', $showtime_id)->get();
+
+        return response()->json($seats);
+    }
+
+    public function updateSeatStatus(Request $request, $showtime_id, $seat_id)
+    {
+        // Validate request
+        $request->validate([
+            'status' => 'required|boolean',
+        ]);
+
+        // Tìm ghế theo showtime_id và seat_id
+        $seat = SeatShowtimeStatus::where('showtime_id', $showtime_id)
+                                    ->where('seat_id', $seat_id)
+                                    ->first();
+
+        if (!$seat) {
+            return response()->json(['message' => 'Seat not found'], 404);
+        }
+
+        // Cập nhật status của ghế
+        $seat->status = $request->status;
+        $seat->save();
+
+        return response()->json(['message' => 'Seat status updated successfully']);
+    }
 }
+
