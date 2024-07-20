@@ -50,6 +50,7 @@
                 <th>Description</th>
                 <th>Duration</th>
                 <th>Premiere_date</th>
+                <th>Image</th>
                 <th>Director</th>
                 <th>Category</th>
                 <th>Action</th>
@@ -63,6 +64,9 @@
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->description }}</p></td>
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->duration}}</p></td>
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->premiere_date}}</p></td>
+                <td>
+                  <img src="{{asset($mo->photo)}}" id="tablenew" alt="" height="150px" width="200px">
+              </td>
                 <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->director->name}}</p></td>
                 <td>
                   <p class="fs-4 mb-0 text-truncate-2">
@@ -106,36 +110,6 @@
             </tbody>
           </table>
         </div>
-        {{-- <div class="d-flex align-items-center justify-content-between mt-4">
-          <p class="mb-0 fw-normal">
-              {{ $movie->firstItem() }}-{{ $movie->lastItem() }} of {{ $movie->total() }}
-          </p>
-          <nav aria-label="Page navigation example">
-              <ul class="pagination mb-0 align-items-center">
-                      <li class="page-item">
-                          <a class="page-link border-0 d-flex align-items-center text-muted fw-normal" href="{{ $movie->previousPageUrl() }}" rel="prev">
-                              <iconify-icon icon="solar:alt-arrow-left-line-duotone" class="fs-5"></iconify-icon>Previous
-                          </a>
-                      </li>
-                  @foreach ($movie->getUrlRange(1, $movie->lastPage()) as $page => $url)
-                      @if ($page == $movie->currentPage())
-                          <li class="page-item active" aria-current="page">
-                              <span class="page-link">{{ $page }}</span>
-                          </li>
-                      @else
-                          <li class="page-item">
-                              <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                          </li>
-                      @endif
-                  @endforeach
-                      <li class="page-item">
-                          <a class="page-link border-0 d-flex align-items-center fw-normal" href="{{ $movie->nextPageUrl() }}" rel="next">
-                              Next<iconify-icon icon="solar:alt-arrow-right-line-duotone" class="fs-5"></iconify-icon>
-                          </a>
-                      </li>
-              </ul>
-          </nav>
-      </div> --}}
        <div class="mt-3">
         {{ $movie->links('vendor.pagination.bootstrap-5') }}
        </div>
