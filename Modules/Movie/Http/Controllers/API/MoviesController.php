@@ -18,7 +18,7 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
+        $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
         // return KhachHangResource::collection($khachHangs);
         return response()->json([
             'status'=> true,
