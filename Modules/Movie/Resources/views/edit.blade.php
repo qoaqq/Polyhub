@@ -55,6 +55,35 @@
               <label for="tb-cpwd">Director</label>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <input type="file" class="form-control" name="photo" accept="image/*" />
+              <label for="photo">Choose Photo</label>
+              @error('photo')
+                <div class="text text-danger">{{ $message }}</div>
+              @enderror 
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              <select class="form-select" name="categories[]" multiple>
+                    @foreach ($categories as $category)
+                        @if (!$category->category_id)
+                        <option value="{{ $category->id }}" 
+                          @if (in_array($category->id, $movie->categories->pluck('id')->toArray())) selected @endif>
+                          {{ $category->name }}
+                        </option>
+                            @include('movie::partials.children_categories', ['categories' => $categories, 'parent_id' => $category->id, 'char' => '|---', 
+                            'selectedCategories' => $movie->categories->pluck('id')->toArray()])
+                        @endif
+                    @endforeach
+                </select>
+                <label for="categories">Categories</label>
+                @error('categories')
+                    <div class="text text-danger">{{ $message }}</div>
+                @enderror 
+            </div>
+        </div>
           <div class="col-12">
             <div class="d-md-flex align-items-center">
               <div class="ms-auto mt-3 mt-md-0">
