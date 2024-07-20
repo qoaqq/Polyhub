@@ -103,9 +103,10 @@ class MovieController extends Controller
     public function edit($id)
     {
         $title = "Edit Movie";
-        $movie = Movie::find($id);
+        $movie = Movie::with('categories')->find($id);;
         $director = Director::query()->pluck('name','id')->all();
-        return view('movie::edit', compact('movie','title','director'));
+        $categories = Category::all();
+        return view('movie::edit', compact('movie','title','director','categories'));
     }
 
     /**
@@ -121,6 +122,9 @@ class MovieController extends Controller
             'description' => 'required|string|max:255',
             'duration' => 'required|numeric|min:60|max:240',
             'premiere_date' => 'required|date',
+            'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'categories' => 'array',
+            'categories.*' => 'exists:categories,id'
         ]);
     
         // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
@@ -129,10 +133,27 @@ class MovieController extends Controller
                         ->withErrors($validator)
                         ->withInput();
         }
-        $movie = Movie::find($id);
-        $movie ->update($request->all());
-        $movie->save();
-        return redirect('/admin/movie')->with('success', 'Updated Movie Successfully');
+
+        $movieId = Movie::find($id);
+        $movie = $request->except('photo','categories');
+
+        if($request->hasFile('photo')){
+            $pathFile = Storage::putFile('movies',$request->file('photo'));
+            $movie['photo'] = 'storage/' . $pathFile;
+        }
+
+        $currentImage = $movieId->photo;
+        
+        $movieId->update($movie);
+        
+        if($request->hasFile('photo')
+        && $currentImage
+        && file_exists(public_path($currentImage)) 
+        ) {
+            unlink(public_path($currentImage));
+        } 
+        $movieId->categories()->sync($request->categories);
+        return redirect('/admin/movie')->with('success', 'Movie Updated successfully!');
     }
 
     /**

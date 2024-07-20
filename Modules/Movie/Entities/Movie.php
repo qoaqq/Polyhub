@@ -15,7 +15,7 @@ class Movie extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'duration', 'premiere_date', 'director_id'];
+    protected $fillable = ['name', 'description', 'duration', 'premiere_date','photo','director_id'];
     
     protected static function newFactory()
     {
@@ -53,4 +53,6 @@ class Movie extends Model
     {
         return $this->hasMany(Actor::class);
     }
+
+
 }

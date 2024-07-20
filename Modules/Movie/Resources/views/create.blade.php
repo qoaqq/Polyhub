@@ -68,9 +68,9 @@
             <div class="form-floating mb-3">
               <select class="form-select" name="categories[]" multiple>
                     @foreach ($categories as $category)
-                        @if (!($category->parent_id))
+                        @if (!$category->category_id)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @include('movie::partials.children_categories', ['categories' => $categories, 'parent_id' => $category->id, 'char' => '|---'])
+                            @include('movie::partials.children_categories', ['categories' => $categories, 'parent_id' => $category->id, 'char' => '|---','selectedCategories' => []])
                         @endif
                     @endforeach
                 </select>
