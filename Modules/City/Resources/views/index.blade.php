@@ -86,4 +86,6 @@
         </div>
     </section>
     {{-- content start  --}}
+
+    <img src="{{ asset('storage/movies/WRf7BivyVNTNxWUnsdxO5Fq6h8utb8qpwfGEcn90.png') }}" alt="">
 @endsection

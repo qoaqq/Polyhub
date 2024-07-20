@@ -53,4 +53,6 @@ class Movie extends Model
     {
         return $this->hasMany(Actor::class);
     }
+
+
 }

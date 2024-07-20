@@ -18,7 +18,7 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
+        $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
         // return KhachHangResource::collection($khachHangs);
         return response()->json([
             'status'=> true,
@@ -44,7 +44,7 @@ class MoviesController extends Controller
      */
     public function show($id)
     {
-        $movie = Movie::with('category', 'director', 'attributes.attributeValues', 'actors')->find($id);
+        $movie = Movie::with('categories', 'director', 'attributes.attributeValues', 'actors')->find($id);
         if (!$movie) {
             $arr = [
                 'status'=> false,
@@ -86,9 +86,9 @@ class MoviesController extends Controller
     {
         $title = $request->get('title');
         if(empty($title)){
-            $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
+            $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
         }else{
-            $movies = Movie::with('director', 'attributes', 'category')->where('name', 'LIKE', '%'.$title.'%')->paginate(9);
+            $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')->paginate(9);
         }
         return response()->json([
            'status'=> true,
@@ -100,7 +100,7 @@ class MoviesController extends Controller
 
     public function getMovieByCategory($categoryId)
     {
-        $movies = Movie::with('director', 'attributes', 'category')->where('category_id', $categoryId)->paginate(9);
+        $movies = Movie::with('director', 'attributes', 'categories')->where('category_id', $categoryId)->paginate(9);
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
