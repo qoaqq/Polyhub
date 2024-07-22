@@ -100,7 +100,11 @@ class MoviesController extends Controller
 
     public function getMovieByCategory($categoryId)
     {
-        $movies = Movie::with('director', 'attributes', 'categories')->where('category_id', $categoryId)->paginate(9);
+        $movies = Movie::with('director', 'attributes', 'categories')
+        ->whereHas('categories', function ($query) use ($categoryId) {
+            $query->where('categories.id', $categoryId);
+        })
+        ->paginate(9);
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
