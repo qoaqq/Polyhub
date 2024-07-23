@@ -100,7 +100,11 @@ class MoviesController extends Controller
 
     public function getMovieByCategory($categoryId)
     {
-        $movies = Movie::with('director', 'attributes', 'categories')->where('category_id', $categoryId)->paginate(9);
+        $movies = Movie::with('director', 'attributes', 'categories')
+        ->whereHas('categories', function ($query) use ($categoryId) {
+            $query->where('categories.id', $categoryId);
+        })
+        ->paginate(9);
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
@@ -124,9 +128,12 @@ class MoviesController extends Controller
         $currentMonth = Carbon::now()->month;
 
         // Truy vấn để lấy 7 phim có số lượng vé bán nhiều nhất trong tháng
-        $topSellingMovies = Movie::select('movies.*', 'categories.name as cate_name',  DB::raw('count(tickets.id) as total_quantity'))
+        $topSellingMovies = Movie::select('movies.*', 
+            DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
+            DB::raw('count(tickets.id) as total_quantity'))
             ->join('tickets', 'movies.id', '=', 'tickets.movie_id')
-            ->leftJoin('categories', 'movies.category_id', '=', 'categories.id')
+            ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
+            ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
             ->whereMonth('tickets.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
