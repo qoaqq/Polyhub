@@ -2,10 +2,11 @@
 
 namespace Modules\Bill\Http\Controllers\API;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\Bill\Entities\Bill;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Support\Renderable;
 
 class ApiBillController extends Controller
 {
@@ -40,8 +41,41 @@ class ApiBillController extends Controller
     public function store(Request $request)
     {
         //
-        $bill = Bill::create($request->all());
-        return response()->json($bill, 201);
+        Log::info('Payment Method: ' . $request->input('paymentMethod'));
+
+        $paymentMethod = $request->input('paymentMethod');
+
+        switch ($paymentMethod) {
+            case 'vnpay':
+                // VNPAY
+                $vnpayUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+                $vnpaySecretKey = '4t7v6K7Nq2e4k3t1b4Vf5Aq8R9k6F9F2';
+
+                $vnpayData = [
+                    'vnp_TmnCode' => 'CONGTY001',
+                    'vnp_Amount' => 1000000 * 100,
+                    'vnp_CurrCode' => 'VND',
+                    'vnp_OrderInfo' => 'Thanh toán đơn hàng',
+                    'vnp_ReturnUrl' => 'http://localhost:4200/home',
+                    'vnp_TxnRef' => uniqid(),
+                    'vnp_IpAddr' => $request->ip(),
+                    'vnp_CreateDate' => date('YmdHis'),
+                ];
+
+                ksort($vnpayData);
+                $query = http_build_query($vnpayData);
+                $hashData = $query . '&' . 'vnp_SecureHashKey=' . $vnpaySecretKey;
+                $vnpayData['vnp_SecureHash'] = strtoupper(hash('sha256', $hashData));
+
+                $vnpayUrl .= '?' . http_build_query($vnpayData);
+
+                return response()->json(['redirect_url' => $vnpayUrl]);
+            case 'momo':
+                // Momo
+                return response()->json(['status' => 'success', 'message' => 'Momo payment processed']);
+            default:
+                return response()->json(['status' => 'error', 'message' => 'Unknown payment method'], 400);
+        }
     }
 
     /**
