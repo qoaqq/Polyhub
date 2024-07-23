@@ -5,6 +5,7 @@ namespace Modules\ShowingRelease\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Carbon\Carbon;
+
 class CreateShowingReleaseRequest extends FormRequest
 {
     /**
@@ -18,7 +19,7 @@ class CreateShowingReleaseRequest extends FormRequest
             'movie_id' => 'required|exists:movies,id',
             'room_id' => 'required|exists:rooms,id',
             'time_release' => 'required|date_format:H:i',
-            'date_release' => 'required|date_format:Y-m-d',
+            'date_release' => 'required|date_format:Y-m-d|after_or_equal:today',
         ];
     }
 
@@ -56,3 +57,4 @@ class CreateShowingReleaseRequest extends FormRequest
         return true;
     }
 }
+

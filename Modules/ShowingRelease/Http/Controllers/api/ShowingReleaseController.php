@@ -18,23 +18,9 @@ class ShowingReleaseController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index($movie_id)
     {
-        $movies = Movie::all();
-        $query = ShowingRelease::with(['movie' => function($query) {
-            // Nếu không cần điều kiện `deleted_at`, loại bỏ chúng
-            $query->withoutGlobalScope('notDeleted'); // Nếu có phạm vi toàn cục
-        }, 'room'])->search($request->get('search'));
-
-        if ($request->filled('movie_id')) {
-            $query->where('movie_id', $request->input('movie_id'));
-        }
-
-        $list = $query->latest('id')->paginate(8);
-        return response()->json([
-            'data' => $list,
-            'movies' => $movies
-        ]);
+        
     }
 
     /**
@@ -75,13 +61,12 @@ class ShowingReleaseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show($movie_id)
     {
-        $showingRelease = ShowingRelease::with('room', 'movie')->find($id);
-        if ($showingRelease) {
-            return response()->json($showingRelease);
-        }
-        return response()->json(['error' => 'Not Found'], 404);
+        $query = ShowingRelease::where('movie_id', $movie_id)->get();
+        return response()->json([
+            'data' => $query,
+        ]);
     }
 
     /**
