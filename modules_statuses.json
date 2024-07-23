@@ -21,5 +21,6 @@
     "Actor": true,
     "Attribute": true,
     "Booking": true,
-    "SeatShowtimeStatus": true
+    "SeatShowtimeStatus": true,
+    "Controller": true
 }
