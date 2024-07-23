@@ -19,8 +19,10 @@ class CspMiddleware
         $response = $next($request);
 
         $csp = "default-src 'self'; ";
-        $csp .= "style-src 'self' 'unsafe-inline'; ";
-        $csp .= "img-src 'self' data:;";
+        $csp .= "style-src 'self' 'unsafe-inline' https://sandbox.vnpayment.vn; ";
+        $csp .= "img-src 'self' data: https://sandbox.vnpayment.vn; ";
+        $csp .= "script-src 'self' 'unsafe-inline' https://sandbox.vnpayment.vn; ";
+        $csp .= "connect-src 'self' https://sandbox.vnpayment.vn;";
 
         $response->headers->set('Content-Security-Policy', $csp);
 
