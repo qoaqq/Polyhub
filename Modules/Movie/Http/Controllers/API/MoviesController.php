@@ -18,7 +18,9 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
+        $movie = Movie::with('director', 'attributes', 'categories')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(9);
         // return KhachHangResource::collection($khachHangs);
         return response()->json([
             'status'=> true,
@@ -86,9 +88,13 @@ class MoviesController extends Controller
     {
         $title = $request->get('title');
         if(empty($title)){
-            $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
+            $movie = Movie::with('director', 'attributes', 'categories')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
         }else{
-            $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')->paginate(9);
+            $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
         }
         return response()->json([
            'status'=> true,
@@ -104,6 +110,7 @@ class MoviesController extends Controller
         ->whereHas('categories', function ($query) use ($categoryId) {
             $query->where('categories.id', $categoryId);
         })
+        ->orderBy('created_at', 'desc')
         ->paginate(9);
         return response()->json([
            'status'=> true,
@@ -114,7 +121,9 @@ class MoviesController extends Controller
 
     public function getAllCategory()
     {
-        $categories = Category::withCount('movies')->get();
+        $categories = Category::withCount('movies')
+        ->orderBy('created_at', 'desc')
+        ->get();
         $allMovies = Movie::get()->count();
         return response()->json([
            'status'=> true,
