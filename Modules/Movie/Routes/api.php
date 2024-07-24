@@ -24,3 +24,8 @@ Route::get('movie-search', [MoviesController::class, 'search'])->name('search');
 Route::get('movie-categories', [MoviesController::class, 'getAllCategory']);
 Route::get('movies-by-category/{categoryID}', [MoviesController::class, 'getMovieByCategory']);
 Route::get('top-movie-in-month', [MoviesController::class, 'getTopMovies']);
+
+
+Route::get('home-movie', [MoviesController::class, 'home']);
+Route::get('image', [MoviesController::class, 'image']);
+Route::get('upcoming-movie', [MoviesController::class, 'upcoming']);

@@ -17,7 +17,7 @@
                 <label for="price">Price</label>
                 <input type="number" id="price" class="form-control mt-2" value="{{ $foodCombo->price }}" readonly>
             </div>
-            <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Quay lại</a>
+            <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Back</a>
         </div>
     </div>
 </div>

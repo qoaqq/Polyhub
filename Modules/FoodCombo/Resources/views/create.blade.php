@@ -31,7 +31,7 @@
                     <input type="number" name="price" id="price" class="form-control mt-2" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>
-                <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Quay lại</a>
+                <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Back</a>
             </form>
         </div>
     </div>

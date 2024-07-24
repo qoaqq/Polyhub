@@ -18,7 +18,7 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
+        $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
         // return KhachHangResource::collection($khachHangs);
         return response()->json([
             'status'=> true,
@@ -44,7 +44,7 @@ class MoviesController extends Controller
      */
     public function show($id)
     {
-        $movie = Movie::with('category', 'director', 'attributes.attributeValues', 'actors')->find($id);
+        $movie = Movie::with('categories', 'director', 'attributes.attributeValues', 'actors')->find($id);
         if (!$movie) {
             $arr = [
                 'status'=> false,
@@ -86,9 +86,9 @@ class MoviesController extends Controller
     {
         $title = $request->get('title');
         if(empty($title)){
-            $movie = Movie::with('director', 'attributes', 'category')->paginate(9);
+            $movie = Movie::with('director', 'attributes', 'categories')->paginate(9);
         }else{
-            $movies = Movie::with('director', 'attributes', 'category')->where('name', 'LIKE', '%'.$title.'%')->paginate(9);
+            $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')->paginate(9);
         }
         return response()->json([
            'status'=> true,
@@ -100,7 +100,11 @@ class MoviesController extends Controller
 
     public function getMovieByCategory($categoryId)
     {
-        $movies = Movie::with('director', 'attributes', 'category')->where('category_id', $categoryId)->paginate(9);
+        $movies = Movie::with('director', 'attributes', 'categories')
+        ->whereHas('categories', function ($query) use ($categoryId) {
+            $query->where('categories.id', $categoryId);
+        })
+        ->paginate(9);
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
@@ -124,9 +128,12 @@ class MoviesController extends Controller
         $currentMonth = Carbon::now()->month;
 
         // Truy vấn để lấy 7 phim có số lượng vé bán nhiều nhất trong tháng
-        $topSellingMovies = Movie::select('movies.*', 'categories.name as cate_name',  DB::raw('count(tickets.id) as total_quantity'))
+        $topSellingMovies = Movie::select('movies.*', 
+            DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
+            DB::raw('count(tickets.id) as total_quantity'))
             ->join('tickets', 'movies.id', '=', 'tickets.movie_id')
-            ->leftJoin('categories', 'movies.category_id', '=', 'categories.id')
+            ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
+            ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
             ->whereMonth('tickets.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
@@ -138,5 +145,49 @@ class MoviesController extends Controller
                 'message'=>'Lấy danh sách thành công',
                 'data' => $topSellingMovies,
              ], 200);
+    }
+
+    public function home()
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+        $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
+    
+        $movies = Movie::with('director', 'attributes', 'categories')
+                    ->where('premiere_date', '<', $currentDate)
+                    ->where('premiere_date', '>=', $tenDaysAgo)
+                    ->paginate(8);
+    
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movies,
+        ], 200);
+    }   
+public function image()
+    {
+        $movie = Movie::with('director', 'attributes', 'categories')->paginate(6);
+        
+        // return KhachHangResource::collection($khachHangs);
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movie,
+        ], 200);
+    }
+    public function upcoming()
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+    $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
+
+    $movies = Movie::with('director', 'attributes', 'categories')
+                ->where('premiere_date', '>', $currentDate)
+                ->where('premiere_date', '<=', $currentDatePlus10Days)
+                ->paginate(8);
+
+    return response()->json([
+        'status'=> true,
+        'message'=>'Lấy danh sách thành công',
+        'data' => $movies,
+    ], 200);
     }
 }

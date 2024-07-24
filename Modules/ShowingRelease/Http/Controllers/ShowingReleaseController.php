@@ -67,13 +67,13 @@ class ShowingReleaseController extends Controller
             $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
             $showingRelease->save();
             $seats = Seat::where('room_id', $request->room_id)
-                        ->where('status', 0)
+                        ->where('status', false)
                         ->get();
             foreach ($seats as $seat) {
                 SeatShowtimeStatus::create([
                     'seat_id' => $seat->id,
                     'showtime_id' => $showingRelease->id,
-                    'status' => 0 // 0 is not placed 
+                    'status' => false
                 ]);
             }
             DB::commit();
