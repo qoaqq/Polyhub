@@ -108,7 +108,14 @@ class AuthClientController extends Controller
             $avatarPath = str_replace(' ', '+', $avatarPath);
             $image = base64_decode($avatarPath);
             $fileName = time() . '.png';
-            $path = storage_path('app/public/user/' . $fileName);
+            $directory = 'public/user';
+        
+            // Tạo thư mục nếu chưa tồn tại
+            if (!Storage::exists($directory)) {
+                Storage::makeDirectory($directory);
+            }
+        
+            $path = storage_path('app/' . $directory . '/' . $fileName);
             file_put_contents($path, $image);
             $user->avatar = 'user/' . $fileName;
         }

@@ -19,7 +19,7 @@ class UpdateShowingReleaseRequest extends FormRequest
             'movie_id' => 'required|exists:movies,id',
             'room_id' => 'required|exists:rooms,id',
             'time_release' => 'required|date_format:H:i',
-            'date_release' => 'required|date',
+            'date_release' => 'required|date_format:Y-m-d|after_or_equal:today',
         ];
     }
      /**
