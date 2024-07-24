@@ -22,5 +22,6 @@
     "Attribute": true,
     "Booking": true,
     "SeatShowtimeStatus": true,
-    "Controller": true
+    "Controller": true,
+    "PaymentMethod": true
 }

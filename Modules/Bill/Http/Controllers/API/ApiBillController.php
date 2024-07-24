@@ -40,12 +40,13 @@ class ApiBillController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('Payment Method: ' . $request->input('paymentMethod'));
-
+        // Log::info('Payment Method: ' . $request->input('paymentMethod'));
+        Log::info('Sub Total: ' . $request->input('totalCost'));
         $paymentMethod = $request->input('paymentMethod');
-
+        // dd($request->input('totalCost'));
         switch ($paymentMethod) {
             case 'vnpay':
+                $grandTotal = $request->input('totalCost');
                 $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
                 $vnp_Returnurl = "http://localhost:4200/confirmation";
                 $vnp_TmnCode = "AQX9I3H0";
@@ -54,7 +55,7 @@ class ApiBillController extends Controller
                 $vnp_TxnRef = uniqid();
                 $vnp_OrderInfo = "Payment success";
                 $vnp_OrderType = "PolyHub";
-                $vnp_Amount = 20000 * 100;
+                $vnp_Amount = $grandTotal * 100;
                 $vnp_Locale = "VN";
                 $vnp_BankCode = "NCB";
                 $vnp_IpAddr = $request->ip();
