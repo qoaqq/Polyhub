@@ -40,66 +40,78 @@ class ApiBillController extends Controller
      */
     public function store(Request $request)
     {
-        //
         Log::info('Payment Method: ' . $request->input('paymentMethod'));
 
         $paymentMethod = $request->input('paymentMethod');
 
         switch ($paymentMethod) {
             case 'vnpay':
-                // VNPAY
-                $vnpayUrl = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
-                $vnpaySecretKey = '4t7v6K7Nq2e4k3t1b4Vf5Aq8R9k6F9F2';
+                $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+                $vnp_Returnurl = "http://localhost:4200/confirmation";
+                $vnp_TmnCode = "AQX9I3H0";
+                $vnp_HashSecret = "UVWWYVHECNHDWLRSOKBNLPMZENAARDLS";
 
-                $vnpayData = [
-                    'vnp_TmnCode' => 'CONGTY001', // Mã website tại VNPAY
-                    'vnp_Amount' => 1000000 * 100, // số tiền từ request
-                    'vnp_CurrCode' => 'VND',
-                    'vnp_ReturnUrl' => 'http://localhost:4200/home', // URL trả về sau khi thanh toán
-                    'vnp_CreateDate' => now()->format('YmdHis'),
-                    'vnp_Bill_Mobile' => '0987654321', // Số điện thoại giả lập
-                    'vnp_Bill_Email' => 'nguyenvana@example.com', // Email giả lập
-                    'vnp_Bill_FirstName' => 'NGUYEN', // Tên giả lập
-                    'vnp_Bill_LastName' => 'VAN A', // Họ giả lập
-                    'vnp_Bill_Address' => '123 Street', // Địa chỉ giả lập
-                    'vnp_Bill_City' => 'Hanoi', // Thành phố giả lập
-                    'vnp_Bill_Country' => 'VN', // Quốc gia giả lập
-                    'vnp_Bill_State' => 'Hanoi', // Tỉnh thành giả lập
-                    'vnp_Inv_Phone' => '0987654321', // Số điện thoại hóa đơn giả lập
-                    'vnp_Inv_Email' => 'nguyenvana@example.com', // Email hóa đơn giả lập
-                    'vnp_Inv_Customer' => 'Nguyen Van A', // Khách hàng hóa đơn giả lập
-                    'vnp_Inv_Address' => '123 Street', // Địa chỉ hóa đơn giả lập
-                    'vnp_Inv_Company' => 'ABC Company', // Công ty hóa đơn giả lập
-                    'vnp_Inv_Taxcode' => '1234567890', // Mã số thuế hóa đơn giả lập
-                    'vnp_Inv_Type' => 'I' // Loại hóa đơn giả lập
-                ];
+                $vnp_TxnRef = uniqid();
+                $vnp_OrderInfo = "Payment success";
+                $vnp_OrderType = "PolyHub";
+                $vnp_Amount = 20000 * 100;
+                $vnp_Locale = "VN";
+                $vnp_BankCode = "NCB";
+                $vnp_IpAddr = $request->ip();
 
-                ksort($vnpayData);
-                $query = http_build_query($vnpayData);
-                $hashData = $query . '&' . 'vnp_SecureHashKey=' . $vnpaySecretKey;
-                $vnpayData['vnp_SecureHash'] = strtoupper(hash_hmac('sha512', $hashData, $vnpaySecretKey));
+                $vnp_CreateDate = date('YmdHis');
 
-                $vnpayUrl .= '?' . http_build_query($vnpayData);
+                $inputData = array(
+                    "vnp_Version" => "2.1.0",
+                    "vnp_TmnCode" => $vnp_TmnCode,
+                    "vnp_Amount" => $vnp_Amount,
+                    "vnp_Command" => "pay",
+                    "vnp_CreateDate" => $vnp_CreateDate,
+                    "vnp_CurrCode" => "VND",
+                    "vnp_IpAddr" => $vnp_IpAddr,
+                    "vnp_Locale" => $vnp_Locale,
+                    "vnp_OrderInfo" => $vnp_OrderInfo,
+                    "vnp_OrderType" => $vnp_OrderType,
+                    "vnp_ReturnUrl" => $vnp_Returnurl,
+                    "vnp_TxnRef" => $vnp_TxnRef,
+                );
 
-                return response()->json(['redirect_url' => $vnpayUrl]);
+                ksort($inputData);
+                $query = "";
+                $i = 0;
+                $hashdata = "";
+                foreach ($inputData as $key => $value) {
+                    if ($i == 1) {
+                        $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+                    } else {
+                        $hashdata .= urlencode($key) . "=" . urlencode($value);
+                        $i = 1;
+                    }
+                    $query .= urlencode($key) . "=" . urlencode($value) . '&';
+                }
+
+                $vnp_Url = $vnp_Url . "?" . $query;
+                if (isset($vnp_HashSecret)) {
+                    $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+                    $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+                }
+                return response()->json(['redirect_url' => $vnp_Url], 200);
             case 'momo':
                 // Giả lập thanh toán MoMo
                 $momoData = [
                     'partnerCode' => 'YOUR_PARTNER_CODE',
                     'accessKey' => 'YOUR_ACCESS_KEY',
                     'requestId' => time(),
-                    'amount' => 1000000, // Số tiền từ request
+                    'amount' => 1000000,
                     'orderId' => time(),
                     'orderInfo' => 'Payment for order',
                     'returnUrl' => 'http://localhost:4200/home',
                     'notifyUrl' => 'http://localhost:8000/api/momo/notify',
-                    'signature' => 'dummy_signature', // Signature giả lập
+                    'signature' => 'dummy_signature',
                 ];
 
-                // Giả lập URL thanh toán MoMo
                 $momoPayUrl = 'http://localhost:4200/momo-payment';
 
-                // Trả về URL giả lập
                 return response()->json(['redirect_url' => $momoPayUrl]);
             default:
                 return response()->json(['status' => 'error', 'message' => 'Unknown payment method'], 400);
