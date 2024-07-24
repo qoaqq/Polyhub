@@ -127,7 +127,9 @@ class ShowingReleaseController extends Controller
     public function getSeatsByShowtime($showtime_id)
     {
         // Lấy toàn bộ ghế theo showtime_id
-        $seats = SeatShowtimeStatus::where('showtime_id', $showtime_id)->get();
+        $seats = SeatShowtimeStatus::where('showtime_id', $showtime_id)
+                                ->with('seat') // Sử dụng with() để tải quan hệ
+                                ->get();
 
         return response()->json($seats);
     }

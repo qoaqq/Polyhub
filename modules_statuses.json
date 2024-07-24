@@ -23,5 +23,6 @@
     "Booking": true,
     "SeatShowtimeStatus": true,
     "BillFoodCombo": true,
-    "BillTicket": true
+    "BillTicket": true,
+    "PaymentMethod": true
 }

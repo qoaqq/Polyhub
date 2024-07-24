@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use Modules\Bill\Http\Controllers\API\ApiBillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,5 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/bill', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('bill', ApiBillController::class);
