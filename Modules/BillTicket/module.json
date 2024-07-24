@@ -1,0 +1,13 @@
+{
+    "name": "BillTicket",
+    "alias": "billticket",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BillTicket\\Providers\\BillTicketServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

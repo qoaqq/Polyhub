@@ -22,6 +22,8 @@
     "Attribute": true,
     "Booking": true,
     "SeatShowtimeStatus": true,
+    "BillFoodCombo": true,
+    "BillTicket": true,
     "Controller": true,
     "PaymentMethod": true
 }

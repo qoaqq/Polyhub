@@ -1,0 +1,13 @@
+{
+    "name": "BillFoodCombo",
+    "alias": "billfoodcombo",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BillFoodCombo\\Providers\\BillFoodComboServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
