@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Modules\Bill\Http\Controllers\BillController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +11,6 @@ use Modules\Bill\Http\Controllers\BillController;
 |
 */
 
-Route::prefix('admin')->group(function() {
-    Route::resource('bill', BillController::class);
+Route::prefix('api/apibillcontroller')->group(function() {
+    Route::get('/', 'API/ApiBillControllerController@index');
 });
