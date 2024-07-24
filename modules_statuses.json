@@ -21,5 +21,7 @@
     "Actor": true,
     "Attribute": true,
     "Booking": true,
-    "SeatShowtimeStatus": true
+    "SeatShowtimeStatus": true,
+    "BillFoodCombo": true,
+    "BillTicket": true
 }
