@@ -61,11 +61,12 @@ class ShowingReleaseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($movie_id)
+    public function show($showingReleaseId)
     {
-        $query = ShowingRelease::where('movie_id', $movie_id)->get();
+        $showingRelease = ShowingRelease::with(['room', 'room.cinema.city', 'movie']) // Tải các quan hệ 'room' và 'room.city'
+        ->find($showingReleaseId);
         return response()->json([
-            'data' => $query,
+            'data' => $showingRelease,
         ]);
     }
 
@@ -161,6 +162,13 @@ class ShowingReleaseController extends Controller
     {
        $SeatType = SeatType::all(); 
     return response()->json($SeatType);
+    }
+    public function getShowingbyMovie($movie_id)
+    {
+        $query = ShowingRelease::where('movie_id', $movie_id)->get();
+        return response()->json([
+            'data' => $query,
+        ]);
     }
 }
 
