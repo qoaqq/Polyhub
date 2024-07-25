@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('column');
             $table->string('row');
             $table->boolean('status')->default(false);
-            $table->string('type');
+            $table->unsignedBigInteger('seat_type_id');
             $table->unique(['row', 'column', 'room_id']);
             $table->unsignedBigInteger('room_id');
+            $table->foreign('seat_type_id')->references('id')->on('seat_types');
             $table->timestamps();
         });
     }

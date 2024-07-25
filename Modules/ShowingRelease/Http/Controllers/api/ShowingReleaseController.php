@@ -3,12 +3,12 @@
 namespace Modules\ShowingRelease\Http\Controllers\api;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\Seat\Entities\SeatType;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Modules\ShowingRelease\Http\Requests\UpdateShowingReleaseRequest;
 
@@ -128,7 +128,7 @@ class ShowingReleaseController extends Controller
     {
         // Lấy toàn bộ ghế theo showtime_id
         $seats = SeatShowtimeStatus::where('showtime_id', $showtime_id)
-                                ->with('seat') // Sử dụng with() để tải quan hệ
+                                ->with('seat' ,'seat.seatType') // Sử dụng with() để tải quan hệ
                                 ->get();
 
         return response()->json($seats);
@@ -155,6 +155,12 @@ class ShowingReleaseController extends Controller
         $seat->save();
 
         return response()->json(['message' => 'Seat status updated successfully']);
+    }
+
+    public function getSeatType()
+    {
+       $SeatType = SeatType::all(); 
+    return response()->json($SeatType);
     }
 }
 

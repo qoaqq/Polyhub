@@ -18,5 +18,6 @@ Route::prefix('admin')->group(function () {
     Route::controller(ShowingReleaseController::class)->group(function () {
         Route::get('showingrelease/{showtime_id}/seats', 'getSeatsByShowtime');
         Route::post('/showingrelease/{showtime_id}/{seat_id}/status', 'updateSeatStatus');
+        Route::get('/seattypes', 'getSeatType');
     });
 });

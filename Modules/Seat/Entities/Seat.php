@@ -18,14 +18,13 @@ class Seat extends Model
     public function room(){
         return $this->belongsTo(Room::class);
     }
-    
-    protected static function newFactory()
-    {
-        return \Modules\Seat\Database\factories\SeatFactory::new();
-    }
 
     public function seatShowtimeStatuses()
     {
         return $this->hasMany(SeatShowtimeStatus::class);
+    }
+    public function seatType()
+    {
+        return $this->belongsTo(SeatType::class, 'seat_type_id');
     }
 }

@@ -60,7 +60,7 @@ class RoomController extends Controller
                 $seats[] = [
                     'row' => $row,
                     'column' => $column,
-                    'type' => $type,
+                    'seat_type_id' => $type,
                     'status' => 0,
                     'room_id' => $room->id,
                  ];

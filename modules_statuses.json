@@ -25,5 +25,6 @@
     "BillFoodCombo": true,
     "BillTicket": true,
     "Controller": true,
-    "PaymentMethod": true
+    "PaymentMethod": true,
+    "SeatType": true
 }
