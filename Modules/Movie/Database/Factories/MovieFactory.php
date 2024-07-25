@@ -3,6 +3,7 @@
 namespace Modules\Movie\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Director\Entities\Director;
 use Modules\Movie\Entities\Movie;
 
 class MovieFactory extends Factory
@@ -21,12 +22,19 @@ class MovieFactory extends Factory
      */
     public function definition()
     {
+        $directorIds = Director::pluck('id')->toArray();
+        
+        if (empty($directorIds)) {
+            throw new \Exception('No directors found in the database. Please seed directors first.');
+        }
+
         return [
-            'name' => fake()->name(),
-            'description' => fake()->paragraph(),
-            'duration' =>fake()->numberBetween($min = 60, $max = 180),
-            'premiere_date' => fake()->date('Y-m-d'),
-            'director_id'=>rand(1,5)
+            'name' => $this->faker->sentence(6),
+            'description' => $this->faker->paragraph(),
+            'duration' => $this->faker->numberBetween(60, 180),
+            'premiere_date' => $this->faker->date(),
+            'photo' => $this->faker->imageUrl(),
+            'director_id' => $this->faker->randomElement($directorIds),
         ];
     }
 }
