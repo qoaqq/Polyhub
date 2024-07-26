@@ -13,18 +13,9 @@ class FoodComboController extends Controller
 {
     public function index(Request $request)
     {
-        $searchTerm = $request->input('search');
-        $sortField = $request->input('sort_field', 'id');
-        $sortDirection = $request->input('sort_direction', 'desc');
+        $foodCombos = FoodCombo::all();
 
-        $foodCombos = FoodCombo::search($searchTerm)->orderBy($sortField, $sortDirection)->paginate(8);
-
-        return response()->json([
-            'data' => $foodCombos,
-            'searchTerm' => $searchTerm,
-            'sortField' => $sortField,
-            'sortDirection' => $sortDirection,
-        ]);
+        return response()->json($foodCombos);
     }
 
     public function create()
