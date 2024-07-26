@@ -139,11 +139,11 @@ class MoviesController extends Controller
         // Truy vấn để lấy 7 phim có số lượng vé bán nhiều nhất trong tháng
         $topSellingMovies = Movie::select('movies.*', 
             DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
-            DB::raw('count(tickets.id) as total_quantity'))
-            ->join('tickets', 'movies.id', '=', 'tickets.movie_id')
+            DB::raw('count(ticket_seats.id) as total_quantity'))
+            ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
             ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
             ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
-            ->whereMonth('tickets.created_at', $currentMonth)
+            ->whereMonth('ticket_seats.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
             ->take(7)

@@ -15,8 +15,6 @@ class BlogDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
-        Blog::factory(5)->create();
+        Blog::factory(15)->create();
     }
 }

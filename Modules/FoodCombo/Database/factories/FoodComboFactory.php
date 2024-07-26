@@ -20,9 +20,9 @@ class FoodComboFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->lastName(),
             'description' => fake()->text(50),
-            'price' => round(fake()->numberBetween(10000, 500000), -3),
+            'price' => round(fake()->numberBetween(1, 5), -3),
         ];
     }
 }
