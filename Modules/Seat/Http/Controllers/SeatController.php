@@ -6,8 +6,10 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Seat\Entities\Seat;
+use Modules\Seat\Entities\SeatType;
 use Modules\Seat\Http\Requests\CreateSeatRequest;
 use Modules\Seat\Http\Requests\UpdateSeatRequest;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 
 class SeatController extends Controller
 {
@@ -64,7 +66,8 @@ class SeatController extends Controller
     public function show($id)
     {
         $seat = $this->model->with('room')->find($id);
-        return view('seat::detail', compact('seat'));
+        $seat_types = SeatType::all();
+        return view('seat::detail', compact('seat','seat_types'));
     }
 
     /**
@@ -74,6 +77,7 @@ class SeatController extends Controller
      */
     public function edit($id)
     {
+       
         return view('seat::edit');
     }
 
@@ -86,9 +90,14 @@ class SeatController extends Controller
     public function update(UpdateSeatRequest $request, $id)
     {
         $seat = $this->model->find($id);
-        $seat->type = $request->type;
+        $seat->seat_type_id = $request->seat_type;
         $seat->status = $request->status;
         $seat->save();
+        $seat_showings = SeatShowtimeStatus::where('seat_id',$seat->id)->get();
+        foreach($seat_showings as $seat_showing){
+            $seat_showing->status = $seat->status ? true : false;
+            $seat_showing->save();
+        }
         return redirect()->route('admin.room.detail', [$request->room_id]);
     }
 

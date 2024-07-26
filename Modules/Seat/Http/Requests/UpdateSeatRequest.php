@@ -15,7 +15,7 @@ class UpdateSeatRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required',
+            'seat_type' => 'required',
             'status' => 'required',
         ];
     }

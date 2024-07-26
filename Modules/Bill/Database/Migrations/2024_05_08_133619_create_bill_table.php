@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->integer('food_combo_quantity');
+            
             $table->foreignId('checkin_id')->constrained();
             $table->decimal('grand_total');
             $table->timestamps();

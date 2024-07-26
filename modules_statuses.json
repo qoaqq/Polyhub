@@ -16,15 +16,15 @@
     "FoodCombo": true,
     "Checkin": true,
     "Bill": true,
-    "BillDetail": true,
     "RankMember": true,
     "Actor": true,
     "Attribute": true,
     "Booking": true,
     "SeatShowtimeStatus": true,
     "BillFoodCombo": true,
-    "BillTicket": true,
     "Controller": true,
     "PaymentMethod": true,
-    "SeatType": true
+    "SeatType": true,
+    "TicketSeat": true,
+    "TicketFoodCombo": true
 }
