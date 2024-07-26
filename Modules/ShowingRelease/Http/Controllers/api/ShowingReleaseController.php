@@ -3,12 +3,12 @@
 namespace Modules\ShowingRelease\Http\Controllers\api;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\Seat\Entities\SeatType;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Modules\ShowingRelease\Http\Requests\UpdateShowingReleaseRequest;
 
@@ -61,11 +61,12 @@ class ShowingReleaseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($movie_id)
+    public function show($showingReleaseId)
     {
-        $query = ShowingRelease::where('movie_id', $movie_id)->get();
+        $showingRelease = ShowingRelease::with(['room', 'room.cinema.city', 'movie']) // Tải các quan hệ 'room' và 'room.city'
+        ->find($showingReleaseId);
         return response()->json([
-            'data' => $query,
+            'data' => $showingRelease,
         ]);
     }
 
@@ -128,7 +129,7 @@ class ShowingReleaseController extends Controller
     {
         // Lấy toàn bộ ghế theo showtime_id
         $seats = SeatShowtimeStatus::where('showtime_id', $showtime_id)
-                                ->with('seat') // Sử dụng with() để tải quan hệ
+                                ->with('seat' ,'seat.seatType') // Sử dụng with() để tải quan hệ
                                 ->get();
 
         return response()->json($seats);
@@ -155,6 +156,19 @@ class ShowingReleaseController extends Controller
         $seat->save();
 
         return response()->json(['message' => 'Seat status updated successfully']);
+    }
+
+    public function getSeatType()
+    {
+       $SeatType = SeatType::all(); 
+    return response()->json($SeatType);
+    }
+    public function getShowingbyMovie($movie_id)
+    {
+        $query = ShowingRelease::where('movie_id', $movie_id)->get();
+        return response()->json([
+            'data' => $query,
+        ]);
     }
 }
 

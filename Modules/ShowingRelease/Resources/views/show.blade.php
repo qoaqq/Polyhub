@@ -48,7 +48,7 @@
                     @foreach ($rows as $row)
                         <div class="col-1">
                             <div
-                                class="p-1 border {{ $row->seat->type == 1 ? 'border-success' : '' }} {{ $row->seat->type == 2 ? 'border-danger' : '' }} {{ $row->seat->type == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
+                                class="p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
                                 {{ $row->seat->column }}{{ $row->seat->row }}
                                 <span class="dropdown dropstart">
                                     <a href="#" class="text-muted" id="dropdownMenuButton"

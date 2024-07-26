@@ -67,7 +67,6 @@ class ShowingReleaseController extends Controller
             $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
             $showingRelease->save();
             $seats = Seat::where('room_id', $request->room_id)
-                        ->where('status', false)
                         ->get();
             foreach ($seats as $seat) {
                 SeatShowtimeStatus::create([

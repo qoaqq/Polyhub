@@ -27,8 +27,4 @@ class Room extends Model
         return $this->hasMany(Seat::class);
     }
     
-    protected static function newFactory()
-    {
-        return \Modules\Room\Database\factories\RoomFactory::new();
-    }
 }

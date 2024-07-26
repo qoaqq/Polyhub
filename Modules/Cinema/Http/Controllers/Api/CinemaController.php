@@ -26,7 +26,7 @@ class CinemaController extends Controller
 
     public function index()
     {
-        $cinemas = $this->model->with('city', 'cinemaType', 'rooms')->paginate(10);
+        $cinemas = $this->model->with('city', 'cinemaType', 'rooms')->get();
         $cinemaResource = CinemaResource::collection($cinemas)->response()->getData(true);
 
         return response()->json([
