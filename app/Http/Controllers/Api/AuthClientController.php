@@ -64,7 +64,12 @@ class AuthClientController extends Controller
         }
 
 
-        return response()->json(['message' => 'User signed in successfully', 'token' => $token]);
+        // Optionally, you can include more user information in the response
+    return response()->json([
+        'message' => 'User signed in successfully', 
+        'token' => $token,
+        'user' => $user // Optional: Include user details in the response
+    ]);
     }
 
 
