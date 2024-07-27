@@ -14,7 +14,6 @@ class MovieDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Sử dụng factory để tạo 10 bản ghi
-        Movie::factory(10)->create();
+        Movie::factory(35)->create();
     }
 }

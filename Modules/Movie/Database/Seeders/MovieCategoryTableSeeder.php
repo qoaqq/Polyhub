@@ -1,14 +1,14 @@
 <?php
 
-namespace Database\Seeders;
+namespace Modules\Movie\Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Modules\Category\Entities\Category;
 use Modules\Movie\Entities\Movie;
 
-class MovieCategorySeeder extends Seeder
+class MovieCategoryTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

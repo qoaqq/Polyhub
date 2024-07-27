@@ -4,7 +4,10 @@ namespace Modules\Attribute\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Modules\Attribute\Entities\Attribute;
+use Modules\Movie\Entities\Movie;
+
 class AttributeDatabaseSeeder extends Seeder
 {
     /**
@@ -14,9 +17,35 @@ class AttributeDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
+        $movies = Movie::all();
 
-        // $this->call("OthersTableSeeder");
-        Attribute::factory()->count(5)->create();
+        foreach ($movies as $movie) {
+            DB::table('attributes')->insert([
+                [
+                    'name' => 'Image',
+                    'movie_id' => $movie->id,
+                    'created_at' => now(), 
+                    'updated_at' => now()
+                ],
+                [
+                    'name' => 'Trailer',
+                    'movie_id' => $movie->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'name' => 'Rating',
+                    'movie_id' => $movie->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'name' => 'Languge',
+                    'movie_id' => $movie->id,
+                    'created_at' => now(), 
+                    'updated_at' => now()
+                ],
+            ]);
+        }
     }
 }

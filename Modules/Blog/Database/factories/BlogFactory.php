@@ -21,6 +21,7 @@ class BlogFactory extends Factory
     {
         return [
             'title' => fake()->sentence,
+            'short_desc' => fake()->paragraph(2), // Tạo một phrasing ng��u nhiên với 2 câu
             'content' => fake()->paragraph,
             'image' => fake()->imageUrl(), // Tạo một URL hình ảnh ngẫu nhiên
             'categories_id' => rand(1, 2),
