@@ -55,7 +55,7 @@ class UserController extends Controller
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $fileName = $avatar->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs('/public/user', $fileName);
+            $path = $request->file('avatar')->storeAs('/user', $fileName);
             $user->avatar =  $path;
         }
         $user->password = Hash::make($request->input('password'));
@@ -105,7 +105,7 @@ class UserController extends Controller
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $fileName = $avatar->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs('/public/user', $fileName);
+            $path = $request->file('avatar')->storeAs('/user', $fileName);
             $user->avatar =  $path;
         }
         $user->save();
