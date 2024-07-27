@@ -13,18 +13,20 @@ class FoodComboController extends Controller
 {
     public function index(Request $request)
     {
+        $title = "FoodCombo";
         $searchTerm = $request->input('search');
         $sortField = $request->input('sort_field', 'id'); 
         $sortDirection = $request->input('sort_direction', 'desc'); 
 
         $foodCombos = FoodCombo::search($searchTerm)->orderBy($sortField, $sortDirection)->paginate(8);
 
-        return view('foodcombo::index', compact('foodCombos','searchTerm','sortField','sortDirection'));
+        return view('foodcombo::index', compact('foodCombos','searchTerm','sortField','sortDirection','title'));
     }
 
     public function create()
     {
-        return view('foodcombo::create');
+        $title = "FoodCombo create";
+        return view('foodcombo::create', compact('title'));
     }
 
     public function store(CreateFoodComboRequest $request)
@@ -42,7 +44,8 @@ class FoodComboController extends Controller
     public function edit($id)
     {
         $foodCombo = FoodCombo::find($id);
-        return view('foodcombo::edit', compact('foodCombo'));
+        $title = "FoodCombo edit";
+        return view('foodcombo::edit', compact('foodCombo','title'));
     }
 
     public function update(UpdateFoodComboRequest $request, $id)

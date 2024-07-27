@@ -1,54 +1,71 @@
 @extends('Backend.layouts.app')
-
 @section('content')
-<div class="container">
-    <h1>Edit</h1>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <div class="card">
-        <div class="card-body">
-            <form action="{{ route('showingrelease.update', $show->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="form-group mb-3">
-                    <label for="movie_id">Movies</label>
-                    <select name="movie_id" id="movie_id" class="form-control select-movie mt-2">
-                        <option value="0">--Select movies--</option>
-                        @foreach($movie as $id => $name)
-                            <option value="{{ $id }}" {{ $show->movie_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="room_id">Room</label>
-                    <select name="room_id" id="room_id" class="form-control select-movie mt-2">
-                        <option value="0">--Select room--</option>
-                        @foreach($room as $id => $name)
-                            <option value="{{ $id }}" {{ $show->room_id == $id ? 'selected' : '' }}>{{ $name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="time_start">Date</label>
-                    <input type="date" name="date_release" id="date_release" class="form-control mt-2" value="{{ $show->date_release}}">
-                </div>
-            
-                <div class="form-group mb-3">
-                    <label for="time_start">Time</label>
-                    <input type="time" name="time_release" id="time_release" class="form-control mt-2" value="{{ \Carbon\Carbon::parse($show->time_release)->format('H:i') }}">
-                </div>
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary">Quay lại</a>
-            </form>
-        </div>
+<div class="card">
+    <div class="border-bottom title-part-padding">
+      <h4 class="card-title mb-0">{{$title}}</h4>
     </div>
-</div>
+    <div class="card-body">
+      <form class="needs-validation" action="{{ route('showingrelease.update', $show->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+         <!-- Hiển thị thông báo lỗi ở đầu form -->
+         @if ($errors->any())
+         <div class="alert alert-danger">
+             <ul>
+                 @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                 @endforeach
+             </ul>
+         </div>
+     @endif
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="movie_id">Movies</label>
+            <select name="movie_id" id="movie_id" class="form-control select-movie mt-2" required/>
+                <option value="0">--Select movies--</option>
+                @foreach($movie as $id => $name)
+                <option value="{{ $id }}" {{ $show->movie_id == $id ? 'selected' : '' }}>{{ $name }}</option>
+            @endforeach
+            </select>
+              @if ($errors->has('movie_id'))
+                <span class="error text-danger">{{ $errors->first('movie_id') }}</span>
+              @endif
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="room_id">Room</label>
+            <select name="room_id" id="room_id" class="form-control select-movie mt-2" required/>
+                <option value="0">--Select room--</option>
+                @foreach($room as $id => $name)
+                <option value="{{ $id }}" {{ $show->room_id == $id ? 'selected' : '' }}>{{ $name }}</option>
+            @endforeach
+            </select>
+              @if ($errors->has('room_id'))
+                <span class="error text-danger">{{ $errors->first('room_id') }}</span>
+              @endif
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="date_release">Date</label>
+            <input type="date" name="date_release" id="date_release" class="form-control" value="{{ $show->date_release}}" required/>
+            @if ($errors->has('date_release'))
+                <span class="error text-danger">{{ $errors->first('date_release') }}</span>
+            @endif
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="date_release">Time</label>
+            <input type="time" name="time_release" id="time_release" class="form-control"value="{{ \Carbon\Carbon::parse($show->time_release)->format('H:i') }}" required/>
+            {{-- @if ($errors->has('time_release'))
+                <span class="error text-danger">{{ $errors->first('time_release') }}</span>
+            @endif --}}
+          </div>
+        </div>
+        <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
+          Submit form
+        </button>
+        <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary  mt-3 rounded-pill px-4" >Back</a>
+      </form>
+    </div>
+  </div>
+ 
 @endsection
-

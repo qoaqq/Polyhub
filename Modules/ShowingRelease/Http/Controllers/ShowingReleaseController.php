@@ -23,20 +23,26 @@ class ShowingReleaseController extends Controller
      * @return Renderable
      */
     public function index(Request $request)
-    {
-        $movies = Movie::all();
-        $query = ShowingRelease::with(['movie' => function($query) {
-            // Nếu không cần điều kiện `deleted_at`, loại bỏ chúng
-            $query->withoutGlobalScope('notDeleted'); // Nếu có phạm vi toàn cục
-        }, 'room'])->search($request->get('search'));
-
-        if ($request->filled('movie_id')) {
-            $query->where('movie_id', $request->input('movie_id'));
-        }
-
-        $list = $query->latest('id')->paginate(8);
-        return view('showingrelease::index', compact('list', 'movies'));
+{
+    $title = "ShowingRelease";
+    $movies = Movie::all();
+    $sort = $request->get('sort');
+    $direction = $request->get('direction', 'desc');
+    $query = ShowingRelease::with(['movie' => function($query) {
+        // Nếu không cần điều kiện `deleted_at`, loại bỏ chúng
+        $query->withoutGlobalScope('notDeleted'); // Nếu có phạm vi toàn cục
+    }, 'room'])
+    ->search($request->get('search', ''))
+    ->sort($sort, $direction);
+    
+    if ($request->filled('movie_id')) {
+        $query->where('movie_id', $request->input('movie_id'));
     }
+
+    $list = $query->latest('id')->paginate(8);
+    return view('showingrelease::index', compact('title', 'list', 'movies'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -47,7 +53,8 @@ class ShowingReleaseController extends Controller
         $movie = Movie::pluck('name', 'id');
         $room = Room::pluck('name', 'id');
         $data = ShowingRelease::all();
-        return view('showingrelease::create', compact('data', 'room', 'movie'));
+        $title = "ShowingRelease create";
+        return view('showingrelease::create', compact('data', 'room', 'movie','title'));
     }
 
     /**
@@ -109,7 +116,8 @@ class ShowingReleaseController extends Controller
         $show = ShowingRelease::find($id);
         $movie = Movie::pluck('name', 'id');
         $room = Room::pluck('name', 'id');
-        return view('showingrelease::edit', compact('show', 'movie', 'room'));
+        $title = "ShowingRelease edit";
+        return view('showingrelease::edit', compact('show', 'movie', 'room','title'));
     }
 
     /**

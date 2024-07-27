@@ -34,7 +34,7 @@
                 <label for="time_release">Time</label>
                 <input type="text" id="time_release" class="form-control mt-2" value="{{ $showingRelease->time_release}}" readonly>
             </div>
-            <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary">Quay lại</a>
+            <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary">Back</a>
         </div>
     </div>
 </div>

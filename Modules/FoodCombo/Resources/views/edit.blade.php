@@ -1,39 +1,45 @@
 @extends('Backend.layouts.app')
-
 @section('content')
-<div class="container">
-    <!-- Error messages -->
-    <h1>Edit Food Combo</h1>
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <div class="card">
-        <div class="card-body">
-            <form action="{{ route('foodcombos.update', $foodCombo->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="form-group mb-3">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" id="name" class="form-control mt-2" value="{{ $foodCombo->name }}" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="description">Description</label>
-                    <textarea name="description" id="description" class="form-control mt-2">{{ $foodCombo->description }}</textarea>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="price">Price</label>
-                    <input type="number" name="price" id="price" class="form-control mt-2" value="{{ $foodCombo->price }}" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Update</button>
-                <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Back</a>
-            </form>
-        </div>
+<div class="card">
+    <div class="border-bottom title-part-padding">
+      <h4 class="card-title mb-0">{{$title}}</h4>
     </div>
-</div>
+    <div class="card-body">
+      <form class="needs-validation" action="{{ route('foodcombos.update', $foodCombo->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="validationCustom01">Name</label>
+            <input type="text" class="form-control" id="validationCustom01" name="name" id="name"
+            value="{{ $foodCombo->name }}"  required/>
+              @if ($errors->has('name'))
+                <span class="error text-danger">{{ $errors->first('name') }}</span>
+              @endif
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="validationCustom02">Price</label>
+            <input type="number" class="form-control" name="price" id="price"
+              value="{{ $foodCombo->price }}"  required/>
+              @if ($errors->has('price'))
+                <span class="error text-danger">{{ $errors->first('price') }}</span>
+              @endif
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label class="form-label" for="validationCustom03">Description</label>
+            <textarea name="description" id="description" class="form-control" value=""  required/>{{ $foodCombo->description }}</textarea>
+            @if ($errors->has('description'))
+            <span class="error text-danger">{{ $errors->first('description') }}</span>
+          @endif
+          </div>
+        </div>
+        <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
+          Submit form
+        </button>
+        <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary  mt-3 rounded-pill px-4">Back</a>
+      </form>
+    </div>
+  </div>
 @endsection
