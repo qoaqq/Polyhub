@@ -1,25 +1,23 @@
-@extends('Backend.layouts.app')
 
+
+
+@extends('Backend.layouts.app')
 @section('content')
-    
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
                 <div class="card-body">
                     <div class="d-md-flex justify-content-between mb-9">
                         <div class="mb-9 mb-md-0">
-                            <h5 class="card-title"> {{ $title }} </h5>
-                            <p class="card-subtitle mb-0"> {{ $title2 }} </p>
+                            <h5 class="card-title">{{ $title }}</h5>
                         </div>
                         <div class="d-flex align-items-center">
-                            <form class="position-relative me-3 w-100" onsubmit="true" method="post"
-                            action=" {{ route('attribute.search') }} ">
-                            @csrf
-                            <input type="text" name="text" class="form-control search-chat py-2 ps-5"
-                                id="text-srh" placeholder="Search">
-                            <i
-                                class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-                        </form>
+                            <form class="position-relative me-3 w-100" method="GET">
+                                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+                                    placeholder="Search" name='q'>
+                                <i
+                                    class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+                            </form>
                             <div class="dropdown">
                                 <a href="#" class="btn border shadow-none px-3" id="dropdownMenuButton"
                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -27,12 +25,12 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attribute.create') }}"><i
-                                                class="fs-4 ti ti-plus"></i>Add</a>
+                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                            href="{{ route('attribute.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attribute.bin') }}"><i
-                                            class="fs-4 ti ti-edit"></i>Bin</a>
+                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                            href="{{ route('attribute.bin') }}"><i class="fs-4 ti ti-edit"></i>Bin</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
@@ -43,12 +41,9 @@
                         </div>
                     </div>
                     <div class="table-responsive overflow-x-auto latest-reviews-table">
-                        <table class="table mb-0 align-middle text-nowrap">
+                        <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
                                 <tr>
-                                    <th class="ps-0">
-                                        #
-                                    </th>
                                     <th scope="col">ID
 
                                     </th>
@@ -64,12 +59,7 @@
                             <tbody>
                                 @forelse ($page as $item)
                                     <tr>
-                                        <td class="ps-0">
-                                            <div class="form-check mb-0 flex-shrink-0">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="flexCheckDefault1">
-                                            </div>
-                                        </td>
+                                      
                                         <td>
                                             <div class="d-flex align-items-center product text-truncate">
 
@@ -85,7 +75,6 @@
 
                                                     @forelse ($movie as $item2)
                                                         @if ($item->movie_id == $item2->id)
-                                                         
                                                             <h5 class="mb-1 fs-4"> {{ $item2->name }} </h5>
                                                         @endif
                                                     @empty
@@ -111,11 +100,13 @@
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="{{ route('attribute.show', $item->id) }}"><i class="fs-4 ti ti-plus"></i>Detail</a>
+                                                            href="{{ route('attribute.show', $item->id) }}"><i
+                                                                class="fs-4 ti ti-plus"></i>Detail</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="{{ route('attribute.edit', $item->id) }}"><i class="fs-4 ti ti-edit"></i>Edit</a>
+                                                            href="{{ route('attribute.edit', $item->id) }}"><i
+                                                                class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>
                                                     <li>
                                                         <form action="{{ route('attribute.delete', $item->id) }}"
@@ -140,13 +131,24 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mt-10">
-                        <div class="mt-3">
-                            {{ $page->links('vendor.pagination.bootstrap-5') }}
-                        </div>
+                    <div class="d-flex align-items-center justify-content-between mt-4">
+                        <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
+                        {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        function sortTable(column) {
+            const urlParams = new URLSearchParams(window.location.search);
+            let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
+
+            urlParams.set('sort', column);
+            urlParams.set('direction', direction);
+
+            window.location.href = window.location.pathname + '?' + urlParams.toString();
+        }
+    </script>
 @endsection
