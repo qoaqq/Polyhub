@@ -33,7 +33,7 @@ class MovieFactory extends Factory
             'description' => $this->faker->paragraph(),
             'duration' => $this->faker->numberBetween(60, 180),
             'premiere_date' => $this->faker->date(),
-            'photo' => $this->faker->imageUrl(),
+            'photo' => 'images/hinh-nen-dien-thoai-4k-6.jpg',
             'director_id' => $this->faker->randomElement($directorIds),
         ];
     }
