@@ -58,7 +58,7 @@
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.seat.detail', [$row->id]) }}"><i
+                                                href="{{ route('admin.seat.detail', [$row->seat_id]) }}"><i
                                                     class="fs-4 ti ti-edit"></i>update</a>
                                         </li>
                                     </ul>

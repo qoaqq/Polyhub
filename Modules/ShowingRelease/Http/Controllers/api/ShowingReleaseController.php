@@ -170,5 +170,18 @@ class ShowingReleaseController extends Controller
             'data' => $query,
         ]);
     }
+    public function getStatusSeat($id) {
+        // Tìm ghế theo ID
+        $seatStatus = SeatShowtimeStatus::where('id', $id)->first();
+    
+        // Kiểm tra nếu ghế tồn tại
+        if ($seatStatus) {
+            // Trả về trạng thái của ghế dưới dạng true/false
+            return response()->json(['status' => $seatStatus->status === 1]);
+        } else {
+            // Nếu không tìm thấy ghế, trả về lỗi 404
+            return response()->json(['error' => 'Seat not found'], 404);
+        }
+    }
 }
 

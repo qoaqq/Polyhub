@@ -60,9 +60,12 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label"> Value</label>
-                                        <input type="text" name="value" value=" {{ $value->value }} " readonly id="firstName"
-                                            class="form-control" placeholder="John doe" />
+                                        <input type="file" name="value" value=" {{ $attrV->value }} " id="firstName"
+                                            class="form-control" placeholder="John doe" disabled />
                                         <span class="text-danger">{{ $errors->first('name') }}</span>
+                                    </div>
+                                    <div>
+                                        <img src="{{ asset($attrV->value) }}" alt="">
                                     </div>
                                 </div>
                             </div>

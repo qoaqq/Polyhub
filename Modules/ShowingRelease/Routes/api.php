@@ -20,5 +20,6 @@ Route::prefix('admin')->group(function () {
         Route::post('/showingrelease/{showtime_id}/{seat_id}/status', 'updateSeatStatus');
         Route::get('/seattypes', 'getSeatType');
         Route::get('/showingrelease/{movie_id}/movie', 'getShowingbyMovie');
+        Route::get('/showingrelease/{id}/status', 'getStatusSeat');
     });
 });
