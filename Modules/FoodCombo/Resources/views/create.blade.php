@@ -34,6 +34,13 @@
           @endif
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+              <label for="formFile" class="form-label">Avatar</label>
+              <input type="file" class="form-control" id="avatar" accept="image/*" onchange="previewImage(event)" name="avatar">
+              <img id="avatar-preview" class="form-control" src="#" alt="Preview" style="display: none;"/>
+          </div>
+      </div>
         <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
           Submit form
         </button>

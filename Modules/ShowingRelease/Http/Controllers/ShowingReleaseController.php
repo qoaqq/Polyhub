@@ -103,7 +103,8 @@ class ShowingReleaseController extends Controller
         $groupedSeats = $showSeats->groupBy(function ($seatStatus) {
             return $seatStatus->seat->row;
         });
-        return view('showingrelease::show', compact('showingRelease', 'groupedSeats'));
+        $title = "ShowingRelease Show";
+        return view('showingrelease::show', compact('showingRelease', 'groupedSeats','title'));
     }
 
     /**

@@ -33,6 +33,7 @@
                             <thead class="text-dark fs-4">
                                 <tr>
                                     <th>Name</th>
+                                    <th>Avatar</th>
                                     <th>Description</th>
                                     <th>Price  
                                         <i class="ti ti-filter" style="cursor: pointer;" onclick="toggleSortingOptions()"></i>
@@ -53,6 +54,11 @@
                                                 <h6 class="fs-4 mb-0 text-truncate-2">{{ $foodCombo->name }}</h6>
                                             </div>
                     </div>
+                    </td>
+                    <td>
+                        @if (!empty($foodCombo->avatar))
+                        <img src="{{asset($foodCombo->avatar)}}" id="tablenew" alt=""  class="img-fluid flex-shrink-0" width="150px" height="150px">
+                        @endif
                     </td>
                     <td>
                         <div class="d-flex align-items-center text-truncate">
