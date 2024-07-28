@@ -136,7 +136,7 @@ class MoviesController extends Controller
     public function getTopMovies(){
         $currentMonth = Carbon::now()->month;
 
-        // Truy vấn để lấy 7 phim có số lượng vé bán nhiều nhất trong tháng
+        // Truy vấn để lấy 10 phim có số lượng vé bán nhiều nhất trong tháng
         $topSellingMovies = Movie::select('movies.*', 
             DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
             DB::raw('count(ticket_seats.id) as total_quantity'))
@@ -146,7 +146,7 @@ class MoviesController extends Controller
             ->whereMonth('ticket_seats.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
-            ->take(7)
+            ->take(10)
             ->get();
 
             return response()->json([
