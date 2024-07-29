@@ -73,4 +73,11 @@ class ShowingRelease extends Model
         }
         return $query;
     }
+    public function scopeSort($query, $sort, $direction)
+    {
+        if ($sort && in_array($direction, ['asc', 'desc'])) {
+            return $query->orderBy($sort, $direction);
+        }
+        return $query->orderBy('id', 'desc');
+    }
 }

@@ -13,29 +13,53 @@
         background-color: grey !important;
         border: 0 !important;
     }
+
+    .seat{
+        height: 32px;
+        width: 42px;
+        margin: 3px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .seat a{
+        line-height: 32px;
+        text-align: center; 
+        display: block;
+        width: 100%;
+        color: white !important;
+    }
+
+    .seat:hover {
+        background-color: rgb(204, 204, 204) !important;
+    }
 </style>
-<div class="container">
-    <h1>Detail Showing Release</h1>
-    <div class="card">
-        <div class="card-body">
-            <div class="form-group mb-3">
-                <label for="movie_id">Movies</label>
-                <input type="text" id="movie_id" class="form-control mt-2" value="{{ $showingRelease->movie->name }}" readonly>
-            </div>
-            <div class="form-group mb-3">
-                <label for="room_id">Room</label>
-                <input type="text" id="room_id" class="form-control mt-2" value="{{ $showingRelease->room->name }}" readonly>
-            </div>
-            <div class="form-group mb-3">
-                <label for="date_release">Date</label>
-                <input type="text" id="date_release" class="form-control mt-2" value="{{ $showingRelease->date_release}}" readonly>
-            </div>
-            <div class="form-group mb-3">
-                <label for="time_release">Time</label>
-                <input type="text" id="time_release" class="form-control mt-2" value="{{ $showingRelease->time_release}}" readonly>
-            </div>
-            <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary">Quay lại</a>
+<div class="card">
+    <div class="border-bottom title-part-padding">
+      <h4 class="card-title mb-0">{{$title}}</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="movie_id">Movies</label>
+            <input type="text" id="movie_id" class="form-control mt-2" value="{{ $showingRelease->movie->name }}" readonly/>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="room_id">Room</label>
+            <input type="text" id="room_id" class="form-control mt-2" value="{{ $showingRelease->room->name}}" readonly/>
+          </div>
         </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="date_release">Date</label>
+            <input type="date" id="date_release" class="form-control" value="{{ $showingRelease->date_release }}" readonly/>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="time_release">Time</label>
+            <input type="time" id="time_release" class="form-control" value="{{ \Carbon\Carbon::parse( $showingRelease->time_release)->format('H:i') }}" readonly/>
+          </div>
+        </div>
+        <a href="{{ route('showingrelease.index') }}" class="btn btn-secondary mt-3 rounded-pill px-4">Back</a>
     </div>
 </div>
 
@@ -47,19 +71,18 @@
                 @foreach ($groupedSeats as $rows)
                     @foreach ($rows as $row)
                         <div class="col-1">
-                            <div
-                                class="p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
-                                {{ $row->seat->column }}{{ $row->seat->row }}
+                            <div  class="seat p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
                                 <span class="dropdown dropstart">
                                     <a href="#" class="text-muted" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ti ti-dots-vertical fs-6"></i>
+                                        {{ $row->seat->column }}{{ $row->seat->row }}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.seat.detail', [$row->seat_id]) }}"><i
-                                                    class="fs-4 ti ti-edit"></i>update</a>
+                                                href="{{ route('admin.seat.detail', [$row->seat_id]) }}">
+                                                <i class="fs-4 ti ti-edit"></i>update
+                                            </a>
                                         </li>
                                     </ul>
                                 </span>
@@ -78,7 +101,7 @@
                     <div class="border bg-primary iconlist"></div> <span>Checked</span>
                 </div>
                 <div class="col-6">
-                    <div class="border border-success iconlist"></div> <span>Normal</span>
+                    <div class="border border-success iconlist"></div> <span>Standard</span>
                 </div>
                 <div class="col-6">
                     <div class="border bg-secondary iconlist"></div>   <span>Placed</span>
@@ -90,7 +113,7 @@
                     <div class="border bg-dark iconlist"></div> <span>Cannot select</span>
                 </div>
                 <div class="col-6">
-                    <div class="border bg-danger iconlist"></div> <span>Sweetbox</span>
+                    <div class="border bg-danger iconlist"></div> <span>Couple</span>
                 </div>
             </div>
         </div>

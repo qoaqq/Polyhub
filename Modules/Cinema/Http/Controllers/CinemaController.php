@@ -24,7 +24,7 @@ class CinemaController extends Controller
      */
     public function index()
     {
-        $cinemas = $this->model->with('city')->paginate(10);
+        $cinemas = $this->model->with('city')->orderBy('id', 'DESC')->paginate(10);
         return view('cinema::index', compact('cinemas'));
     }
 

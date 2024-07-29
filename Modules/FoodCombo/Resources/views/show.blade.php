@@ -1,25 +1,37 @@
 @extends('Backend.layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Detail Food Combo</h1>
-    <div class="card">
-        <div class="card-body">
-            <div class="form-group mb-3">
-                <label for="name">Name</label>
-                <input type="text" id="name" class="form-control mt-2" value="{{ $foodCombo->name }}" readonly>
+<div class="card">
+    <div class="border-bottom title-part-padding">
+        <h4 class="card-title mb-0">Food Combo Details</h4>
+    </div>
+    <div class="card-body">
+        <form class="needs-validation">
+            @csrf
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ $foodCombo->name }}" disabled />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="price">Price</label>
+                    <input type="number" class="form-control" id="price" name="price" value="{{ $foodCombo->price }}" disabled />
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label for="description">Description</label>
-                <textarea id="description" class="form-control mt-2" readonly>{{ $foodCombo->description }}</textarea>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" disabled>{{ $foodCombo->description }}</textarea>
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label for="price">Price</label>
-                <input type="number" id="price" class="form-control mt-2" value="{{ $foodCombo->price }}" readonly>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="avatar" class="form-label">Avatar</label>
+                    <img src="{{ asset($foodCombo->avatar) }}" alt="{{ $foodCombo->name }}" class="img-fluid" id="avatar-preview">
+                </div>
             </div>
-            <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary">Back</a>
-        </div>
+            <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary mt-3 rounded-pill px-4">Back</a>
+        </form>
     </div>
 </div>
 @endsection
-
