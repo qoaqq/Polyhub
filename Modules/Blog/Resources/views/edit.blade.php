@@ -1,64 +1,60 @@
 @extends('Backend.layouts.app')
-
 @section('content')
-<h1 class="mt-4 ml-4">{{$title}}</h1>
 <div class="card">
+    <div class="border-bottom title-part-padding">
+        <h4 class="card-title mb-0">{{ $title }}</h4>
+    </div>
     <div class="card-body">
-        <form action="/admin/blog/{{$blog->id}}" enctype="multipart/form-data" method="POST">
+        <form class="needs-validation" action="/admin/blog/{{ $blog->id }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="title" placeholder="Enter Title here" value="{{$blog->title}}" />
-                        <label for="">Title</label>
-                        @error('title')
-                        <div class="text text-danger">{{ $message }}</div>
-                        @enderror  
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter Title here" value="{{ $blog->title }}" required>
+                    @error('title')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror  
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="short_desc" placeholder="Enter Title here" value="{{$blog->short_desc}}" />
-                        <label for="">Short Description</label>
-                        @error('short_desc')
-                        <div class="text text-danger">{{ $message }}</div>
-                        @enderror  
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="short_desc">Short Description</label>
+                    <input type="text" class="form-control" id="short_desc" name="short_desc" placeholder="Enter Short Description here" value="{{ $blog->short_desc }}" required>
+                    @error('short_desc')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror 
                 </div>
-                <div class="col-md-12">
-                    <div class="form-floating mb-3">
-                        <textarea name="content" id="mytextarea">{{$blog->content}}</textarea>
-                        @error('content')
-                        <div class="text text-danger">{{ $message }}</div>
-                        @enderror 
-                    </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label" for="mytextarea">Content</label>
+                    <textarea name="content" id="mytextarea">{{ $blog->content }}</textarea>
+                    @error('content')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror 
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <label for="formFile" class="form-label"></label>
-                        <input class="form-control" type="file" id="formFile" name="image" />
-                        @error('image')
-                        <div class="text text-danger">{{ $message }}</div>
-                        @enderror 
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="formFile">Choose Image</label>
+                    <input class="form-control" type="file" id="formFile" name="image">
+                    @error('image')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror 
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating mb-3">
-                        <select type="text" id="categories_id" class="form-select" name='categories_id'>
-                            @foreach($category as $id=>$name)
-                            <option 
-                            @if ($blog->categories_id == $id) selected @endif 
-                            value="{{$id}}">{{$name}}</option>
-                            @endforeach 
-                        </select> 
-                        <label for="tb-cpwd">Category</label>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="categories_id">Category</label>
+                    <select class="form-select" id="categories_id" name='categories_id'>
+                        @foreach ($categories as $item)
+                            @if (!$item->category_id)
+                                <option value="{{ $item->id }}" @if ($blog->categories_id == $item->id) selected @endif>{{ $item->name }}</option>
+                                @include('blog::partials.children_categories', ['categories' => $categories, 'parent_id' => $item->id, 'char' => '|---', 'selectedCategory' => $blog->categories_id])
+                            @endif
+                        @endforeach 
+                    </select>  
+                    @error('categories_id')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror 
                 </div>
                 <div class="col-12">
                     <div class="d-md-flex align-items-center">
                         <div class="ms-auto mt-3 mt-md-0">
-                            <button type="submit" class="btn btn-primary  rounded-pill px-4">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 <div class="d-flex align-items-center">
                                     <i class="ti ti-send me-2 fs-4"></i>
                                     Submit
@@ -68,17 +64,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </form>      
     </div>
 </div>
-
-<script>
-    tinymce.init({
-        selector: '#mytextarea',
-        apiKey: 'ucbbhja701oxqnbdgr0j3pabzgks4lk6simsn0047qsyv61m',
-        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker code',
-        toolbar: 'undo redo | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image media | code',
-        height: 400 // Chiều cao của editor
-    });
-</script>
 @endsection
