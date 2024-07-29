@@ -57,7 +57,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label"> Value</label>
-                                        <input type="text" name="value" id="firstName" class="form-control"
+                                        <input type="file" name="value" id="firstName" class="form-control"
                                             placeholder="John doe" />
                                         <span class="text-danger">{{ $errors->first('name') }}</span>
                                     </div>

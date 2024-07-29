@@ -16,7 +16,7 @@
                 <div class="mb-4 pb-2 align-items-center">
                     <h5 class="mb-0"> {{ $title2 }} </h5>
                 </div>
-                <form action="{{ route('actor.update', $listactor->id) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('actor.update', $actor->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('put')
                     <div>
@@ -26,7 +26,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label"> Name</label>
-                                        <input type="text" name="name" value="{{ $listactor->name }}" id="firstName"
+                                        <input type="text" name="name" value="{{ $actor->name }}" id="firstName"
                                             class="form-control" placeholder="John doe" />
                                         <span class="text-danger">{{ $errors->first('name') }}</span>
                                     </div>
@@ -36,15 +36,15 @@
                                     <div class="mb-3 has-success">
                                         <label class="form-label">Gender</label>
                                         <select class="form-select" name="gender">
-                                            @if ($listactor->gender == 'Male')
+                                            @if ($actor->gender == 'Male')
                                                 <option value="0">Select gender</option>
-                                                <option value="{{ $listactor->gender }}" selected>{{ $listactor->gender }}
+                                                <option value="{{ $actor->gender }}" selected>{{ $actor->gender }}
                                                 </option>
 
                                                 <option value="Female">Female</option>
                                             @else
                                                 <option value="0">Select gender</option>
-                                                <option value="{{ $listactor->gender }}" selected>{{ $listactor->gender }}
+                                                <option value="{{ $actor->gender }}" selected>{{ $actor->gender }}
                                                 </option>
 
                                                 <option value="Male">Male</option>
@@ -65,27 +65,32 @@
 
                                     </div>
                                     <div>
-                                        <img src="{{ asset('/storage/actors/'. $listactor->avatar) }}" width="100px" alt="">
+                                        <img src="{{ asset( $actor->avatar) }}" width="100px" alt="">
                                     </div>
                                     <span class="text-danger">{{ $errors->first('avatar') }}</span>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="mb-3 has-success">
-                                        <label class="form-label">Movie</label>
-                                        <select class="form-select" name="movie_id">
-                                            <option value="">Select a Movie</option>
-                                            @forelse ($movie as $item)
-                                                {{-- <option value=" {{ $item->id }} "> {{ $item->name }} </option> --}}
-                                               @if ($listactor->movie_id == $item->id)
-                                                   <option value="{{ $item->id }}" selected> {{ $item->name }} </option>
-                                               @else
-                                               <option value="{{ $item->id }}" selected> {{ $item->name }} </option>
-                                               @endif
-                                            @empty
-                                            @endforelse
+                                        
+                                        <select class="form-select" name="movies[]" multiple>
+                                        
+                                            @foreach ($movies as $movie)
+                                            @if (!$movie->movie_id)
+                                            <option value="{{ $movie->id }}" 
+                                              @if (in_array($movie->id, $actor->movies->pluck('id')->toArray())) selected @endif>
+                                              {{ $movie->name }}
+                                            </option>
+                                                @include('actor::partials.children_movies', ['movies' => $movies, 'parent_id' => $movie->id, 'char' => '|---', 
+                                                'selectedMovies' => $actor->movies->pluck('id')->toArray()])
+                                            @endif
+                                        @endforeach
                                         </select>
-                                        <span class="text-danger">{{ $errors->first('movie_id') }}</span>
+                                        {{-- <span class="text-danger">{{ $errors->first('movie_id') }}</span> --}}
+                                        <label for="movies">Movies</label>
+                                        @error('movies')
+                                            <div class="text text-danger">{{ $message }}</div>
+                                        @enderror
 
                                     </div>
                                 </div>

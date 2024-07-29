@@ -4,7 +4,9 @@
     <div class="mx-2">
         <div class="card shadow-none position-relative overflow-hidden mb-4">
             <div class="card-body d-flex align-items-center justify-content-between p-4">
-               <a href="{{ route('actor.list') }}"> <h4 class="fw-semibold mb-0"> {{ $title }} </h4></a>
+                <a href="{{ route('actor.list') }}">
+                    <h4 class="fw-semibold mb-0"> {{ $title }} </h4>
+                </a>
 
             </div>
         </div>
@@ -57,7 +59,7 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="mb-3 has-success">
-                                        <label class="form-label">Movie</label>
+                                        {{-- <label class="form-label">Movie</label>
                                         <select class="form-select" name="movie_id">
                                             <option value="">Select a Movie</option>
                                             @forelse ($movie as $item)
@@ -65,7 +67,24 @@
                                             @empty
                                             @endforelse
                                         </select>
-                                        <span class="text-danger">{{ $errors->first('movie_id') }}</span>
+                                        <span class="text-danger">{{ $errors->first('movie_id') }}</span> --}}
+                                        <select class="form-select" name="movies[]" multiple>
+                                            @foreach ($movies as $movie)
+                                                @if (!$movie->movie_id)
+                                                    <option value="{{ $movie->id }}">{{ $movie->name }}</option>
+                                                    @include('actor::partials.children_movies', [
+                                                        'movies' => $movies,
+                                                        'parent_id' => $movie->id,
+                                                        'char' => '|---',
+                                                        'selectedMovies' => [],
+                                                    ])
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        <label for="movies">Movies</label>
+                                        @error('movies')
+                                            <div class="text text-danger">{{ $message }}</div>
+                                        @enderror
 
                                     </div>
                                 </div>
@@ -80,11 +99,11 @@
                                 <button type="submit" class="btn btn-success rounded-pill px-4">
                                     Save
                                 </button>
-                               <a href=" {{ route('actor.list') }} ">
-                                <button type="button" class="btn bg-danger-subtle text-danger rounded-pill px-4 ms-6">
-                                    Cancel
-                                </button>
-                               </a>
+                                <a href=" {{ route('actor.list') }} ">
+                                    <button type="button" class="btn bg-danger-subtle text-danger rounded-pill px-4 ms-6">
+                                        Cancel
+                                    </button>
+                                </a>
                             </div>
                         </div>
                     </div>

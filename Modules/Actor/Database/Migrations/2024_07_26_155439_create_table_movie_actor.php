@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateActor extends Migration
+class CreateTableMovieActor extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class UpdateActor extends Migration
      */
     public function up()
     {
-        Schema::table('actors', function (Blueprint $table) {
-            $table->softDeletes();
+        Schema::create('actor_movie', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('movie_id')->constrained();
+            $table->foreignId('actor_id')->constrained();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class UpdateActor extends Migration
      */
     public function down()
     {
-        Schema::table('actors', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
+        Schema::dropIfExists('actor_movie');
     }
 }
