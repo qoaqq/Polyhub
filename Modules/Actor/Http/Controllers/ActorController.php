@@ -5,6 +5,7 @@ namespace Modules\Actor\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Modules\Actor\Entities\Actor;
 use Modules\Movie\Entities\Movie;
 class ActorController extends Controller
@@ -32,8 +33,8 @@ class ActorController extends Controller
     {
         $title = ' Actor';
         $title2 = 'Add New Actor';
-        $movie = Movie::all();
-        return view('actor::create', compact('title','title2','movie'));
+        $movies = Movie::all();
+        return view('actor::create', compact('title','title2','movies'));
         // return view('actor::create');
     }
 
@@ -49,29 +50,28 @@ class ActorController extends Controller
             'name' => 'required',
             'gender' => 'required',
             'avatar' => 'required',
-            'movie_id' => 'required'            
+            'movies' => 'required'            
         ]);
         if($request->hasFile('avatar')){
             $request->validate([
                 'avatar' => 'mimes:jpg,png,jpeg,gif'
             ]);
-            $avatar = $request->file('avatar');
-            $fileName = $avatar->getClientOriginalName();
-            $path = $avatar->storeAs('public/actors',$fileName); 
+          
 
-            $input = [
-                'name' => $request->name,
-                'gender' => $request->gender,
-                'avatar' => $fileName,
-                'movie_id' => $request->movie_id,
-                'created_at' => now(),
-                'updated_at' => null
-            ];
+            $actorData = $request->except(['avatar','movies']);
+            $pathFile = Storage::putFile('actors', $request->file('avatar'));
+            $actorData['avatar'] = 'storage/' . $pathFile;
+            $actor = Actor::query()->create($actorData);
+            $actor->movies()->attach($request->input('movies'));
 
-            Actor::create($input);
+            return redirect('/admin/actor')->with('success', 'Add Actor Successfully!');
+
+
+         
+        
            
         }
-        return redirect(route('actor.list'));
+       
     }
 
     /**
@@ -81,11 +81,11 @@ class ActorController extends Controller
      */
     public function show($id)
     {
-        $listactor = Actor::find($id);
+        $actor = Actor::with('movies')->find($id);
         $title = ' Actor';
         $title2 = 'Detail Actor';
-        $movie = Movie::all();
-        return view('actor::show', compact('listactor','title','title2','movie'));
+        $movies = Movie::all();
+        return view('actor::show', compact('actor','title','title2','movies'));
         // return view('actor::show');
     }
 
@@ -97,11 +97,11 @@ class ActorController extends Controller
     public function edit($id)
     {
         // return view('actor::edit');
-        $listactor = Actor::find($id);
+        $actor = Actor::find($id);
         $title = ' Actor';
         $title2 = 'Update Actor';
-        $movie = Movie::all();
-        return view('actor::edit', compact('listactor','title','title2','movie'));
+        $movies = Movie::all();
+        return view('actor::edit', compact('actor','title','title2','movies'));
     }
 
     /**
@@ -113,42 +113,34 @@ class ActorController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $actor = Actor::find($id);
+        $actorId = Actor::find($id);
         $request->validate([
             'name' => 'required',
             'gender' => 'required',
-            'movie_id' => 'required'            
+            'movies' => 'required'            
         ]);
+        
+       
+        $actor = $request->except(['avatar','movies']);
+
         if($request->hasFile('avatar')){
-            $request->validate([
-                'avatar' => 'mimes:jpg,png,jpeg,gif'
-            ]);
-            $avatar = $request->file('avatar');
-            $fileName = $avatar->getClientOriginalName();
-            $path = $avatar->storeAs('public/actors',$fileName); 
-
-            $input = [
-                'name' => $request->name,
-                'gender' => $request->gender,
-                'avatar' => $fileName,
-                'movie_id' => $request->movie_id,
-                'updated_at' => now()
-            ];
-
-            $actor->update($input);
-           
+            $pathFile = Storage::putFile('actors',$request->file('avatar'));
+            $actor['avatar'] = 'storage/' . $pathFile;
         }
-        else{
-            $input = [
-                'name' => $request->name,
-                'gender' => $request->gender,
-                'avatar' => $request->avatar,
-                'movie_id' => $request->movie_id,
-                'updated_at' => now()
-            ];
-            $actor->update($input);
-        }
-        return redirect(route('actor.list'));
+
+        $currentImage = $actorId->image;
+
+        
+        $actorId->update($actor);
+        
+        if($request->hasFile('avatar')
+        && $currentImage
+        && file_exists(public_path($currentImage)) 
+        ) {
+            unlink(public_path($currentImage));
+        } 
+        $actorId->movies()->sync($request->movies);
+        return redirect('/admin/actor')->with('success', 'Actor Updated successfully!');
     }
 
     /**

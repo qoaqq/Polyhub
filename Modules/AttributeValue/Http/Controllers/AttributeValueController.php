@@ -5,6 +5,7 @@ namespace Modules\AttributeValue\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Modules\AttributeValue\Entities\AttributeValue;
 use Modules\Attribute\Entities\Attribute;
 use Modules\Movie\Entities\Movie;
@@ -60,10 +61,28 @@ class AttributeValueController extends Controller
             'value' => $request->value,
         ];
 
-        AttributeValue::create($input);
+        // AttributeValue::create($input);
 
 
-        return redirect(route('attributevalue.list'));
+        // return redirect(route('attributevalue.list'));
+        if($request->hasFile('value')){
+            $request->validate([
+                'value' => 'mimes:jpg,png,jpeg,gif,mp4'
+            ]);
+          
+
+            $valueData = $request->except('value');
+            $pathFile = Storage::putFile('attributevalue', $request->file('value'));
+            $valueData['value'] = 'storage/' . $pathFile;
+            AttributeValue::query()->create($valueData);
+
+            return redirect('/admin/attributevalue')->with('success', 'Add Attribute Successfully!');
+
+
+         
+        
+           
+        }
     }
 
     /**
@@ -114,17 +133,35 @@ class AttributeValueController extends Controller
             'attribute_id' => 'required',
             'value' => 'required'
         ]);
+        $valueData = $request->except('value');
+
+        if($request->hasFile('value')){
+            $pathFile = Storage::putFile('attributevalue',$request->file('value'));
+            $valueData['value'] = 'storage/' . $pathFile;
+        }
+
+        $currentImage = $attrV->image;
+
+        
+        $attrV->update($valueData);
+        
+        if($request->hasFile('value')
+        && $currentImage
+        && file_exists(public_path($currentImage)) 
+        ) {
+            unlink(public_path($currentImage));
+        } 
+        return redirect('/admin/attributevalue')->with('success', 'Actor Updated successfully!');
+
+        // $input = [
+        //     'attribute_id' => $request->attribute_id,
+        //     'value' => $request->value,
+        // ];
+
+        // $attrV->update($input);
 
 
-        $input = [
-            'attribute_id' => $request->attribute_id,
-            'value' => $request->value,
-        ];
-
-        $attrV->update($input);
-
-
-        return redirect(route('attributevalue.list'));
+        // return redirect(route('attributevalue.list'));
     }
 
     /**

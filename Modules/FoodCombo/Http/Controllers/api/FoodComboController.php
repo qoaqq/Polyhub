@@ -5,6 +5,7 @@ namespace Modules\FoodCombo\Http\Controllers\api;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 use Modules\FoodCombo\Entities\FoodCombo;
 use Modules\FoodCombo\Http\Requests\CreateFoodComboRequest;
 use Modules\FoodCombo\Http\Requests\UpdateFoodComboRequest;
@@ -14,7 +15,6 @@ class FoodComboController extends Controller
     public function index(Request $request)
     {
         $foodCombos = FoodCombo::all();
-
         return response()->json($foodCombos);
     }
 
@@ -24,9 +24,16 @@ class FoodComboController extends Controller
         return response()->json(['message' => 'Method not allowed'], 405);
     }
 
-    public function store(Request $request)
+    public function store(CreateFoodComboRequest $request)
     {
-        $foodCombo = FoodCombo::create($request->all());
+        $foodComboData = $request->except(['avatar']);
+        
+        if ($request->hasFile('avatar')) {
+            $pathFile = Storage::putFile('foodcombos', $request->file('avatar'));
+            $foodComboData['avatar'] = 'storage/' . $pathFile;
+        }
+
+        $foodCombo = FoodCombo::create($foodComboData);
         return response()->json(['data' => $foodCombo, 'message' => 'Thêm thành công'], 201);
     }
 
@@ -51,7 +58,15 @@ class FoodComboController extends Controller
         if (!$foodCombo) {
             return response()->json(['message' => 'Not Found'], 404);
         }
-        $foodCombo->update($request->all());
+
+        $foodComboData = $request->except(['avatar']);
+        
+        if ($request->hasFile('avatar')) {
+            $pathFile = Storage::putFile('foodcombos', $request->file('avatar'));
+            $foodComboData['avatar'] = 'storage/' . $pathFile;
+        }
+
+        $foodCombo->update($foodComboData);
         return response()->json(['data' => $foodCombo, 'message' => 'Cập nhật thành công']);
     }
 
@@ -61,6 +76,7 @@ class FoodComboController extends Controller
         if (!$foodCombo) {
             return response()->json(['message' => 'Not Found'], 404);
         }
+
         $foodCombo->delete();
         return response()->json(['message' => 'Xóa thành công!']);
     }
