@@ -56,15 +56,7 @@ class AttributeValueController extends Controller
         ]);
 
 
-        $input = [
-            'attribute_id' => $request->attribute_id,
-            'value' => $request->value,
-        ];
-
-        // AttributeValue::create($input);
-
-
-        // return redirect(route('attributevalue.list'));
+       
         if($request->hasFile('value')){
             $request->validate([
                 'value' => 'mimes:jpg,png,jpeg,gif,mp4'
@@ -77,10 +69,6 @@ class AttributeValueController extends Controller
             AttributeValue::query()->create($valueData);
 
             return redirect('/admin/attributevalue')->with('success', 'Add Attribute Successfully!');
-
-
-         
-        
            
         }
     }
@@ -153,15 +141,7 @@ class AttributeValueController extends Controller
         } 
         return redirect('/admin/attributevalue')->with('success', 'Actor Updated successfully!');
 
-        // $input = [
-        //     'attribute_id' => $request->attribute_id,
-        //     'value' => $request->value,
-        // ];
-
-        // $attrV->update($input);
-
-
-        // return redirect(route('attributevalue.list'));
+      
     }
 
     /**
