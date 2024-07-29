@@ -25,7 +25,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = $this->model->with('cinema')->paginate(10);
+        $rooms = $this->model->with('cinema')->orderBy('id', 'DESC')->paginate(10);
         return view('room::index', compact('rooms'));
     }
 
