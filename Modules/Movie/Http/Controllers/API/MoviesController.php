@@ -186,17 +186,17 @@ public function image()
     public function upcoming()
     {
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
-    $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
+        $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
 
-    $movies = Movie::with('director', 'attributes', 'categories')
-                ->where('premiere_date', '>', $currentDate)
-                ->where('premiere_date', '<=', $currentDatePlus10Days)
-                ->paginate(8);
+        $movies = Movie::with('director', 'attributes', 'categories')
+                    ->where('premiere_date', '>', $currentDate)
+                    ->where('premiere_date', '<=', $currentDatePlus10Days)
+                    ->paginate(8);
 
-    return response()->json([
-        'status'=> true,
-        'message'=>'Lấy danh sách thành công',
-        'data' => $movies,
-    ], 200);
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movies,
+        ], 200);
     }
 }

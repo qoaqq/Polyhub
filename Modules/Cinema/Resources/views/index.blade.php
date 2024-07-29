@@ -78,5 +78,8 @@
                 </div>
             </div>
         </div>
+        <div class="mt-3">
+            {{ $cinemas->links('vendor.pagination.bootstrap-5') }}
+        </div>
     </div>
 @endsection

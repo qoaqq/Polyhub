@@ -13,6 +13,26 @@
         background-color: grey !important;
         border: 0 !important;
     }
+
+    .seat{
+        height: 32px;
+        width: 42px;
+        margin: 3px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .seat a{
+        line-height: 32px;
+        text-align: center; 
+        display: block;
+        width: 100%;
+        color: white !important;
+    }
+
+    .seat:hover {
+        background-color: rgb(204, 204, 204) !important;
+    }
 </style>
 <div class="card">
     <div class="border-bottom title-part-padding">
@@ -51,19 +71,18 @@
                 @foreach ($groupedSeats as $rows)
                     @foreach ($rows as $row)
                         <div class="col-1">
-                            <div
-                                class="p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
-                                {{ $row->seat->column }}{{ $row->seat->row }}
+                            <div  class="seat p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
                                 <span class="dropdown dropstart">
                                     <a href="#" class="text-muted" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ti ti-dots-vertical fs-6"></i>
+                                        {{ $row->seat->column }}{{ $row->seat->row }}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>
                                             <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.seat.detail', [$row->seat_id]) }}"><i
-                                                    class="fs-4 ti ti-edit"></i>update</a>
+                                                href="{{ route('admin.seat.detail', [$row->seat_id]) }}">
+                                                <i class="fs-4 ti ti-edit"></i>update
+                                            </a>
                                         </li>
                                     </ul>
                                 </span>
