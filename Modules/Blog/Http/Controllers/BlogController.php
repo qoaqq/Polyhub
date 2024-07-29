@@ -97,8 +97,8 @@ class BlogController extends Controller
     {
         $blog = Blog::find($id);
         $title = "Edit Blog";
-        $category = Category::query()->pluck('name','id')->all();
-        return view('blog::edit',compact('title','blog','category'));
+        $categories = Category::all();
+        return view('blog::edit',compact('title','blog','categories'));
     }
 
     /**
@@ -156,5 +156,21 @@ class BlogController extends Controller
         $blog = Blog::find($id);
         $blog -> delete();
         return redirect('/admin/blog')->with('success', 'Deleted Blog Successfully!');
+    }
+
+    public function uploadImage(Request $request)
+    {
+        // Validate file type
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+    
+        $originalName = $request->file('file')->getClientOriginalName();
+
+    // Lưu tệp với tên gốc vào thư mục uploadcontent trong public storage
+    $pathFile = $request->file('file')->storeAs('uploadcontent', $originalName);
+
+    // Trả về đường dẫn của ảnh để TinyMCE hiển thị
+    return response()->json(['location' => Storage::url($pathFile)]);
     }
 }
