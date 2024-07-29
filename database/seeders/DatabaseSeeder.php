@@ -1,7 +1,8 @@
 <?php
 
 namespace Database\Seeders;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Modules\Attribute\Database\Seeders\AttributeDatabaseSeeder;
@@ -30,7 +31,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(11)->create();
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'user_type' => 'admin',
+            'remember_token' => Str::random(10),
+        ]);
+         // Tạo một tài khoản client
+         User::create([
+            'name' => 'Client',
+            'email' => 'client@gmail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'user_type' => 'client',
+            'remember_token' => Str::random(10),
+        ]);
+        User::factory()->count(10)->create();
         $this->call([
             CityDatabaseSeeder::class,
             CinemaDatabaseSeeder::class,

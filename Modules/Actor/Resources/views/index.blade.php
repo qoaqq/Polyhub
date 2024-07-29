@@ -1,6 +1,5 @@
 
-
- @extends('Backend.layouts.app')
+@extends('Backend.layouts.app')
  @section('content')
      <div class="row">
          <div class="col-12">

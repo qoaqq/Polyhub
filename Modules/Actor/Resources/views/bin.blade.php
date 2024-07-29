@@ -7,7 +7,7 @@
         This view is loaded from module: {!! config('actor.name') !!}
     </p>
 @endsection --}}
-@extends('backend.layouts.app')
+@extends('Backend.layouts.app')
 
 @section('content')
     {{-- <div class="mx-2">

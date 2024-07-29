@@ -19,9 +19,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [RoomController::class, 'index'])->name('index');
         Route::get('/create', [RoomController::class, 'create'])->name('create');
         Route::post('/create', [RoomController::class, 'store'])->name('create');
-        Route::get('/detail/{id}', [RoomController::class, 'show'])->name('detail');
+        Route::get('/detail/{id}', [RoomController::class, 'show'])->name('show');
         Route::post('/update/{id}', [RoomController::class, 'update'])->name('update');
-        Route::get('/delete/{id}', [RoomController::class, 'destroy'])->name('delete');
+        Route::get('/delete/{id}', [RoomController::class, 'destroy'])->name('destroy');
     });
 });
 
