@@ -13,6 +13,5 @@ class PaymentMethod extends Model
     
     protected static function newFactory()
     {
-        return \Modules\PaymentMethod\Database\factories\PaymentMethodFactory::new();
     }
 }

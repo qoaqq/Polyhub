@@ -5,6 +5,7 @@ namespace Modules\PaymentMethod\Http\Controllers\API;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\PaymentMethod\Entities\PaymentMethod;
 
 class PaymentMethodController extends Controller
 {
@@ -14,7 +15,12 @@ class PaymentMethodController extends Controller
      */
     public function index()
     {
-        return view('paymentmethod::index');
+        $payments = PaymentMethod::all();
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
+            'data' => $payments,
+        ], 200);
     }
 
     /**
@@ -36,16 +42,15 @@ class PaymentMethodController extends Controller
         //
          // Log::info('Payment Method: ' . $request->input('paymentMethod'));
         //  Log::info('Sub Total: ' . $request->input('totalCost'));
-         $paymentMethod = $request->input('paymentMethod');
-         // dd($request->input('totalCost'));
+         $paymentMethod = $request->paymentMethod;
+         
          switch ($paymentMethod) {
              case 'vnpay':
-                 $grandTotal = $request->input('totalCost');
+                 $grandTotal = $request->total;
                  $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
                  $vnp_Returnurl = "http://localhost:4200/confirmation";
                  $vnp_TmnCode = "AQX9I3H0";
                  $vnp_HashSecret = "UVWWYVHECNHDWLRSOKBNLPMZENAARDLS";
- 
                  $vnp_TxnRef = uniqid();
                  $vnp_OrderInfo = "Payment success";
                  $vnp_OrderType = "PolyHub";
