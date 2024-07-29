@@ -101,7 +101,7 @@
                     <div class="border bg-primary iconlist"></div> <span>Checked</span>
                 </div>
                 <div class="col-6">
-                    <div class="border border-success iconlist"></div> <span>Normal</span>
+                    <div class="border border-success iconlist"></div> <span>Standard</span>
                 </div>
                 <div class="col-6">
                     <div class="border bg-secondary iconlist"></div>   <span>Placed</span>
@@ -113,7 +113,7 @@
                     <div class="border bg-dark iconlist"></div> <span>Cannot select</span>
                 </div>
                 <div class="col-6">
-                    <div class="border bg-danger iconlist"></div> <span>Sweetbox</span>
+                    <div class="border bg-danger iconlist"></div> <span>Couple</span>
                 </div>
             </div>
         </div>
