@@ -18,8 +18,8 @@ use Modules\Movie\Database\Seeders\MovieCategoryTableSeeder;
 use Modules\Movie\Database\Seeders\MovieDatabaseSeeder;
 use Modules\Room\Database\Seeders\RoomDatabaseSeeder;
 use Modules\Seat\Database\Seeders\SeatDatabaseSeeder;
-use Modules\Seat\Database\Seeders\SeatTypeTableSeeder;
 use Modules\SeatShowtimeStatus\Database\Seeders\SeatShowtimeStatusDatabaseSeeder;
+use Modules\SeatType\Database\Seeders\SeatTypeDatabaseSeeder;
 use Modules\ShowingRelease\Database\Seeders\ShowingReleaseDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             CinemaDatabaseSeeder::class,
             CinemaTypeDatabaseSeeder::class,
             RoomDatabaseSeeder::class,
-            SeatTypeTableSeeder::class,
+            SeatTypeDatabaseSeeder::class,
             SeatDatabaseSeeder::class,
             DirectorDatabaseSeeder::class,
             CategoryDatabaseSeeder::class,
