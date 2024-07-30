@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
-use Modules\Seat\Entities\SeatType;
+use Modules\SeatType\Entities\SeatType;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Modules\ShowingRelease\Http\Requests\UpdateShowingReleaseRequest;
 
