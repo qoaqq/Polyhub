@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Room\Entities\Room;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\SeatType\Entities\SeatType;
 
 class Seat extends Model
 {

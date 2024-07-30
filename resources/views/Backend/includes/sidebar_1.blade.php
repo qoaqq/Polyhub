@@ -166,7 +166,7 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link">
+                <a href="{{ route('seattype.list') }}" class="sidebar-link">
                 <span class="sidebar-icon"></span>
                 <span class="hide-menu">Seat Type</span>
                 </a>
