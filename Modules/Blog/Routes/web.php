@@ -15,4 +15,5 @@ use Modules\Blog\Http\Controllers\BlogController;
 
 Route::prefix('admin')->group(function() {
     Route::resource('/blog', BlogController::class);
+    Route::post('/blog/upload_image', [BlogController::class, 'uploadImage']);
 });

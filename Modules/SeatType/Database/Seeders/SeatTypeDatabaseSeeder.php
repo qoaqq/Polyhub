@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Seat\Database\Seeders;
+namespace Modules\SeatType\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class SeatTypeTableSeeder extends Seeder
+class SeatTypeDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +15,9 @@ class SeatTypeTableSeeder extends Seeder
      */
     public function run()
     {
+        Model::unguard();
+
+        // $this->call("OthersTableSeeder");
         DB::table('seat_types')->insert([
             ['name' => 'Standard', 'price' => 2],
             ['name' => 'VIP', 'price' => 3],

@@ -17,7 +17,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $blog = Blog::all();
+        $blog = Blog::latest()->take(3)->get();
         return response()->json([
             'status'=>true,
             'message'=>'Lấy danh sách thành công',

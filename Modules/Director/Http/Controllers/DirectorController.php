@@ -16,7 +16,7 @@ class DirectorController extends Controller
      */
     public function index(Request $request)
     {
-        $title = "list Movies";
+        $title = "List Dirctor";
 
         $query = Director::query();
 

@@ -19,7 +19,7 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $title = "list Movies";
+        $title = "List Movies";
         $director = Director::all();
         $categories = Category::all();
         // Truy vấn phim với điều kiện lọc theo đạo diễn nếu có
@@ -34,7 +34,7 @@ class MovieController extends Controller
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
         
-        $movie = $query->latest('id')->paginate(5);
+        $movie = $query->latest('id')->paginate(2);
         
         return view('movie::index', compact('movie', 'director', 'title','categories'));
     }
