@@ -10,7 +10,11 @@ class Bill extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['grand_total'];
+    protected $fillable = [
+        'user_id',
+        'checkin_id',
+        'grand_total'
+    ];
 
     public function ticketSeats()
     {

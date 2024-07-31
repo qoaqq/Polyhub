@@ -2,14 +2,16 @@
 
 namespace Modules\Bill\Http\Controllers\API;
 
+use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
 use Modules\Bill\Entities\Bill;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Contracts\Support\Renderable;
-use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
-use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
+use Modules\Checkin\Entities\Checkin;
 use Modules\TicketSeat\Entities\TicketSeat;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 
 class ApiBillController extends Controller
 {
@@ -106,8 +108,19 @@ class ApiBillController extends Controller
                     $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
                 }
 
+                $barcode = (new DNS1D())->getBarcodePNG($vnp_TxnRef, 'C39');
+
+                $checkin = Checkin::create([
+                    'name' => 'Check-in for bill ' . $vnp_TxnRef,
+                    'checkin_code' => $barcode,
+                    'type' => 'bill',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
                 $bill = Bill::create([
-                    'grand_total' => $request->bill['grandTotal']
+                    'grand_total' => $request->bill['grandTotal'],
+                    'checkin_id' => $checkin->id
                 ]);
                 
                 foreach ($request->ticket_seat['selectedSeats'] as $seat) {
@@ -136,7 +149,14 @@ class ApiBillController extends Controller
                     ]);
                 };
 
-                return response()->json(['redirect_url' => $vnp_Url], 200);
+                return response()->json([
+                    'redirect_url' => $vnp_Url,
+                    'data' => [
+                        'bill' => $bill,
+                        'checkin' => $checkin,
+                        'barcode' => $barcode
+                    ]
+                ], 200);
             case 'momo':
                 // Giả lập thanh toán MoMo
                 $momoData = [
