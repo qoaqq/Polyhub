@@ -160,17 +160,17 @@ class BlogController extends Controller
 
     public function uploadImage(Request $request)
     {
-        // Validate file type
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'file' => 'required|image'
         ]);
     
-        $originalName = $request->file('file')->getClientOriginalName();
-
-    // Lưu tệp với tên gốc vào thư mục uploadcontent trong public storage
-    $pathFile = $request->file('file')->storeAs('uploadcontent', $originalName);
-
-    // Trả về đường dẫn của ảnh để TinyMCE hiển thị
-    return response()->json(['location' => Storage::url($pathFile)]);
+        $file = $request->file('file');
+        $path = $file->store('uploadcontent');
+        
+        // Tạo URL đầy đủ cho ảnh
+        $url = Storage::url($path);
+    
+        // Trả về URL của ảnh
+        return response()->json(['location' => url($url)]);
     }
 }
