@@ -163,13 +163,22 @@ class ShowingReleaseController extends Controller
        $SeatType = SeatType::all(); 
     return response()->json($SeatType);
     }
+
     public function getShowingbyMovie($movie_id)
     {
-        $query = ShowingRelease::where('movie_id', $movie_id)->get();
+        $today = Carbon::today();
+        $tenDaysLater = $today->copy()->addDays(10); // Ngày sau 10 ngày từ hôm nay
+
+        $query = ShowingRelease::where('movie_id', $movie_id)
+            ->whereBetween('date_release', [$today, $tenDaysLater])
+            ->with(['room', 'room.cinema.city', 'movie'])
+            ->get();
+
         return response()->json([
             'data' => $query,
         ]);
     }
+
     public function getStatusSeat($id) {
         // Tìm ghế theo ID
         $seatStatus = SeatShowtimeStatus::where('id', $id)->first();

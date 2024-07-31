@@ -15,14 +15,21 @@ class BlogController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $blog = Blog::latest()->take(3)->get();
+        $perPage = $request->input('per_page', 5); // Số lượng bài viết mỗi trang
+        $page = $request->input('page', 1); // Trang hiện tại
+
+        $blogs = Blog::latest('id')->paginate($perPage);
+
         return response()->json([
-            'status'=>true,
-            'message'=>'Lấy danh sách thành công',
-            'data' => $blog,
-        ],200);
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
+            'data' => $blogs->items(), // Danh sách blog
+            'current_page' => $blogs->currentPage(), // Trang hiện tại
+            'total_pages' => $blogs->lastPage(), // Tổng số trang
+            'total' => $blogs->total(), // Tổng số bài viết
+        ], 200);
     }
 
     /**
@@ -82,35 +89,54 @@ class BlogController extends Controller
     public function bloghome()
     {
     // Get the 3 most recent blog posts
-    $blog = Blog::orderBy('created_at', 'desc')->take(2)->get();
-
+    $blogs = Blog::orderBy('created_at', 'desc')->take(3)->get();
     return response()->json([
         'status' => true,
         'message' => 'Lấy danh sách thành công',
-        'data' => $blog,
+        'data' => $blogs,
     ], 200);
     }
 
 
-    public function getBlogByCategory($categoryId)
+     public function getLatestBlogs()
     {
-        $blogs = Blog::all()->where('categories_id', $categoryId);
+        $latestBlogs = Blog::orderBy('created_at', 'desc')->take(3)->get();
         return response()->json([
-           'status'=> true,
-           'message'=>'Lấy danh sách thành công',
-           'data' => $blogs
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
+            'data' => $latestBlogs,
         ], 200);
     }
+
+    public function getBlogByCategory(Request $request, $categoryId)
+    {
+        $perPage = $request->input('per_page', 5); // Số lượng bài viết mỗi trang
+        $page = $request->input('page', 1); // Trang hiện tại
+
+        $blogs = Blog::where('categories_id', $categoryId) // Lọc theo danh mục
+                     ->latest()
+                     ->paginate($perPage);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy danh sách bài viết theo danh mục thành công',
+            'data' => $blogs->items(), // Danh sách blog
+            'current_page' => $blogs->currentPage(), // Trang hiện tại
+            'total_pages' => $blogs->lastPage(), // Tổng số trang
+            'total' => $blogs->total(), // Tổng số bài viết
+        ], 200);
+    }
+
 
     public function getAllCategory()
     {
         $categories = Category::withCount('blogs')->get();
-        $allBlogs = Blog::get()->count();
+        $allBlogs = Blog::count();
         return response()->json([
-           'status'=> true,
-           'message'=>'Lấy danh sách thành công',
-           'data' => $categories,
-           'allBlogs' => $allBlogs // Sửa lại thành allBlogs
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
+            'data' => $categories,
+            'allBlogs' => $allBlogs
         ], 200);
     }
 
@@ -120,6 +146,83 @@ class BlogController extends Controller
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
            'data' => $topBogs,
+        ], 200);
+    }
+    public function getYearsAndCounts()
+    {
+        $years = Blog::selectRaw('YEAR(created_at) as year')
+                    ->groupBy('year')
+                    ->orderBy('year', 'desc')
+                    ->get();
+
+        $yearlyCounts = [];
+        foreach ($years as $year) {
+            $count = Blog::whereYear('created_at', $year->year)->count();
+            $yearlyCounts[] = [
+                'year' => $year->year,
+                'count' => $count
+            ];
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy danh sách năm và số lượng bài viết thành công',
+            'data' => $yearlyCounts
+        ], 200);
+    }
+
+    public function getBlogsByYear(Request $request, $year)
+    {
+        $page = $request->query('page', 1);
+        $perPage = $request->query('per_page', 5);
+
+        $blogsQuery = Blog::whereYear('created_at', $year);
+
+        $total = $blogsQuery->count();
+        $blogs = $blogsQuery->orderBy('created_at', 'desc')
+                            ->skip(($page - 1) * $perPage)
+                            ->take($perPage)
+                            ->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy danh sách bài viết theo năm thành công',
+            'data' => [
+                'blogs' => $blogs,
+                'total' => $total,
+                'current_page' => $page,
+                'per_page' => $perPage,
+                'total_pages' => ceil($total / $perPage),
+            ]
+        ], 200);
+    }
+
+    public function searchBlogs(Request $request)
+    {
+        $searchTerm = $request->query('search', '');
+        $page = $request->query('page', 1);
+        $perPage = $request->query('per_page', 5);
+
+        // Tìm kiếm bài viết theo tên
+        $blogsQuery = Blog::where('title', 'like', '%' . $searchTerm . '%');
+
+        // Phân trang
+        $total = $blogsQuery->count();
+        $blogs = $blogsQuery->orderBy('created_at', 'desc')
+                            ->skip(($page - 1) * $perPage)
+                            ->take($perPage)
+                            ->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Tìm kiếm bài viết thành công',
+            'data' => [
+                'blogs' => $blogs,
+                'total' => $total,
+                'current_page' => $page,
+                'per_page' => $perPage,
+                'total_pages' => ceil($total / $perPage),
+            ]
         ], 200);
     }
 }
