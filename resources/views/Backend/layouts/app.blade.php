@@ -85,38 +85,54 @@ tinymce.init({
     image_advtab: true,
     media_live_embeds: true,
     automatic_uploads: true,
+    images_upload_handler: function (blobInfo, success, failure) {
+        let formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/blog/upload_image', true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                let response = JSON.parse(xhr.responseText);
+                let imageUrl = response.location; // URL của ảnh sau khi upload
+
+                // Gọi hàm success với URL của ảnh đã upload
+                success(imageUrl);
+            } else {
+                failure('Error uploading image: ' + xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function() {
+            failure('Network error while uploading image.');
+        };
+
+        xhr.send(formData);
+    },
     file_picker_callback: function(callback, value, meta) {
         if (meta.filetype === 'image') {
-            var input = document.createElement('input');
+            let input = document.createElement('input');
             input.setAttribute('type', 'file');
             input.setAttribute('accept', 'image/*');
-            input.addEventListener('change', function() {
-                var file = this.files[0];
-                var reader = new FileReader();
-                reader.onload = function () {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/admin/blog/upload_image', true);
-                    xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            var json = JSON.parse(xhr.responseText);
-                            callback(json.location);
-                        } else {
-                            alert('Failed to upload image.');
-                        }
-                    };
-                    var formData = new FormData();
-                    formData.append('file', file);
-                    xhr.send(formData);
+            input.onchange = function() {
+                let file = this.files[0];
+                let reader = new FileReader();
+
+                reader.onload = function(e) {
+                    let base64 = e.target.result; // Chuỗi base64 của ảnh
+
+                    // Gọi callback với base64 của ảnh
+                    callback(base64, { title: file.name });
                 };
-                reader.readAsDataURL(file);
-            });
+
+                reader.readAsDataURL(file); // Đọc file dưới dạng base64
+            };
             input.click();
         }
     }
 });
-
-
     </script>
 </body>
 </html>
