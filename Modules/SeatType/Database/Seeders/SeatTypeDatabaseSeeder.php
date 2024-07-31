@@ -19,9 +19,9 @@ class SeatTypeDatabaseSeeder extends Seeder
 
         // $this->call("OthersTableSeeder");
         DB::table('seat_types')->insert([
-            ['name' => 'Standard', 'price' => 2],
-            ['name' => 'VIP', 'price' => 3],
-            ['name' => 'Couple', 'price' => 4],
+            ['name' => 'Standard', 'price' => 200000],
+            ['name' => 'VIP', 'price' => 300000],
+            ['name' => 'Couple', 'price' => 400000],
         ]);
     }
 }
