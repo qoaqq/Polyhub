@@ -113,4 +113,13 @@ class BlogController extends Controller
            'allBlogs' => $allBlogs // Sửa lại thành allBlogs
         ], 200);
     }
+
+    public function getTopBlogs(){
+        $topBogs = Blog::with('category')->paginate(3);
+        return response()->json([
+           'status'=> true,
+           'message'=>'Lấy danh sách thành công',
+           'data' => $topBogs,
+        ], 200);
+    }
 }

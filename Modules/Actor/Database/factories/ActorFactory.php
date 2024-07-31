@@ -19,13 +19,11 @@ class ActorFactory extends Factory
     public function definition()
     {
         return [
-            //
             'name' => $this->faker->name,
             'gender' => $this->faker->randomElement(['Male', 'Female']),
-            'avatar' => $this->faker->image(),
-            'movie_id' => Movie::pluck('id')->random(),
+            'avatar' => $this->faker->imageUrl($width = 640, $height = 480, 'casts'),
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now()   
         ];
     }
 }

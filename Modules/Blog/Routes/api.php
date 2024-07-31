@@ -23,4 +23,5 @@ Route::resource('blog',BlogController::class);
 Route::get('blog-home', [BlogController::class, 'bloghome']);
 Route::get('getAllCategory', [BlogController::class, 'getAllCategory']);
 Route::get('getBlogByCategory/{categoryId}', [BlogController::class, 'getBlogByCategory']);
+Route::get('top-bogs', [BlogController::class, 'getTopBlogs']);
 

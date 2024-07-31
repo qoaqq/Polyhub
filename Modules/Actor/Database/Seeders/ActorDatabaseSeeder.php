@@ -3,7 +3,6 @@
 namespace Modules\Actor\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Actor\Entities\Actor;
 class ActorDatabaseSeeder extends Seeder
 {
@@ -14,9 +13,6 @@ class ActorDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
-
-        // $this->call("OthersTableSeeder");
         Actor::factory()->count(20)->create();
     }
 }
