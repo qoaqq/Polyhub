@@ -7,6 +7,9 @@ use Modules\Bill\Entities\Bill;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class ApiBillController extends Controller
 {
@@ -40,13 +43,19 @@ class ApiBillController extends Controller
      */
     public function store(Request $request)
     {
-        // Log::info('Payment Method: ' . $request->input('paymentMethod'));
-        Log::info('Sub Total: ' . $request->input('totalCost'));
-        $paymentMethod = $request->input('paymentMethod');
-        // dd($request->input('totalCost'));
+        // $bills = Bill::get();
+        // dd($request->ticket_seat['selectedFoodCombos']); die;
+        $paymentMethod = $request->bill['paymentMethod'];
+        // foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
+        //     dd($selectedFoodCombos);
+        //     // TicketFoodCombo::create([
+        //     //     'food_combo_id' => $selectedFoodCombos['id']
+        //     // ]);
+        // }; die;
+
+        
         switch ($paymentMethod) {
             case 'vnpay':
-                $grandTotal = $request->input('totalCost');
                 $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
                 $vnp_Returnurl = "http://localhost:4200/confirmation";
                 $vnp_TmnCode = "AQX9I3H0";
@@ -55,8 +64,8 @@ class ApiBillController extends Controller
                 $vnp_TxnRef = uniqid();
                 $vnp_OrderInfo = "Payment success";
                 $vnp_OrderType = "PolyHub";
-                $vnp_Amount = $grandTotal * 100;
-                $vnp_Locale = "VN";
+                $vnp_Amount = $request->bill['grandTotal'] * 100;
+                $vnp_Locale = "US";
                 $vnp_BankCode = "NCB";
                 $vnp_IpAddr = $request->ip();
 
@@ -68,7 +77,7 @@ class ApiBillController extends Controller
                     "vnp_Amount" => $vnp_Amount,
                     "vnp_Command" => "pay",
                     "vnp_CreateDate" => $vnp_CreateDate,
-                    "vnp_CurrCode" => "VND",
+                    "vnp_CurrCode" => "USD",
                     "vnp_IpAddr" => $vnp_IpAddr,
                     "vnp_Locale" => $vnp_Locale,
                     "vnp_OrderInfo" => $vnp_OrderInfo,
@@ -96,6 +105,37 @@ class ApiBillController extends Controller
                     $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
                     $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
                 }
+
+                $bill = Bill::create([
+                    'grand_total' => $request->bill['grandTotal']
+                ]);
+                
+                foreach ($request->ticket_seat['selectedSeats'] as $seat) {
+                    $seatDetails = $seat['seat'];
+                    $showingRelease = $request->ticket_seat['showingrelease'];
+                    $seatType = $seatDetails['seat_type'];
+
+                    TicketSeat::create([
+                        'seat_showtime_status_id' => $seatDetails['id'], 
+                        'bill_id' => $bill->id, 
+                        'movie_id' => $showingRelease['movie_id'],
+                        'room_id' => $showingRelease['room_id'], 
+                        'cinema_id' => $showingRelease['room']['cinema']['id'],
+                        'showing_release_id' => $showingRelease['id'], 
+                        'time_start' => $showingRelease['time_release'], 
+                        'price' => $seatType['price'] 
+                    ]);
+                }
+
+                foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
+                    TicketFoodCombo::create([
+                        'food_combo_id' => $selectedFoodCombos['id'],
+                        'bill_id' => $bill->id,
+                        'price' => $selectedFoodCombos['price'],
+                        'quantity' => $selectedFoodCombos['quantity']
+                    ]);
+                };
+
                 return response()->json(['redirect_url' => $vnp_Url], 200);
             case 'momo':
                 // Giả lập thanh toán MoMo
@@ -112,6 +152,8 @@ class ApiBillController extends Controller
                 ];
 
                 $momoPayUrl = 'http://localhost:4200/momo-payment';
+
+                
 
                 return response()->json(['redirect_url' => $momoPayUrl]);
             default:
