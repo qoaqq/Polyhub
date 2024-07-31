@@ -9,10 +9,15 @@ class TicketFoodCombo extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'food_combo_id',
+        'bill_id',
+        'price',
+        'quantity',
+    ];
     
-    protected static function newFactory()
-    {
-        return \Modules\TicketFoodCombo\Database\factories\TicketFoodComboFactory::new();
-    }
+    // protected static function newFactory()
+    // {
+    //     return \Modules\TicketFoodCombo\Database\factories\TicketFoodComboFactory::new();
+    // }
 }
