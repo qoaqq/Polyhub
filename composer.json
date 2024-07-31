@@ -8,9 +8,11 @@
         "php": "^8.0",
         "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
+        "intervention/image": "^3.7",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.7",
+        "milon/barcode": "^11.0",
         "nwidart/laravel-modules": "9.0",
         "prettus/l5-repository": "^2.9",
         "tymon/jwt-auth": "^2.1"
