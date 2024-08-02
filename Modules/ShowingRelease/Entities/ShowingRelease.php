@@ -32,10 +32,7 @@ class ShowingRelease extends Model
     public function movie(){
         return $this->belongsTo(Movie::class,'movie_id');
     }
-    public function tickets()
-    {
-        return $this->hasMany(Ticket::class, 'showing_release_id');
-    }
+    
 
     public function seatShowtimeStatuses()
     {

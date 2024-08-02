@@ -9,34 +9,46 @@
                             <h5 class="card-title">{{ $title }}</h5>
                         </div>
                         <div class="d-flex align-items-center">
-                            <form id="filter-form" class="position-relative me-3 w-50" method="GET">
-                                <select name="movie_id" class="form-select" onchange="this.form.submit()">
-                                    <option value="">All Movies</option>
-                                    @foreach ($movies as $movie)
-                                        <option value="{{ $movie->id }}" @if(request('movie_id') == $movie->id) selected @endif>{{ $movie->name }}</option>
-                                    @endforeach
-                                </select>
+                            <form id="filter-form" class="d-flex justify-content-between w-100">
+                                <div class="flex-grow-1 mx-2">
+                                    <select name="city_id" class="form-select" id="citySelect">
+                                        <option value="">Select City</option>
+                                        @foreach ($cities as $city)
+                                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="flex-grow-1 mx-2" id="cinemaSelectContainer" style="display: none;">
+                                    <select name="cinema_id" class="form-select" id="cinemaSelect">
+                                        <option value="">Select Cinema</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex-grow-1 mx-2" id="movieSelectContainer" style="display: none;">
+                                    <div class="d-flex align-items-center">
+                                        <select name="movie_id" class="form-select" id="movieSelect">
+                                            <option value="">Select Movie</option>
+                                        </select>
+                                        <div class="dropdown ms-2" id="addButtonContainer" style="display: none;">
+                                            <a href="#" class="btn border shadow-none px-3" id="addButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ti ti-dots-vertical fs-5"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="#" id="addLink">
+                                                        <i class="fs-4 ti ti-plus"></i>Add
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </form>
-                            <form class="position-relative me-3 w-50" method="GET">
-                                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" name="search"
-                                placeholder="Search" value="{{ request()->get('search') }}">
-                                <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-                            </form>
-                            <div class="dropdown">
-                                <a href="#" class="btn border shadow-none px-3" id="dropdownMenuButton"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti ti-dots-vertical fs-5"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('showingrelease.create') }}"><i
-                                                class="fs-4 ti ti-plus"></i>Add</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
-                    <div class="table-responsive overflow-x-auto latest-reviews-table">
+                    <div id="showingReleaseTable" class="table-responsive overflow-x-auto latest-reviews-table" style="display: none;">
                         <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
                                 <tr>
@@ -44,81 +56,128 @@
                                     <th>Room</th>
                                     <th>Time</th>
                                     <th>Date</th>
-                                    <th>Actions</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($list as $showingRelease)
-                                    <tr>
-                                        <td>
-                                            <div class="ms-3 product-title">
-                                                <h6 class="fs-4 mb-0 text-truncate-2">{{ $showingRelease->movie->name }}</h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center text-truncate">
-                                                <h6 class="mb-0 fw-light">{{ $showingRelease->room->name }}</h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center text-truncate">
-                                                <h6 class="mb-0 fw-light">{{ \Carbon\Carbon::parse($showingRelease->time_release)->format('H:i')}}</h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex align-items-center text-truncate">
-                                                <h6 class="mb-0 fw-light">{{ date('d/m/Y', strtotime($showingRelease->date_release)) }}</h6>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="dropdown dropstart">
-                                                <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                    <i class="ti ti-dots-vertical fs-5"></i>
-                                                </a>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('showingrelease.show',$showingRelease->id) }}"><i
-                                                                class="fs-4 ti ti-plus"></i>Detail</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('showingrelease.edit', $showingRelease->id) }}"><i
-                                                                class="fs-4 ti ti-edit"></i>Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <form action="{{ route('showingrelease.destroy', $showingRelease->id) }}" method="post" onsubmit="return confirm('Bạn chắc muốn xóa')">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
-                                                                <i class="fs-4 ti ti-trash"></i>Delete
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            <tbody id="showingReleaseBody">
+                                <!-- Nội dung bảng sẽ được chèn bằng AJAX -->
                             </tbody>
                         </table>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between mt-4">
-                        <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
-                        {{ $list->appends(['search' => request()->get('search'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction'), 'movie_id' => request()->get('movie_id')])->links('vendor.pagination.bootstrap-5') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script>
-        function sortTable(column) {
-            const urlParams = new URLSearchParams(window.location.search);
-            let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
+        document.getElementById('citySelect').addEventListener('change', function() {
+            var cityId = this.value;
+            fetch(`/admin/cinemas/${cityId}`)
+                .then(response => response.json())
+                .then(cinemas => {
+                    var cinemaSelect = document.getElementById('cinemaSelect');
+                    cinemaSelect.innerHTML = '<option value="">Select Cinema</option>';
+                    cinemas.forEach(cinema => {
+                        cinemaSelect.innerHTML += `<option value="${cinema.id}">${cinema.name}</option>`;
+                    });
+                    document.getElementById('cinemaSelectContainer').style.display = 'block';
+                    // Reset movie and showing release sections
+                    document.getElementById('movieSelectContainer').style.display = 'none';
+                    document.getElementById('showingReleaseTable').style.display = 'none';
+                });
+        });
 
-            urlParams.set('sort', column);
-            urlParams.set('direction', direction);
+        document.getElementById('cinemaSelect').addEventListener('change', function() {
+            var cinemaId = this.value;
+            fetch(`/admin/movies/${cinemaId}`)
+                .then(response => response.json())
+                .then(movies => {
+                    if (Array.isArray(movies)) {
+                        var movieSelect = document.getElementById('movieSelect');
+                        movieSelect.innerHTML = '<option value="">Select Movie</option>';
+                        movies.forEach(movie => {
+                            movieSelect.innerHTML += `<option value="${movie.id}">${movie.name}</option>`;
+                        });
+                        document.getElementById('movieSelectContainer').style.display = 'flex';
+                        document.getElementById('addButtonContainer').style.display = 'block';
 
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
+                        // Thiết lập URL cho nút Add với cinemaId
+                        var addLink = document.getElementById('addLink');
+                        addLink.href = `/admin/showingrelease/create/${cinemaId}`;
+                    } else {
+                        console.error('Dữ liệu không phải là mảng:', movies);
+                        document.getElementById('movieSelectContainer').style.display = 'none';
+                        document.getElementById('addButtonContainer').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Có lỗi xảy ra:', error);
+                    document.getElementById('movieSelectContainer').style.display = 'none';
+                    document.getElementById('addButtonContainer').style.display = 'none';
+                });
+        });
+
+
+
+
+
+document.getElementById('movieSelect').addEventListener('change', function() {
+    var movieId = this.value;
+    var cinemaId = document.getElementById('cinemaSelect').value;
+
+    if (movieId && cinemaId) {
+        fetch(`/admin/showingreleases/${movieId}/${cinemaId}`)
+            .then(response => response.json())
+            .then(showingReleases => {
+                var showingReleaseBody = document.getElementById('showingReleaseBody');
+                showingReleaseBody.innerHTML = '';
+                if (Array.isArray(showingReleases)) {
+                    showingReleases.forEach(showingRelease => {
+                        showingReleaseBody.innerHTML += `
+                            <tr>
+                                <td>${showingRelease.movie.name}</td>
+                                <td>${showingRelease.room.name}</td>
+                                <td>${new Date(showingRelease.time_release).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</td>
+                                <td>${new Date(showingRelease.date_release).toLocaleDateString()}</td>
+                                <td>
+                                    <div class="dropdown dropstart">
+                                        <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="ti ti-dots-vertical fs-5"></i>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3"  href="/admin/showingrelease/${showingRelease.id}"><i
+                                                        class="fs-4 ti ti-plus"></i>Chi tiết</a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/showingrelease/${showingRelease.id}/edit"><i
+                                                        class="fs-4 ti ti-edit"></i>Chỉnh sửa</a>
+                                            </li>
+                                            <li>
+                                                <form action="/admin/showingrelease/${showingRelease.id}" method="post" onsubmit="return confirm('Bạn chắc muốn xóa')">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
+                                                        <i class="fs-4 ti ti-trash"></i>Xóa
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById('showingReleaseTable').style.display = 'block';
+                } else {
+                    console.error('Dữ liệu trả về không phải là mảng:', showingReleases);
+                }
+            })
+            .catch(error => console.error('Có lỗi xảy ra:', error));
+    } else {
+        console.error('movieId hoặc cinemaId không hợp lệ');
+    }
+});
+
     </script>
 @endsection
