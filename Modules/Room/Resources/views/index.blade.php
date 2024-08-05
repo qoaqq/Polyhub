@@ -10,11 +10,27 @@
                         <h5 class="card-title">cinemas management</h5>
                     </div>
                     <div class="d-flex align-items-center">
+                        {{-- filler --}}
+                        <form id="filter-form" class="position-relative me-3 w-100" method="GET" action="{{ route('admin.room.index') }}">
+                            <select name="city_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Cities</option>
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->id }}" @if(request('city_id') == $city->id) selected @endif>{{ $city->name }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                        <form action="{{ route('admin.room.index') }}" class="position-relative me-3 w-100" method="GET">
+                            <select name="cinema_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Cinemas</option>
+                                @foreach ($cinemas as $cinema)
+                                <option value="{{ $cinema->id }}" @if(request('cinema_id') == $cinema->id) selected @endif>{{ $cinema->name }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                        {{-- searching --}}
                         <form class="position-relative me-3 w-100" method="GET">
-                            <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-                                placeholder="Search" name='q'>
-                            <i
-                                class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+                            <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search" name='search' value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
+                            <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                         </form>
                         <div class="dropdown">
                             <a href="{{ route('admin.room.create') }}" class="btn border shadow-none px-3"

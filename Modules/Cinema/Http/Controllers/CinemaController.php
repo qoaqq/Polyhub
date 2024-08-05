@@ -109,4 +109,10 @@ class CinemaController extends Controller
         $this->model->findOrFail($id)->delete();
         return redirect()->back();
     }
+
+    public function getCinemasByCity($cityId)
+    {
+        $cinemas = Cinema::where('city_id', $cityId)->get();
+        return response()->json($cinemas);
+    }
 }

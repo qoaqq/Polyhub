@@ -17,14 +17,14 @@ class FoodComboDatabaseSeeder extends Seeder
     public function run()
     {
         $foodCombos = [
-            ['name' => 'Pizza Margherita', 'description' => 'Classic pizza with tomato, mozzarella, and basil.', 'price' => 4.99],
-            ['name' => 'Sushi Roll', 'description' => 'Fresh sushi roll with tuna, avocado, and cucumber.', 'price' => 4.50],
-            ['name' => 'Burger Deluxe', 'description' => 'Juicy beef burger with lettuce, tomato, and cheese.', 'price' => 4.75],
-            ['name' => 'Pasta Carbonara', 'description' => 'Creamy pasta with pancetta, egg, and Parmesan cheese.', 'price' => 4.80],
-            ['name' => 'Chicken Teriyaki', 'description' => 'Grilled chicken with teriyaki sauce and vegetables.', 'price' => 4.90],
-            ['name' => 'Tacos Supreme', 'description' => 'Spicy tacos with beef, cheese, and salsa.', 'price' => 4.25],
-            ['name' => 'Greek Salad', 'description' => 'Fresh salad with feta cheese, olives, and cucumbers.', 'price' => 4.30],
-            ['name' => 'Chocolate Lava Cake', 'description' => 'Warm chocolate cake with a gooey center.', 'price' => 4.99],
+            ['name' => 'Pizza Margherita', 'description' => 'Classic pizza with tomato, mozzarella, and basil.', 'price' => 40000],
+            ['name' => 'Sushi Roll', 'description' => 'Fresh sushi roll with tuna, avocado, and cucumber.', 'price' => 450000],
+            ['name' => 'Burger Deluxe', 'description' => 'Juicy beef burger with lettuce, tomato, and cheese.', 'price' => 47500],
+            ['name' => 'Pasta Carbonara', 'description' => 'Creamy pasta with pancetta, egg, and Parmesan cheese.', 'price' => 48000],
+            ['name' => 'Chicken Teriyaki', 'description' => 'Grilled chicken with teriyaki sauce and vegetables.', 'price' => 49000],
+            ['name' => 'Tacos Supreme', 'description' => 'Spicy tacos with beef, cheese, and salsa.', 'price' => 42500],
+            ['name' => 'Greek Salad', 'description' => 'Fresh salad with feta cheese, olives, and cucumbers.', 'price' => 43000],
+            ['name' => 'Chocolate Lava Cake', 'description' => 'Warm chocolate cake with a gooey center.', 'price' => 49900],
         ];
 
         foreach ($foodCombos as $combo) {
