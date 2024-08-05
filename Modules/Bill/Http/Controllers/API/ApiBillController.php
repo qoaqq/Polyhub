@@ -45,16 +45,7 @@ class ApiBillController extends Controller
      */
     public function store(Request $request)
     {
-        // $bills = Bill::get();
-        // dd($request->ticket_seat['selectedFoodCombos']); die;
         $paymentMethod = $request->bill['paymentMethod'];
-        // foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
-        //     dd($selectedFoodCombos);
-        //     // TicketFoodCombo::create([
-        //     //     'food_combo_id' => $selectedFoodCombos['id']
-        //     // ]);
-        // }; die;
-
         
         switch ($paymentMethod) {
             case 'vnpay':
@@ -119,6 +110,7 @@ class ApiBillController extends Controller
                 ]);
 
                 $bill = Bill::create([
+                    'user_id' => $request->bill['user_id'],
                     'grand_total' => $request->bill['grandTotal'],
                     'checkin_id' => $checkin->id
                 ]);
