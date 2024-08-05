@@ -147,18 +147,18 @@ document.getElementById('movieSelect').addEventListener('change', function() {
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3"  href="/admin/showingrelease/${showingRelease.id}"><i
-                                                        class="fs-4 ti ti-plus"></i>Chi tiết</a>
+                                                        class="fs-4 ti ti-plus"></i>Detail</a>
                                             </li>
                                             <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/showingrelease/${showingRelease.id}/edit"><i
-                                                        class="fs-4 ti ti-edit"></i>Chỉnh sửa</a>
+                                                        class="fs-4 ti ti-edit"></i>Edit</a>
                                             </li>
                                             <li>
                                                 <form action="/admin/showingrelease/${showingRelease.id}" method="post" onsubmit="return confirm('Bạn chắc muốn xóa')">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
-                                                        <i class="fs-4 ti ti-trash"></i>Xóa
+                                                        <i class="fs-4 ti ti-trash"></i>Delete
                                                     </button>
                                                 </form>
                                             </li>
