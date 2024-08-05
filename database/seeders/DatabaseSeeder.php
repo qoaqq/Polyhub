@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Modules\Actor\Database\Seeders\ActorDatabaseSeeder;
 use Modules\Attribute\Database\Seeders\AttributeDatabaseSeeder;
 use Modules\AttributeValue\Database\Seeders\AttributeValueDatabaseSeeder;
 use Modules\Blog\Database\Seeders\BlogDatabaseSeeder;
@@ -66,6 +67,7 @@ class DatabaseSeeder extends Seeder
             BlogDatabaseSeeder::class,
             SeatShowtimeStatusDatabaseSeeder::class,
             FoodComboDatabaseSeeder::class,
+            ActorDatabaseSeeder::class,
         ]);
     }
 }

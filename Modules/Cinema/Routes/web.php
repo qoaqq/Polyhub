@@ -16,5 +16,6 @@ use Modules\Cinema\Http\Controllers\CinemaController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('cinema', CinemaController::class);
+    Route::get('/cinema/city/{cityId}', [CinemaController::class, 'getCinemasByCity'])->name('cinema.getCinemasByCity');
 });
 

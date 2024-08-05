@@ -93,7 +93,6 @@ class MoviesController extends Controller
             ->paginate(9);
         }else{
             $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')
-            ->orderBy('created_at', 'desc')
             ->paginate(9);
         }
         return response()->json([
