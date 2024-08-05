@@ -10,6 +10,7 @@ use Modules\Room\Entities\Room;
 use Modules\Seat\Entities\Seat;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
 use Modules\Ticket\Entities\Ticket;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class ShowingRelease extends Model
 {
@@ -32,9 +33,9 @@ class ShowingRelease extends Model
     public function movie(){
         return $this->belongsTo(Movie::class,'movie_id');
     }
-    public function tickets()
+    public function ticketSeats()
     {
-        return $this->hasMany(Ticket::class, 'showing_release_id');
+        return $this->hasMany(TicketSeat::class);
     }
 
     public function seatShowtimeStatuses()
