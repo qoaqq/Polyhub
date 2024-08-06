@@ -13,6 +13,7 @@ use Modules\ShowingRelease\Http\Controllers\ShowingReleaseController;
 |
 */
 
+
 Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::resource('showingrelease', ShowingReleaseController::class);

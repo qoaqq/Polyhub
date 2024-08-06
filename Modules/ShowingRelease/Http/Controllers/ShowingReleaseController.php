@@ -178,6 +178,7 @@ class ShowingReleaseController extends Controller
             return response()->json($movies);
         } catch (\Exception $e) {    
             // Trả về mã lỗi và thông báo lỗi
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
