@@ -83,7 +83,7 @@
                 </li>
                 @if (Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'supper'))
                     <li class="sidebar-item">
-                        <a class="sidebar-link has-arrow danger-hover-bg" href="#" aria-expanded="false">
+                        <a class="sidebar-link has-arrow indigo-hover-bg" href="#" aria-expanded="false">
                             <span class="aside-icon p-2 bg-danger-subtle rounded-1">
                                 <iconify-icon icon="solar:user-circle-line-duotone" class="fs-6"></iconify-icon>
                             </span>
@@ -128,7 +128,7 @@
                     </ul>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link has-arrow danger-hover-bg" href="#" aria-expanded="false">
+                    <a class="sidebar-link has-arrow success-hover-bg" href="#" aria-expanded="false">
                         <span class="aside-icon p-2 bg-danger-subtle rounded-1">
                             <iconify-icon icon="solar:user-circle-line-duotone" class="fs-6"></iconify-icon>
                         </span>

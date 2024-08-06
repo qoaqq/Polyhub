@@ -76,7 +76,7 @@
                     <td>
                         @if (!empty($user->avatar))
                         <img src="{{ asset('storage/' . str_replace('public/', '', $user->avatar)) }}" alt=""
-                        class="img-fluid flex-shrink-0" width="32" height="32">
+                        class="img-fluid flex-shrink-0" width="120" height="120">
                         @endif
                     </td>
                     <td>
