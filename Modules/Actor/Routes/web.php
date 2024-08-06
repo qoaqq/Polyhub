@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Modules\Actor\Http\Controllers\ActorController;
 
@@ -13,21 +14,23 @@ use Modules\Actor\Http\Controllers\ActorController;
 |
 */
 
-Route::prefix('admin')->group(function() {
-    //Route::get('/', 'ActorController@index');
-    Route::resource('actor',ActorController::class)->names([
-        'index' => 'actor.list',
-        'store' => 'actor.store',
-        'create' => 'actor.create',
-        'show' => 'actor.show',
-        'edit' => 'actor.edit',
-        'update' => 'actor.update',
-        'destroy' => 'actor.delete'
-    ]);
-    Route::post('actor/search', 'ActorController@search')->name('actor.search');
-    Route::get('actor/up', 'ActorController@up')->name('actor.up');
-    Route::get('actor/down', 'ActorController@down')->name('actor.down');
-    Route::get('actor/bin/actor', 'ActorController@bin')->name('actor.bin');
-    Route::get('actor/restore/{id}', 'ActorController@restore')->name('actor.restore');
-    Route::get('actor/forceDelete/{id}', 'ActorController@forceDelete')->name('actor.forceDelete');
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        //Route::get('/', 'ActorController@index');
+        Route::resource('actor', ActorController::class)->names([
+            'index' => 'actor.list',
+            'store' => 'actor.store',
+            'create' => 'actor.create',
+            'show' => 'actor.show',
+            'edit' => 'actor.edit',
+            'update' => 'actor.update',
+            'destroy' => 'actor.delete'
+        ]);
+        Route::post('actor/search', 'ActorController@search')->name('actor.search');
+        Route::get('actor/up', 'ActorController@up')->name('actor.up');
+        Route::get('actor/down', 'ActorController@down')->name('actor.down');
+        Route::get('actor/bin/actor', 'ActorController@bin')->name('actor.bin');
+        Route::get('actor/restore/{id}', 'ActorController@restore')->name('actor.restore');
+        Route::get('actor/forceDelete/{id}', 'ActorController@forceDelete')->name('actor.forceDelete');
+    });
 });

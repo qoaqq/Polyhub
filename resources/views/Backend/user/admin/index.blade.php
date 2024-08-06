@@ -54,6 +54,7 @@
                                     <th>Email</th>
                                     <th>Avatar</th>
                                     <th>Address</th>
+                                    <th>User Type</th>
                                     <th>Status</th>
                                     <th></th>
                                 </tr>
@@ -82,6 +83,16 @@
                         <div class="d-flex align-items-center text-truncate">
                             <h6 class="mb-0 fw-light">{{ $user->address }}</h6>
                         </div>
+                    </td>
+                    <td>
+                        <form action="{{ route('user.updateType', $user->id) }}" method="post">
+                            @csrf
+                            @method('patch')
+                            <select name="user_type" class="form-select" onchange="this.form.submit()">
+                                <option value="admin" {{ $user->user_type == 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="employee" {{ $user->user_type == 'employee' ? 'selected' : '' }}>Employee</option>
+                            </select>
+                        </form>
                     </td>
                     <td class="text-center">
                       <form action="{{ route('user.active', [$user->id]) }}" method="post">

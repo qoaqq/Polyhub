@@ -14,7 +14,8 @@ use Modules\Cinema\Http\Controllers\CinemaController;
 |
 */
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('cinema', CinemaController::class);
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('cinema', CinemaController::class);
+    });
 });
-

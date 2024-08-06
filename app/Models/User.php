@@ -101,7 +101,7 @@ class User extends Authenticatable implements JWTSubject
      // Scope để lọc user có user_type là 'admin'
      public function scopeOnlyAdmins($query)
      {
-         return $query->where('user_type', 'admin');
+        return $query->whereIn('user_type', ['admin', 'employee']);
      }
 
       // Scope để lọc user có user_type là 'client'
