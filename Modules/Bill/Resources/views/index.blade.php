@@ -32,17 +32,21 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Category Name</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Grand Total</th>
                         <th scope="col">Created At</th>
                         <th scope="col">Updated At</th>
                         <th scope="col">Handles</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($categories as $key => $item)
+                    @foreach ($bills as $key => $item)
                         @if (!$item->category_id)
                             <tr>
-                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->user->name }}</td>
+                                <td>{{ $item->user->email }}</td>
+                                <td>{{ $item->grand_total }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>{{ $item->updated_at }}</td>
                                 <td>
@@ -53,10 +57,10 @@
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('categories.show', ['category' => $item->id]) }}"><i
+                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('bill.show', ['bill' => $item->id]) }}"><i
                                                     class="fs-4 ti ti-plus"></i>Detail</a>
                                             </li>
-                                            <li>
+                                            {{-- <li>
                                                 <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('categories.edit', ['category' => $item->id]) }}"><i
                                                     class="fs-4 ti ti-edit"></i>Edit</a>
                                             </li>
@@ -70,15 +74,15 @@
                                                     class="fs-4 ti ti-trash"></i>Delete</a> 
                                                     </button>
                                                 </form>
-                                            </li>
+                                            </li> --}}
                                         </ul>
                                     </div>
                                 </td>
                             </tr>
                             
-                            @include('category::partials.children_categories', ['categories' => $categories, 'parent_id' => $item->id, 'char' => '|---'])
+                            {{-- @include('category::partials.children_categories', ['categories' => $categories, 'parent_id' => $item->id, 'char' => '|---']) --}}
                         @endif
-                    @endforeach --}}
+                    @endforeach
                 </tbody>
             </table>
             {{-- {{ $categories->links('vendor.pagination.bootstrap-5') }} --}}

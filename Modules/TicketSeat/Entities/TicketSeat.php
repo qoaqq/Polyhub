@@ -25,6 +25,11 @@ class TicketSeat extends Model
     {
         return $this->belongsTo(Bill::class);
     }
+
+    public function seat_show_time()
+    {
+        
+    }
     
     // protected static function newFactory()
     // {
