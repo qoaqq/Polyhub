@@ -154,7 +154,7 @@ document.getElementById('movieSelect').addEventListener('change', function() {
                                                         class="fs-4 ti ti-edit"></i>Edit</a>
                                             </li>
                                             <li>
-                                                <form action="/admin/showingrelease/${showingRelease.id}" method="post" onsubmit="return confirm('Bạn chắc muốn xóa')">
+                                                <form action="/admin/showingrelease/${showingRelease.id}" method="post" onsubmit="return confirm('Do you want to delete ?')">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
