@@ -47,8 +47,26 @@ class BillController extends Controller
      */
     public function show($id)
     {
-        $bill = Bill::with(['ticketSeats', 'user'])->get()->where('id', '=', $id);
-        return view('bill::show', compact('bill'));
+        $bill = Bill::with([
+            'user',
+            'checkin',
+            'ticketFoodCombo.food_combo',
+            'ticketSeats.seat_showTime_status.seat.seatType', 
+            'ticketSeats.movie', 
+            'ticketSeats.room', 
+            'ticketSeats.cinema', 
+            'ticketSeats.showingRelease',
+        ])->find($id);
+
+        $movie = $bill->ticketSeats->first()->movie;
+        $room = $bill->ticketSeats->first()->room;
+        $cinema = $bill->ticketSeats->first()->cinema;
+        $food_combo = $bill->ticketFoodCombo;
+        $checkin = $bill->checkin;
+
+            // dd($checkin->checkin_code);
+
+        return view('bill::show', compact('bill', 'movie', 'room', 'cinema', 'food_combo', 'checkin'));
     }
 
     /**

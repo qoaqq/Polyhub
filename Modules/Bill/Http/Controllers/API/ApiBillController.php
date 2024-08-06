@@ -121,7 +121,7 @@ class ApiBillController extends Controller
                     $seatType = $seatDetails['seat_type'];
 
                     TicketSeat::create([
-                        'seat_showtime_status_id' => $seatDetails['id'], 
+                        'seat_showtime_status_id' => $seat['id'], 
                         'bill_id' => $bill->id, 
                         'movie_id' => $showingRelease['movie_id'],
                         'room_id' => $showingRelease['room_id'], 
