@@ -23,12 +23,12 @@
                                  </a>
                                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('actor.create') }}"><i
+                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('voucher.create') }}"><i
                                                 class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                            href="{{ route('actor.bin') }}"><i class="fs-4 ti ti-edit"></i>Bin</a>
+                                            href="{{ route('voucher.bin') }}"><i class="fs-4 ti ti-edit"></i>Bin</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
@@ -46,16 +46,28 @@
                                     <th scope="col">ID
 
                                     </th>
-                                    <th scope="col">Name
+                                    <th scope="col">Code
 
                                     </th>
-                                    <th scope="col">Gender
+                                    <th scope="col">Type
 
                                     </th>
-                                    <th scope="col">Avatar
+                                    <th scope="col">Amount
 
                                     </th>
-                                    <th scope="col">Movies
+                                    <th scope="col">Start Date
+
+                                    </th>
+                                    <th scope="col">End Date
+
+                                    </th>
+                                    <th scope="col">Limit Usage
+
+                                    </th>
+                                    <th scope="col">Used
+
+                                    </th>
+                                    <th scope="col">Status
 
                                     </th>
                                     <th scope="col"></th>
@@ -77,7 +89,7 @@
                                         <td>
                                             <div class="d-flex align-items-center text-truncate">
                                                 <div class="ms-7">
-                                                    <h5 class="mb-1 fs-4"> {{ $item->name }}</h5>
+                                                    <h5 class="mb-1 fs-4"> {{ $item->code }}</h5>
 
                                                 </div>
                                             </div>
@@ -85,24 +97,45 @@
                                         <td>
                                             <div class="d-flex align-items-center text-truncate">
                                                 <div class="ms-7">
-                                                    <h5 class="mb-1 fs-4"> {{ $item->gender }}</h5>
+                                                    <h5 class="mb-1 fs-4"> {{ $item->type }}</h5>
 
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <img src="{{ asset( $item->avatar) }}" alt=""
-                                                width="100px">
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                {{ $item->amount }}
+                                            </h6>
                                         </td>
-                                        
                                         <td>
-                                           
-                                            @foreach($item->movies as $movie)
-                                            {{ $movie->name }}
-                                            @if (!$loop->last)
-                                                ,
-                                            @endif
-                                        @endforeach
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                {{ $item->start_date }}
+                                            </h6>
+                                            
+                                        </td>
+                                        <td>
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                {{ $item->end_date }}
+                                            </h6>
+                                            
+                                        </td>
+                                        <td>
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                {{ $item->usage_limit }}
+                                            </h6>
+                                            
+                                        </td>
+                                        <td>
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                {{ $item->used }}
+                                            </h6>
+                                            
+                                        </td>
+                                        <td>
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                {{ $item->status }}
+                                            </h6>
+                                            
                                         </td>
                                         <td>
                                             <div class="dropdown dropstart">
@@ -113,17 +146,17 @@
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href=" {{ route('actor.show', $item->id) }} "><i
+                                                            href=" {{ route('voucher.show', $item->id) }} "><i
                                                                 class="fs-4 ti ti-plus"></i>Detail</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="{{ route('actor.edit', $item->id) }}"><i
+                                                            href="{{ route('voucher.edit', $item->id) }}"><i
                                                                 class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>
                                                     <li>
 
-                                                        <form action="{{ route('actor.delete', $item->id) }}"
+                                                        <form action="{{ route('voucher.delete', $item->id) }}"
                                                             method="post">
                                                             @csrf
                                                             @method('delete')
