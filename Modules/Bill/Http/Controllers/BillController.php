@@ -5,6 +5,7 @@ namespace Modules\Bill\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Bill\Entities\Bill;
 
 class BillController extends Controller
 {
@@ -14,7 +15,10 @@ class BillController extends Controller
      */
     public function index()
     {
-        return view('bill::index');
+        $bills = Bill::with(['ticketSeats', 'user'])->get();
+
+        // dd($bills);
+        return view('bill::index',  compact('bills'));
     }
 
     /**
@@ -43,7 +47,8 @@ class BillController extends Controller
      */
     public function show($id)
     {
-        return view('bill::show');
+        $bill = Bill::with(['ticketSeats', 'user'])->get()->where('id', '=', $id);
+        return view('bill::show', compact('bill'));
     }
 
     /**

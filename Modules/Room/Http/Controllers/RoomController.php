@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Cinema\Entities\Cinema;
+use Modules\City\Entities\City;
 use Modules\Room\Entities\Room;
 use Modules\Room\Http\Requests\CreateRoomRequest;
 use Modules\Room\Http\Requests\UpdateRoomRequest;
@@ -23,10 +24,27 @@ class RoomController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rooms = $this->model->with('cinema')->orderBy('id', 'DESC')->paginate(10);
-        return view('room::index', compact('rooms'));
+        $cities = City::all();
+        $cinemaQuery = Cinema::with('city');
+        $query = $this->model->with('cinema');
+        if ($request->filled('city_id')) {
+            $cinemaQuery->where('city_id', $request->city_id);
+        }
+
+        if ($request->filled('cinema_id')) {
+            $query->where('cinema_id', $request->cinema_id);
+        }
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+
+        $cinemas = $cinemaQuery->get();
+        $rooms = $query->latest('id')->paginate(10);
+        return view('room::index', compact('rooms', 'cities', 'cinemas'));
     }
 
     /**
@@ -35,8 +53,9 @@ class RoomController extends Controller
      */
     public function create()
     {
+        $cities = City::all();
         $cinemas = Cinema::all();
-        return view('room::create', compact('cinemas'));
+        return view('room::create', compact('cinemas', 'cities'));
     }
 
     /**

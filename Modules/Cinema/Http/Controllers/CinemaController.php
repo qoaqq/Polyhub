@@ -22,10 +22,19 @@ class CinemaController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cinemas = $this->model->with('city')->orderBy('id', 'DESC')->paginate(10);
-        return view('cinema::index', compact('cinemas'));
+        $cities = City::all();
+        $query = $this->model->with('city');
+        if ($request->filled('city_id')) {
+            $query->where('city_id', $request->city_id);
+        }
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+        $cinemas = $query->latest('id')->paginate(10);
+        return view('cinema::index', compact('cinemas', 'cities'));
     }
 
     /**
@@ -99,5 +108,11 @@ class CinemaController extends Controller
     {
         $this->model->findOrFail($id)->delete();
         return redirect()->back();
+    }
+
+    public function getCinemasByCity($cityId)
+    {
+        $cinemas = Cinema::where('city_id', $cityId)->get();
+        return response()->json($cinemas);
     }
 }
