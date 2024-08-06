@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Modules\Director\Http\Controllers\DirectorController;
 
@@ -13,6 +14,8 @@ use Modules\Director\Http\Controllers\DirectorController;
 |
 */
 
-Route::prefix('admin')->group(function() {
-    Route::resource('/director', DirectorController::class);
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('/director', DirectorController::class);
+    });
 });

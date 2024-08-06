@@ -20,9 +20,9 @@ class UserController extends Controller
         $sort = $request->get('sort');
         $direction = $request->get('direction', 'desc');
         $users = User::onlyAdmins()->search($request->get('q', ''))
-        ->sort($sort, $direction)->paginate();
+            ->sort($sort, $direction)->paginate();
         $page = User::onlyAdmins()->paginate();
-        return view('Backend.user.admin.index', compact('title', 'users' , 'page'));
+        return view('Backend.user.admin.index', compact('title', 'users', 'page'));
     }
 
     /**
@@ -57,6 +57,7 @@ class UserController extends Controller
             $fileName = $avatar->getClientOriginalName();
             $path = $request->file('avatar')->storeAs('/user', $fileName);
             $user->avatar =  $path;
+            $user->user_type =  'employee';
         }
         $user->password = Hash::make($request->input('password'));
         $user->save();
@@ -130,5 +131,20 @@ class UserController extends Controller
         $user->activated = $request->input('is_active');
         $user->save();
         return back();
+    }
+
+    
+    public function updateType(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'user_type' => 'required|in:admin,employee,client',
+        ]);
+
+        $user->user_type = $request->input('user_type');
+        $user->save();
+
+        return redirect()->route('user.index')->with('success', 'User type updated successfully.');
     }
 }
