@@ -22,3 +22,9 @@ Route::prefix('admin')->group(function(){
     
 });
 
+
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('showingrelease', ShowingReleaseController::class);
+    });
+});

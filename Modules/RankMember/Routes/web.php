@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Modules\RankMember\Http\Controllers\RankMemberController;
 
@@ -13,14 +14,16 @@ use Modules\RankMember\Http\Controllers\RankMemberController;
 |
 */
 
-Route::prefix('admin')->group(function() {
-    Route::resource('/rankmember', RankMemberController::class)->names([
-        'index'   => 'rankmember.index',
-        'create'  => 'rankmember.create',
-        'store'   => 'rankmember.store',
-        'show'    => 'rankmember.show',
-        'edit'    => 'rankmember.edit',
-        'update'  => 'rankmember.update',
-        'destroy' => 'rankmember.destroy',
-    ]);
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('/rankmember', RankMemberController::class)->names([
+            'index'   => 'rankmember.index',
+            'create'  => 'rankmember.create',
+            'store'   => 'rankmember.store',
+            'show'    => 'rankmember.show',
+            'edit'    => 'rankmember.edit',
+            'update'  => 'rankmember.update',
+            'destroy' => 'rankmember.destroy',
+        ]);
+    });
 });

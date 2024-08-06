@@ -640,10 +640,10 @@
 
                     <div class="d-none d-sm-block">
                         <h6 class="fw-bold fs-4 mb-1 profile-name">
-                        Mike Nielsen
+                            {{ Auth::user()->name }}
                         </h6>
                         <p class="fs-3 lh-base mb-0 profile-subtext">
-                        Admin
+                            {{ ucfirst(Auth::user()->user_type) }}
                         </p>
                     </div>
                     </div>
@@ -658,19 +658,19 @@
         </div>
 
         <div class="d-flex align-items-center mx-7 py-9 border-bottom">
-            <img src="{{ asset('storage/images/profile/user-1.jpg') }}" alt="user" width="90" class="rounded-circle" />
+            <img src="{{ asset('storage/' . str_replace('public/', '', Auth::user()->avatar)) }}" alt="user" width="90" class="rounded-circle" />
             <div class="ms-4">
-            <h4 class="mb-0 fs-5 fw-normal">Mike Nielsen</h4>
-            <span class="text-muted">super admin</span>
+            <h4 class="mb-0 fs-5 fw-normal"> {{ Auth::user()->name }}</h4>
+            <span class="text-muted">{{ ucfirst(Auth::user()->user_type) }}</span>
             <p class="text-muted mb-0 mt-1 d-flex align-items-center">
                 <iconify-icon icon="solar:mailbox-line-duotone" class="fs-4 me-1"></iconify-icon>
-                info@spike.com
+                {{ Auth::user()->email }}
             </p>
             </div>
         </div>
 
         <div class="message-body">
-            <a href="../dark/page-user-profile.html" class="dropdown-item px-7 d-flex align-items-center py-6">
+            <a href="{{ route('user.edit', Auth::user()->id) }}" class="dropdown-item px-7 d-flex align-items-center py-6">
             <span class="btn px-3 py-2 bg-info-subtle rounded-1 text-info shadow-none">
                 <iconify-icon icon="solar:wallet-2-line-duotone" class="fs-7"></iconify-icon>
             </span>
@@ -679,27 +679,6 @@
                 My Profile
                 </h5>
                 <span class="fs-3 text-nowrap d-block fw-normal mt-1 text-muted">Account Settings</span>
-            </div>
-            </a>
-
-            <a href="../dark/app-email.html" class="dropdown-item px-7 d-flex align-items-center py-6">
-            <span class="btn px-3 py-2 bg-success-subtle rounded-1 text-success shadow-none">
-                <iconify-icon icon="solar:shield-minimalistic-line-duotone" class="fs-7"></iconify-icon>
-            </span>
-            <div class="w-75 d-inline-block v-middle ps-3 ms-1">
-                <h5 class="mb-0 mt-1 fs-4 fw-normal">My Inbox</h5>
-                <span class="fs-3 text-nowrap d-block fw-normal mt-1 text-muted">Messages & Emails</span>
-            </div>
-            </a>
-
-            <a href="../dark/app-notes.html" class="dropdown-item px-7 d-flex align-items-center py-6">
-            <span class="btn px-3 py-2 bg-danger-subtle rounded-1 text-danger shadow-none">
-                <iconify-icon icon="solar:card-2-line-duotone" class="fs-7"></iconify-icon>
-            </span>
-            <div class="w-75 d-inline-block v-middle ps-3 ms-1">
-                <h5 class="mb-0 mt-1 fs-4 fw-normal">My Task</h5>
-                <span class="fs-3 text-nowrap d-block fw-normal mt-1 text-muted">To-do and Daily
-                Tasks</span>
             </div>
             </a>
         </div>
@@ -1334,19 +1313,20 @@
                     aria-expanded="false">
                     <div class="d-flex align-items-center flex-shrink-0">
                     <div class="user-profile me-sm-3 me-2">
-                        <img src="{{ asset('storage/images/profile/user-1.jpg') }}" width="45" class="rounded-circle" alt="">
+                        <img src="{{ asset('storage/' . str_replace('public/', '', Auth::user()->avatar)) }}" width="45" class="rounded-circle" alt="">
                     </div>
                     <span class="d-sm-none d-block"><iconify-icon
                         icon="solar:alt-arrow-down-line-duotone"></iconify-icon></span>
 
-                    <div class="d-none d-sm-block">
-                        <h6 class="fw-bold fs-4 mb-1 profile-name">
-                        Mike Nielsen
-                        </h6>
-                        <p class="fs-3 lh-base mb-0 profile-subtext">
-                        Admin
-                        </p>
-                    </div>
+                        <div class="d-none d-sm-block">
+                            <h6 class="fw-bold fs-4 mb-1 profile-name">
+                                {{ Auth::user()->name }}
+                            </h6>
+                            <p class="fs-3 lh-base mb-0 profile-subtext">
+                                {{ ucfirst(Auth::user()->user_type) }} <!-- Capitalize first letter of user_type -->
+                            </p>
+                        </div>
+                        
                     </div>
                 </a>
                 <div class="dropdown-menu content-dd dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop1">
@@ -1365,7 +1345,7 @@
             <span class="text-muted">super admin</span>
             <p class="text-muted mb-0 mt-1 d-flex align-items-center">
                 <iconify-icon icon="solar:mailbox-line-duotone" class="fs-4 me-1"></iconify-icon>
-                info@spike.com
+                {{ Auth::user()->email }}
             </p>
             </div>
         </div>

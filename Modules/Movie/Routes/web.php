@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Modules\Movie\Http\Controllers\MovieController;
 
@@ -13,6 +14,8 @@ use Modules\Movie\Http\Controllers\MovieController;
 |
 */
 
-Route::prefix('admin')->group(function() {
-    Route::resource('/movie', MovieController::class);
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('/movie', MovieController::class);
+    });
 });
