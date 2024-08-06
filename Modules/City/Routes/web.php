@@ -14,6 +14,8 @@ use Modules\City\Http\Controllers\CityController;
 |
 */
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('city', CityController::class);
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('city', CityController::class);
+    });
 });

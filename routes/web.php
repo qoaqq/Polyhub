@@ -17,37 +17,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::get('/', [BackendControllerBase::class, 'index'])->name('admin.index');
-
-    //User
-    Route::resource('/user', UserController::class)->names([
-        'index'   => 'user.index',
-        'create'  => 'user.create',
-        'store'   => 'user.store',
-        'show'    => 'user.show',
-        'edit'    => 'user.edit',
-        'update'  => 'user.update',
-        'destroy' => 'user.destroy',
-    ]);
-    Route::controller(UserController::class)->group(function () {
-    Route::patch('user/{user}/active', 'toggleActivation')->name('user.active');
+    Route::prefix('admin')->group(function () {
+        Route::middleware(['auth', 'isAdmin'])->group(function () {
+            //User
+            Route::resource('/user', UserController::class)->names([
+                'index'   => 'user.index',
+                'create'  => 'user.create',
+                'store'   => 'user.store',
+                'show'    => 'user.show',
+                'edit'    => 'user.edit',
+                'update'  => 'user.update',
+                'destroy' => 'user.destroy',
+            ]);
+            Route::controller(UserController::class)->group(function () {
+                Route::patch('user/{user}/active', 'toggleActivation')->name('user.active');
+                Route::patch('/user/{id}/update-type', 'updateType')->name('user.updateType');
+            });
+            //UserClient
+            Route::resource('/user-client', UserClientController::class)->names(['index'   => 'user.client.index']);
+            Route::controller(UserClientController::class)->group(function () {
+                Route::patch('user-client/{user}/active', 'toggleActivation')->name('user.client.active');
+            });
+        });
     });
-
-    //UserClient
-    Route::resource('/user-client', UserClientController::class)->names(['index'   => 'user.client.index']);
-    Route::controller(UserClientController::class)->group(function () {
-        Route::patch('user-client/{user}/active', 'toggleActivation')->name('user.client.active');
-    });
-
-    //Auth
-    Route::controller(AuthController::class)->group(function () {
-    Route::get('/login', 'index')->name('auth.login');
-    Route::post('/login', 'login')->name('auth.login.post');
-    Route::get('/logout', 'logout')->name('auth.logout');
 });
+//Auth
+Route::controller(AuthController::class)->group(function () {
+    Route::middleware(['guest'])->group(function () {
+        Route::get('/login', 'index')->name('auth.login');
+        Route::post('/login', 'login')->name('auth.login.post');
+    });
+    Route::get('/logout', 'logout')->name('auth.logout');
 });

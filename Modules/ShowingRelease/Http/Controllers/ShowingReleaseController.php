@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Modules\Cinema\Entities\Cinema;
+use Modules\City\Entities\Cities;
 use Modules\Movie\Entities\Movie;
 use Modules\Room\Entities\Room;
 use Modules\Seat\Entities\Seat;
@@ -23,38 +25,46 @@ class ShowingReleaseController extends Controller
      * @return Renderable
      */
     public function index(Request $request)
-{
-    $title = "ShowingRelease";
-    $movies = Movie::all();
-    $sort = $request->get('sort');
-    $direction = $request->get('direction', 'desc');
-    $query = ShowingRelease::with(['movie' => function($query) {
-        // Nếu không cần điều kiện `deleted_at`, loại bỏ chúng
-        $query->withoutGlobalScope('notDeleted'); // Nếu có phạm vi toàn cục
-    }, 'room'])
-    ->search($request->get('search', ''))
-    ->sort($sort, $direction);
+    {
+        $title = "ShowingRelease";
+        $cities = Cities::all();
+        $cinemas = collect();
+        $rooms = collect();
+        $movies = Movie::all();
     
-    if ($request->filled('movie_id')) {
-        $query->where('movie_id', $request->input('movie_id'));
-    }
-
-    $list = $query->latest('id')->paginate(8);
-    return view('showingrelease::index', compact('title', 'list', 'movies'));
-}
-
+        if ($request->filled('city_id')) {
+            $cinemas = Cinema::where('city_id', $request->input('city_id'))->get();
+        }
+    
+        if ($request->filled('cinema_id')) {
+            $rooms = Room::where('cinema_id', $request->input('cinema_id'))->get();
+        }
+    
+        $query = ShowingRelease::with(['movie', 'room.cinema.city']);
+    
+        if ($request->filled('room_id')) {
+            $query->where('room_id', $request->input('room_id'));
+        }
+    
+        $list = $query->latest('id')->paginate(8);
+        return view('showingrelease::index', compact('title', 'list', 'cities', 'cinemas', 'rooms', 'movies'));
+    } 
 
     /**
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create($cinemaId = null)
     {
         $movie = Movie::pluck('name', 'id');
-        $room = Room::pluck('name', 'id');
+        $cities = Cities::pluck('name', 'id'); 
+        $rooms = [];
+        if ($cinemaId) {
+            $rooms = Room::where('cinema_id', $cinemaId)->pluck('name', 'id');
+        }
         $data = ShowingRelease::all();
         $title = "ShowingRelease create";
-        return view('showingrelease::create', compact('data', 'room', 'movie','title'));
+        return view('showingrelease::create', compact('data', 'cities', 'movie','title','rooms'));
     }
 
     /**
@@ -85,9 +95,9 @@ class ShowingReleaseController extends Controller
             DB::commit();
         }catch(\Exception $e) {
             DB::rollBack();
-            return redirect()->route('showingrelease.create')->with('error', 'Thêm không thành công');
+            return redirect()->route('showingrelease.create')->with('error', 'Add ShowingRelease Not Successfully!');
         }
-        return redirect()->route('showingrelease.index')->with('success', 'Thêm thành công');
+        return redirect()->route('showingrelease.index')->with('success', 'Add ShowingRelease Successfully!');
     }
 
     /**
@@ -114,11 +124,11 @@ class ShowingReleaseController extends Controller
      */
     public function edit($id)
     {
-        $show = ShowingRelease::find($id);
-        $movie = Movie::pluck('name', 'id');
-        $room = Room::pluck('name', 'id');
-        $title = "ShowingRelease edit";
-        return view('showingrelease::edit', compact('show', 'movie', 'room','title'));
+        $show= ShowingRelease::findOrFail($id);
+    $movie = Movie::pluck('name', 'id');
+    $rooms = Room::where('cinema_id', $show->room->cinema_id)->pluck('name', 'id');
+    $title = "Edit Showing Release";
+        return view('showingrelease::edit', compact('show', 'movie', 'rooms','title'));
     }
 
     /**
@@ -137,7 +147,7 @@ class ShowingReleaseController extends Controller
         $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
         $showingRelease->save();
 
-        return redirect()->route('showingrelease.index')->with('success', 'Cập nhật thành công!');
+        return redirect()->route('showingrelease.index')->with('success', 'ShowingRelease Updated successfully!');
     }
 
     /**
@@ -149,6 +159,38 @@ class ShowingReleaseController extends Controller
     {
         $showingRelease = ShowingRelease::find($id);
         $showingRelease->delete();
-        return redirect()->route('showingrelease.index')->with('success', 'Xóa thành công!');
+        return redirect()->route('showingrelease.index')->with('success', 'Deleted ShowingRelease Successfully!');
+    }
+    public function getCinemasByCity($cityId) {
+        $cinemas = Cinema::where('city_id', $cityId)->get();
+        return response()->json($cinemas);
+    }
+    
+   // ShowingReleaseController.php
+    public function getMoviesByCinema($cinemaId)
+    {
+        try {
+            $rooms = Room::where('cinema_id', $cinemaId)->pluck('id'); // Lấy danh sách room_id thuộc cinema
+            $movies = Movie::whereHas('showingReleases', function ($query) use ($rooms) {
+                $query->whereIn('room_id', $rooms); // Lọc phim thuộc các room này
+            })->get();
+            
+            return response()->json($movies);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
+    }
+
+    public function getShowingReleasesByMovie($movieId, $cinemaId) {
+        try {
+            $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
+            $showingReleases = ShowingRelease::with(['movie', 'room'])
+                ->where('movie_id', $movieId)
+                ->whereIn('room_id', $rooms)
+                ->get();
+            return response()->json($showingReleases);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
     }
 }
