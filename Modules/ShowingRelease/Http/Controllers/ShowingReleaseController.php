@@ -95,9 +95,9 @@ class ShowingReleaseController extends Controller
             DB::commit();
         }catch(\Exception $e) {
             DB::rollBack();
-            return redirect()->route('showingrelease.create')->with('error', 'Thêm không thành công');
+            return redirect()->route('showingrelease.create')->with('error', 'Add ShowingRelease Not Successfully!');
         }
-        return redirect()->route('showingrelease.index')->with('success', 'Thêm thành công');
+        return redirect()->route('showingrelease.index')->with('success', 'Add ShowingRelease Successfully!');
     }
 
     /**
@@ -147,7 +147,7 @@ class ShowingReleaseController extends Controller
         $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
         $showingRelease->save();
 
-        return redirect()->route('showingrelease.index')->with('success', 'Cập nhật thành công!');
+        return redirect()->route('showingrelease.index')->with('success', 'ShowingRelease Updated successfully!');
     }
 
     /**
@@ -159,7 +159,7 @@ class ShowingReleaseController extends Controller
     {
         $showingRelease = ShowingRelease::find($id);
         $showingRelease->delete();
-        return redirect()->route('showingrelease.index')->with('success', 'Xóa thành công!');
+        return redirect()->route('showingrelease.index')->with('success', 'Deleted ShowingRelease Successfully!');
     }
     public function getCinemasByCity($cityId) {
         $cinemas = Cinema::where('city_id', $cityId)->get();
@@ -167,36 +167,30 @@ class ShowingReleaseController extends Controller
     }
     
    // ShowingReleaseController.php
-public function getMoviesByCinema($cinemaId)
-{
-    try {
-        $rooms = Room::where('cinema_id', $cinemaId)->pluck('id'); // Lấy danh sách room_id thuộc cinema
-        $movies = Movie::whereHas('showingReleases', function ($query) use ($rooms) {
-            $query->whereIn('room_id', $rooms); // Lọc phim thuộc các room này
-        })->get();
-        
-        return response()->json($movies);
-    } catch (\Exception $e) {
-        // Log lỗi để dễ dàng kiểm tra
-       
-        // Trả về mã lỗi và thông báo lỗi
-        return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+    public function getMoviesByCinema($cinemaId)
+    {
+        try {
+            $rooms = Room::where('cinema_id', $cinemaId)->pluck('id'); // Lấy danh sách room_id thuộc cinema
+            $movies = Movie::whereHas('showingReleases', function ($query) use ($rooms) {
+                $query->whereIn('room_id', $rooms); // Lọc phim thuộc các room này
+            })->get();
+            
+            return response()->json($movies);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
     }
-}
 
-
-    
-    
-public function getShowingReleasesByMovie($movieId, $cinemaId) {
-    try {
-        $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
-        $showingReleases = ShowingRelease::with(['movie', 'room'])
-            ->where('movie_id', $movieId)
-            ->whereIn('room_id', $rooms)
-            ->get();
-        return response()->json($showingReleases);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+    public function getShowingReleasesByMovie($movieId, $cinemaId) {
+        try {
+            $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
+            $showingReleases = ShowingRelease::with(['movie', 'room'])
+                ->where('movie_id', $movieId)
+                ->whereIn('room_id', $rooms)
+                ->get();
+            return response()->json($showingReleases);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Có lỗi xảy ra'], 500);
+        }
     }
-}
 }
