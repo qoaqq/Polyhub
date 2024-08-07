@@ -94,14 +94,9 @@
                                             <img src="{{ asset( $item->avatar) }}" alt=""
                                                 width="100px">
                                         </td>
-                                        </td>
+                                        
                                         <td>
-                                            {{-- @forelse ($movie as $item2)
-                                                @if ($item->movie_id == $item2->id)
-                                                    <h5 class="mb-1 fs-4"> {{ $item2->name }} </h5>
-                                                @endif
-                                            @empty
-                                            @endforelse --}}
+                                           
                                             @foreach($item->movies as $movie)
                                             {{ $movie->name }}
                                             @if (!$loop->last)

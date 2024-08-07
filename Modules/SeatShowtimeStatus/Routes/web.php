@@ -10,7 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('seatshowtimestatus')->group(function() {
-    Route::get('/', 'SeatShowtimeStatusController@index');
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('seatshowtimestatus')->group(function () {
+        Route::get('/', 'SeatShowtimeStatusController@index');
+    });
 });

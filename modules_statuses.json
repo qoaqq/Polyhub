@@ -26,5 +26,7 @@
     "PaymentMethod": true,
     "SeatType": true,
     "TicketSeat": true,
-    "TicketFoodCombo": true
+    "TicketFoodCombo": true,
+    "Voucher": true,
+    "Banner": true
 }

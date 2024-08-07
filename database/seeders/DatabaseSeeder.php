@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Modules\Actor\Database\Seeders\ActorDatabaseSeeder;
 use Modules\Attribute\Database\Seeders\AttributeDatabaseSeeder;
 use Modules\AttributeValue\Database\Seeders\AttributeValueDatabaseSeeder;
 use Modules\Blog\Database\Seeders\BlogDatabaseSeeder;
@@ -32,11 +33,27 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::create([
+            'name' => 'SupperAdmin',
+            'email' => 'supper@gmail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'user_type' => 'supper',
+            'remember_token' => Str::random(10),
+        ]);
+        User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'user_type' => 'admin',
+            'remember_token' => Str::random(10),
+        ]);
+        User::create([
+            'name' => 'Employee',
+            'email' => 'employee@gmail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'user_type' => 'employee',
             'remember_token' => Str::random(10),
         ]);
          // Tạo một tài khoản client
@@ -66,6 +83,7 @@ class DatabaseSeeder extends Seeder
             BlogDatabaseSeeder::class,
             SeatShowtimeStatusDatabaseSeeder::class,
             FoodComboDatabaseSeeder::class,
+            ActorDatabaseSeeder::class,
         ]);
     }
 }

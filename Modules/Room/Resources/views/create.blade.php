@@ -15,16 +15,22 @@
                                 <form action="" method="POST">
                                     @csrf
                                     <div class="row">
-                                        <div class="col input-group">
+                                        <div class="col-12 input-group my-4">
                                             <span class="input-group-text">name</span>
                                             <input class="form-control" type="text" name="name">
                                         </div>
-                                        <div class="col input-group">
-                                            <span class="input-group-text">Cinema</span>
-                                            <select name="cinema_id" class="form-select" id="inputGroupSelect04">
-                                                @foreach ($cinemas as $cinema)
-                                                    <option value="{{ $cinema->id }}">{{ $cinema->name }}</option>
+                                        <div class="col input-group my-4">
+                                            <span class="input-group-text">City</span>
+                                            <select id="city-select" name="city_id" class="form-select">
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
                                                 @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col input-group my-4">
+                                            <span class="input-group-text">Cinema</span>
+                                            <select id="cinemaSelect" name="cinema_id" class="form-select" disabled>
+                                                <option value="">Select cinema</option>
                                             </select>
                                         </div>
                                         <div class="col-12 my-4">
@@ -55,4 +61,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset('assets/js/apps/selectCinemas.js') }}"></script>
 @endsection

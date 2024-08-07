@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Modules\FoodCombo\Http\Controllers\FoodComboController;
 /*
@@ -11,8 +12,9 @@ use Modules\FoodCombo\Http\Controllers\FoodComboController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::prefix('admin')->group(function(){
-    Route::resource('foodcombos', FoodComboController::class);
+
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('foodcombos', FoodComboController::class);
+    });
 });
-
-

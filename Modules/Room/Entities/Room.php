@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Cinema\Entities\Cinema;
 use Modules\Seat\Entities\Seat;
-use Modules\TicketSeat\Entities\TicketSeat;
 
 class Room extends Model
 {
@@ -26,11 +25,6 @@ class Room extends Model
     public function seats()
     {
         return $this->hasMany(Seat::class);
-    }
-
-    public function ticketSeat()
-    {
-        return $this->hasMany(TicketSeat::class);
     }
     
 }
