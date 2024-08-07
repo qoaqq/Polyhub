@@ -42,14 +42,14 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="date_release">Food Combo :</label>
                             @foreach ($food_combo as $food_item)
-                                <input style="margin-top: 7px;" type="text" id="date_release" class="form-control" value="{{ $food_item->food_combo->name . ' - ' . $food_item->price . ' $' . ' ' . '(' . $food_item->quantity . ')' }}" readonly/>
+                                <input style="margin-top: 7px;" type="text" id="date_release" class="form-control" value="{{ $food_item->food_combo->name . ' - ' . $food_item->price . '$' . ' ' . '(' . 'qty: ' . $food_item->quantity . ')' }}" readonly/>
                             @endforeach
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="date_release">Seat :</label>
                             @foreach ($bill->ticketSeats as $item)
-                                <input style="margin-top: 7px;" type="text" id="date_release" class="form-control" value="{{ $item->seat_showTime_status->seat->column . $item->seat_showTime_status->seat->row . ' - ' . $item->seat_showTime_status->seat->seatType->name . ' ' . '(' . $item->seat_showTime_status->seat->seatType->price . ' $' . ')' }}" readonly/>
+                                <input style="margin-top: 7px;" type="text" id="date_release" class="form-control" value="{{ $item->seat_showTime_status->seat->column . $item->seat_showTime_status->seat->row . ' - ' . $item->seat_showTime_status->seat->seatType->name . ' ' . '(' . $item->seat_showTime_status->seat->seatType->price . '$' . ')' }}" readonly/>
                             @endforeach
                         </div>
 
