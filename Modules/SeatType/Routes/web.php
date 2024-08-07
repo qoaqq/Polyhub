@@ -12,15 +12,17 @@ use Modules\SeatType\Http\Controllers\SeatTypeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::prefix('admin')->group(function(){
-    Route::resource('seattype', SeatTypeController::class)->names([
-        'index' => 'seattype.list',
-        'store' => 'seattype.store',
-        'create' => 'seattype.create',
-        'show' => 'seattype.show',
-        'edit' => 'seattype.edit',
-        'update' => 'seattype.update',
-        'destroy' => 'seattype.delete'
-    ]);
-    
+
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('seattype', SeatTypeController::class)->names([
+            'index' => 'seattype.list',
+            'store' => 'seattype.store',
+            'create' => 'seattype.create',
+            'show' => 'seattype.show',
+            'edit' => 'seattype.edit',
+            'update' => 'seattype.update',
+            'destroy' => 'seattype.delete'
+        ]);
+    });
 });

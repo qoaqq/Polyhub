@@ -14,13 +14,15 @@ use Modules\Seat\Http\Controllers\SeatController;
 |
 */
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::prefix('seat')->name('seat.')->group(function () {
-        Route::get('/', [SeatController::class, 'index'])->name('index');
-        Route::get('/create', [SeatController::class, 'create'])->name('create');
-        Route::post('/create', [SeatController::class, 'store'])->name('create');
-        Route::get('/delete/{id}', [SeatController::class, 'destroy'])->name('delete');
-        Route::get('/detail/{id}', [SeatController::class, 'show'])->name('detail');
-        Route::post('/update/{id}', [SeatController::class, 'update'])->name('update');
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::prefix('seat')->name('seat.')->group(function () {
+            Route::get('/', [SeatController::class, 'index'])->name('index');
+            Route::get('/create', [SeatController::class, 'create'])->name('create');
+            Route::post('/create', [SeatController::class, 'store'])->name('create');
+            Route::get('/delete/{id}', [SeatController::class, 'destroy'])->name('delete');
+            Route::get('/detail/{id}', [SeatController::class, 'show'])->name('detail');
+            Route::post('/update/{id}', [SeatController::class, 'update'])->name('update');
+        });
     });
 });

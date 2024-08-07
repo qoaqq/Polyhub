@@ -10,9 +10,19 @@
                             <h5 class="card-title">cinemas management</h5>
                         </div>
                         <div class="d-flex align-items-center">
+                            {{-- filler --}}
+                            <form id="filter-form" class="position-relative me-3 w-100" method="GET" action="{{ route('admin.cinema.index') }}">
+                                <select name="city_id" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Cities</option>
+                                    @foreach($cities as $city)
+                                        <option value="{{ $city->id }}" @if(request('city_id') == $city->id) selected @endif>{{ $city->name }}</option>
+                                    @endforeach
+                                </select>
+                            </form>
+                            {{-- seach --}}
                             <form class="position-relative me-3 w-100" method="GET">
-                                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-                                    placeholder="Search" name='q'>
+                                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}"
+                                    placeholder="Search for name" name='search'>
                                 <i
                                     class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                             </form>

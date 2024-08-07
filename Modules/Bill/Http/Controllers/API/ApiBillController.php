@@ -47,7 +47,6 @@ class ApiBillController extends Controller
      */
     public function store(Request $request)
     {
-        // dd(request()->header());die;
         $paymentMethod = $request->bill['paymentMethod'];
         
         switch ($paymentMethod) {
