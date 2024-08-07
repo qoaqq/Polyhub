@@ -1653,21 +1653,10 @@
         },
         {
             "name": "lcobucci/clock",
+            "shasum": "",
             "version": "2.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lcobucci/clock.git",
-                "reference": "c7aadcd6fd97ed9e199114269c0be3f335e38876"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/clock/zipball/c7aadcd6fd97ed9e199114269c0be3f335e38876",
-                "reference": "c7aadcd6fd97ed9e199114269c0be3f335e38876",
-                "shasum": ""
-            },
             "require": {
-                "php": "~8.1.0 || ~8.2.0",
-                "stella-maris/clock": "^0.1.7"
+                "php": "~8.1.0 || ~8.2.0"
             },
             "provide": {
                 "psr/clock-implementation": "1.0"
@@ -1700,8 +1689,8 @@
             ],
             "description": "Yet another clock abstraction",
             "support": {
-                "issues": "https://github.com/lcobucci/clock/issues",
-                "source": "https://github.com/lcobucci/clock/tree/2.3.0"
+                "issues": "https://github.com/lcobucci/clock/issues"
+
             },
             "funding": [
                 {
@@ -1712,8 +1701,7 @@
                     "url": "https://www.patreon.com/lcobucci",
                     "type": "patreon"
                 }
-            ],
-            "time": "2022-12-19T14:38:11+00:00"
+            ]
         },
         {
             "name": "lcobucci/jwt",

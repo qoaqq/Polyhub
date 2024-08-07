@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Modules\ShowingRelease\Http\Controllers\api\ShowingReleaseController;
@@ -14,6 +15,7 @@ use Modules\ShowingRelease\Http\Controllers\api\ShowingReleaseController;
 |
 */
 
+Route::prefix('admin')->group(function () {
     Route::apiResource('showingrelease', ShowingReleaseController::class);
     Route::controller(ShowingReleaseController::class)->group(function () {
         Route::get('showingrelease/{showtime_id}/seats', 'getSeatsByShowtime');
@@ -22,3 +24,4 @@ use Modules\ShowingRelease\Http\Controllers\api\ShowingReleaseController;
         Route::get('/showingrelease/{movie_id}/movie', 'getShowingbyMovie');
         Route::get('/showingrelease/{id}/status', 'getStatusSeat');
     });
+});

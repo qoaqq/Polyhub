@@ -59,15 +59,7 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="mb-3 has-success">
-                                        {{-- <label class="form-label">Movie</label>
-                                        <select class="form-select" name="movie_id">
-                                            <option value="">Select a Movie</option>
-                                            @forelse ($movie as $item)
-                                                <option value=" {{ $item->id }} "> {{ $item->name }} </option>
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                        <span class="text-danger">{{ $errors->first('movie_id') }}</span> --}}
+                                      
                                         <select class="form-select" name="movies[]" multiple>
                                             @foreach ($movies as $movie)
                                                 @if (!$movie->movie_id)

@@ -10,7 +10,7 @@ use Modules\Attribute\Entities\Attribute;
 use Modules\AttributeValue\Entities\AttributeValue;
 use Modules\Category\Entities\Category;
 use Modules\Director\Entities\Director;
-use Modules\ShowingRelease\Entities\ShowingRelease;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class Movie extends Model
 {
@@ -54,9 +54,6 @@ class Movie extends Model
     {
         return $this->belongsToMany(Actor::class, 'actor_movie');
     }
-    public function showingReleases()
-    {
-        return $this->hasMany(ShowingRelease::class);
-    }
+
 
 }

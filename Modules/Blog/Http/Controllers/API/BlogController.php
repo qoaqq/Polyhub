@@ -89,7 +89,7 @@ class BlogController extends Controller
     public function bloghome()
     {
     // Get the 3 most recent blog posts
-    $blogs = Blog::orderBy('created_at', 'desc')->take(3)->get();
+    $blogs = Blog::orderBy('created_at', 'desc')->take(2)->get();
     return response()->json([
         'status' => true,
         'message' => 'Lấy danh sách thành công',

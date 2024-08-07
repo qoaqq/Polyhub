@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\CinemaType\Entities\CinemaType;
 use Modules\City\Entities\City;
 use Modules\Room\Entities\Room;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class Cinema extends Model
 {
@@ -29,9 +30,14 @@ class Cinema extends Model
     public function cinemaType(){
         return $this->belongsTo(CinemaType::class);
     }
-    
-    protected static function newFactory()
+
+    public function ticketSeat()
     {
-        return \Modules\Cinema\Database\factories\CinemaFactory::new();
+        return $this->hasMany(TicketSeat::class);
     }
+    
+    // protected static function newFactory()
+    // {
+    //     return \Modules\Cinema\Database\factories\CinemaFactory::new();
+    // }
 }
