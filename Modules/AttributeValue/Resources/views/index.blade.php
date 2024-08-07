@@ -1,5 +1,3 @@
-
-
 @extends('Backend.layouts.app')
 @section('content')
     <div class="row">
@@ -24,7 +22,8 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attributevalue.create') }}"><i
+                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                            href="{{ route('attributevalue.create') }}"><i
                                                 class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     {{-- <li>
@@ -44,118 +43,119 @@
                             <thead class="text-dark fs-4">
                                 <tr>
                                     <th scope="col">ID
-                                        
+
                                     </th>
                                     <th scope="col">Movie
-                                        
+
                                     </th>
                                     <th scope="col">Name
-                                         
+
                                     </th>
                                     <th scope="col">Value
-                                          
+
                                     </th>
-                                      
-                                      <th></th>
+
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($page as $item)
-                                <tr>
-                                
-                                    <td>
-                                        <div class="d-flex align-items-center product text-truncate">
-                                           
-                                            <div class=" product-title">
-                                                <h6 class="fs-4 mb-0 text-truncate-2"> {{ $item->id }} </h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center text-truncate">
-                                           
-                                            <div class="">
-                                                @forelse ($listattr as $item2)
-                                            @forelse ($movie as $item3)
-                                                @if ($item->attribute_id == $item2->id && $item2->movie_id == $item3->id)
-                                                   
-                                                    <h5 class="mb-1 fs-4"> {{ $item3->name }} </h5>
-                                                @else
-                                                @endif
-                                            @empty
-                                            @endforelse
-                                        @empty
-                                        @endforelse
-                                                
-                                               
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="product-reviews">
-                                            @forelse ($listattr as $item2)
-                                            @if ($item->attribute_id == $item2->id)
-                                            <h6 class="fs-4 mb-0 text-truncate-2"> {{ $item2->name }} </h6>
-                                            @endif
-                                        @empty
-                                        @endforelse
-                                          
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="product-reviews">
-                                            <img src="{{ asset($item->value) }}" alt="" width="100px">
-                                           
-                                        </div>
-                                    </td>
-                                   
-                                    <td>
-                                        <div class="dropdown dropstart">
-                                            <a href="#" class="text-muted " id="dropdownMenuButton"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="ti ti-dots-vertical fs-5"></i>
-                                            </a>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3"
-                                                        href="{{ route('attributevalue.show', $item->id) }}"><i class="fs-4 ti ti-plus"></i>Detail</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3"
-                                                        href="{{ route('attributevalue.edit', $item->id) }}"><i class="fs-4 ti ti-edit"></i>Edit</a>
-                                                </li>
-                                                <li>
-                                                    <form action="{{ route('attributevalue.delete', $item->id) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <input type="hidden" name="id"
-                                                            value="{{ $item->id }}">
-                                                        <button type="submit"
-                                                            class="dropdown-item d-flex align-items-center gap-3"
-                                                            onclick="return confirm('Delete now?')"><i
-                                                                class="fs-4 ti ti-trash"></i> Delete </button>
-                                                    </form>
-                                                </li>
+                                    <tr>
 
-                                                
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        <td>
+                                            <div class="d-flex align-items-center product text-truncate">
+
+                                                <div class=" product-title">
+                                                    <h6 class="fs-4 mb-0 text-truncate-2"> {{ $item->id }} </h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center text-truncate">
+
+                                                <div class="">
+                                                    @forelse ($listattr as $item2)
+                                                        @forelse ($movie as $item3)
+                                                            @if ($item->attribute_id == $item2->id && $item2->movie_id == $item3->id)
+                                                                <h5 class="mb-1 fs-4"> {{ $item3->name }} </h5>
+                                                            @else
+                                                            @endif
+                                                        @empty
+                                                        @endforelse
+                                                    @empty
+                                                    @endforelse
+
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="product-reviews">
+                                                @forelse ($listattr as $item2)
+                                                    @if ($item->attribute_id == $item2->id)
+                                                        <h6 class="fs-4 mb-0 text-truncate-2"> {{ $item2->name }} </h6>
+                                                    @endif
+                                                @empty
+                                                @endforelse
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="product-reviews">
+                                                <img src="{{ asset($item->value) }}" alt="" width="100px">
+
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="dropdown dropstart">
+                                                <a href="#" class="text-muted " id="dropdownMenuButton"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ti ti-dots-vertical fs-5"></i>
+                                                </a>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                                            href="{{ route('attributevalue.show', $item->id) }}"><i
+                                                                class="fs-4 ti ti-plus"></i>Detail</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                                            href="{{ route('attributevalue.edit', $item->id) }}"><i
+                                                                class="fs-4 ti ti-edit"></i>Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('attributevalue.delete', $item->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
+                                                            <button type="submit"
+                                                                class="dropdown-item d-flex align-items-center gap-3"
+                                                                onclick="return confirm('Delete now?')"><i
+                                                                    class="fs-4 ti ti-trash"></i> Delete </button>
+                                                        </form>
+                                                    </li>
+
+
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @empty
                                 @endforelse
-                    </tbody>
-                    </table>
-                </div>
-                <div class="d-flex align-items-center justify-content-between mt-4">
-                    <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
-                    {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mt-4">
+                        <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
+                        {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <script>
         function sortTable(column) {

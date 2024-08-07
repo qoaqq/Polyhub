@@ -14,25 +14,35 @@ class AuthController extends Controller
     }
     public function index()
     {
-
+        
         return view('Backend.auth.login');
     }
+
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email|max:255',
             'password' => 'required|min:8',
         ]);
+
         $credentials = [
             'email' => $request->input('email'),
             'password' => $request->input('password'),
         ];
+
         if (Auth::attempt($credentials)) {
-                return redirect()->route('admin.index')->with('success', 'Đặng nhập thành công');
+            $user = Auth::user();
+            if ($user->user_type == 'admin' || $user->user_type == 'employee'|| $user->user_type == 'supper') {
+                return redirect()->route('admin.index');
+            } else {
+                Auth::logout();
+                return redirect()->route('auth.login');
+            }
         }
-        return redirect()->route('auth.login')->with('error', '
-        Email hoặc mật khẩu không hợp lệ ');
+
+        return redirect()->route('auth.login');
     }
+
 
     public function logout(Request $request)
     {
@@ -42,6 +52,6 @@ class AuthController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('auth.login')->with('success', 'Đăng xuất thành công');
+        return redirect()->route('auth.login');
     }
 }

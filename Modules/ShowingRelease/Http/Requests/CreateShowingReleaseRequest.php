@@ -42,7 +42,7 @@ class CreateShowingReleaseRequest extends FormRequest
                 ->first();
 
             if ($existingRelease) {
-                $validator->errors()->add('time_release', 'Buổi chiếu đã tồn tại trong phòng này vào ngày và giờ đã chọn.');
+                $validator->errors()->add('time_release', 'Showing Release already exist in this room on the selected date and time.');
             }
         });
     }

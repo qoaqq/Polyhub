@@ -36,7 +36,7 @@ class FoodComboController extends Controller
     $pathFile = Storage::putFile('foodcombos', $request->file('avatar'));
     $foodComboData['avatar'] = 'storage/' . $pathFile;
     $foodCombo = FoodCombo::create($foodComboData);
-    return redirect()->route('foodcombos.index')->with('success', 'Thêm thành công');
+    return redirect()->route('foodcombos.index')->with('success', 'Add FoodCombo Successfully!');
     }
 
     public function show($id)
@@ -64,12 +64,12 @@ class FoodComboController extends Controller
         }
     
         $foodCombo->update($foodComboData);
-        return redirect()->route('foodcombos.index')->with('success', 'Cập nhật thành công');
+        return redirect()->route('foodcombos.index')->with('success', 'FoodCombo Updated successfully!');
     }
     public function destroy($id)
     {
         $foodCombo = FoodCombo::find($id);
         $foodCombo->delete();
-        return redirect()->route('foodcombos.index')->with('success', 'Xóa thành công!');
+        return redirect()->route('foodcombos.index')->with('success', 'Deleted FoodCombo Successfully!');
     }
 }

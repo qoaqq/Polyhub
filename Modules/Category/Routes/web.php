@@ -14,6 +14,8 @@ use Modules\Category\Http\Controllers\CategoryController;
 |
 */
 
-Route::prefix('admin')->group(function() {
-    Route::resource('categories', CategoryController::class);
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('categories', CategoryController::class);
+    });
 });

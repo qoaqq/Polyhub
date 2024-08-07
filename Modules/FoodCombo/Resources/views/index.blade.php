@@ -86,7 +86,7 @@
                                             class="fs-4 ti ti-edit"></i>Edit</a>
                                 </li>
                                 <li>
-                                    <form action="{{ route('foodcombos.destroy', $foodCombo->id) }}" method="post" onsubmit="return confirm('Bạn chắc muốn xóa')">
+                                    <form action="{{ route('foodcombos.destroy', $foodCombo->id) }}" method="post" onsubmit="return confirm('Do you want to delete ?')">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="dropdown-item d-flex align-items-center gap-3">

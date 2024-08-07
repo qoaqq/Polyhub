@@ -1,6 +1,3 @@
-
-
-
 @extends('Backend.layouts.app')
 @section('content')
     <div class="row">
@@ -59,7 +56,7 @@
                             <tbody>
                                 @forelse ($page as $item)
                                     <tr>
-                                      
+
                                         <td>
                                             <div class="d-flex align-items-center product text-truncate">
 
