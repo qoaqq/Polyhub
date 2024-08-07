@@ -176,11 +176,16 @@ class ShowingReleaseController extends Controller
             })->get();
             
             return response()->json($movies);
+        } catch (\Exception $e) {    
+            // Trả về mã lỗi và thông báo lỗi
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
 
+
+    
+    
     public function getShowingReleasesByMovie($movieId, $cinemaId) {
         try {
             $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');

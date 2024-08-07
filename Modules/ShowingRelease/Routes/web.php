@@ -21,6 +21,6 @@ Route::middleware(['auth', 'isEmployee'])->group(function () {
         Route::get('/rooms/{cinemaId}', [ShowingReleaseController::class, 'getRoomsByCinema']);
         Route::get('/movies/{cinemaId}', [ShowingReleaseController::class, 'getMoviesByCinema']);
         Route::get('/showingreleases/{movieId}/{cinemaId}', [ShowingReleaseController::class, 'getShowingReleasesByMovie']);
-        Route::get('/showingrelease/create/{cinemaId?}', [ShowingReleaseController::class, 'create']); 
+        Route::get('/showingrelease/create/{cinemaId?}', [ShowingReleaseController::class, 'create']); // Thay đổi ở đây
     });
 });
