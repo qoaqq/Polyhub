@@ -1653,12 +1653,10 @@
         },
         {
             "name": "lcobucci/clock",
-
-                "shasum": ""
-            },
+            "shasum": "",
+            "version": "2.3.0",
             "require": {
-                "php": "~8.1.0 || ~8.2.0",
-
+                "php": "~8.1.0 || ~8.2.0"
             },
             "provide": {
                 "psr/clock-implementation": "1.0"
@@ -1691,7 +1689,7 @@
             ],
             "description": "Yet another clock abstraction",
             "support": {
-                "issues": "https://github.com/lcobucci/clock/issues",
+                "issues": "https://github.com/lcobucci/clock/issues"
 
             },
             "funding": [
@@ -1703,8 +1701,7 @@
                     "url": "https://www.patreon.com/lcobucci",
                     "type": "patreon"
                 }
-            ],
-
+            ]
         },
         {
             "name": "lcobucci/jwt",
