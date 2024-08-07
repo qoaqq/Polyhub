@@ -55,21 +55,27 @@ class FoodComboController extends Controller
 
     public function update(UpdateFoodComboRequest $request, $id)
     {
-        $foodCombo = FoodCombo::findOrFail($id);
-        $foodComboData = $request->except(['avatar']);
-        
-        if ($request->hasFile('avatar')) {
-            $pathFile = Storage::putFile('foodcombos', $request->file('avatar'));
-            $foodComboData['avatar'] = 'storage/' . $pathFile;
-        }
+    $foodCombo = FoodCombo::findOrFail($id);
+    $foodComboData = $request->except(['avatar']);
     
+    if ($request->hasFile('avatar')) {
+        if ($foodCombo->avatar && file_exists(public_path($foodCombo->avatar))) {
+            unlink(public_path($foodCombo->avatar));
+        }
+        $pathFile = Storage::putFile('foodcombos', $request->file('avatar'));
+        $foodComboData['avatar'] = 'storage/' . $pathFile;
+    }
         $foodCombo->update($foodComboData);
         return redirect()->route('foodcombos.index')->with('success', 'FoodCombo Updated successfully!');
     }
-    public function destroy($id)
-    {
-        $foodCombo = FoodCombo::find($id);
-        $foodCombo->delete();
-        return redirect()->route('foodcombos.index')->with('success', 'Deleted FoodCombo Successfully!');
+    public function destroy($id){
+    $foodCombo = FoodCombo::findOrFail($id);
+
+    if ($foodCombo->avatar && file_exists(public_path($foodCombo->avatar))) {
+        unlink(public_path($foodCombo->avatar));
     }
+    $foodCombo->delete();
+    return redirect()->route('foodcombos.index')->with('success', 'Deleted FoodCombo Successfully!');
+    }
+
 }

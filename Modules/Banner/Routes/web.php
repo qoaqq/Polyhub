@@ -10,7 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\Route;
+use Modules\Banner\Http\Controllers\BannerController;
 
-Route::prefix('banner')->group(function() {
-    Route::get('/', 'BannerController@index');
+Route::middleware(['auth', 'isEmployee'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::resource('/banners', BannerController::class);
+    });
 });

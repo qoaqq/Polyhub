@@ -1,47 +1,46 @@
 <?php
 
-namespace Modules\Banner\Http\Controllers;
+namespace Modules\Banner\Http\Controllers\api;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Banner\Entities\Banner;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+
 class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
-        $title = "List Banners";
-        $query = Banner::query();
+        $banners = Banner::where('status', 1)->latest('id')->paginate(6);
 
-        if ($request->filled('search')) {
-            $searchTerm = $request->input('search');
-            $query->where('name', 'like', '%' . $searchTerm . '%');
-        }
-
-        $banners = $query->latest('id')->paginate(10);
-        return view('banner::index',compact('banners', 'title'));
+        return response()->json([
+            'success' => true,
+            'data' => $banners
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function create()
+    public function create(): JsonResponse
     {
-        $title = "Add Banner";
-        return view('banner::create', compact('title'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Ready to create a new banner'
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -51,9 +50,10 @@ class BannerController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $bannerData = $request->except(['image']);
@@ -61,35 +61,41 @@ class BannerController extends Controller
         $bannerData['image'] = 'storage/' . $pathFile;
         $bannerData['status'] = $request->input('status') === 'display' ? 1 : 0;
 
-        Banner::create($bannerData);
+        $banner = Banner::create($bannerData);
 
-        return redirect()->route('banners.index')->with('success', 'Banner created successfully!');
+        return response()->json([
+            'success' => true,
+            'data' => $banner,
+            'message' => 'Banner created successfully!'
+        ], 201);
     }
-
-
 
     /**
      * Show the specified resource.
      */
-    public function show(Banner $banner)
+    public function show(Banner $banner): JsonResponse
     {
-        $title = "Detail Banner";
-        return view('banner::show', compact('banner', 'title'));
+        return response()->json([
+            'success' => true,
+            'data' => $banner
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Banner $banner)
+    public function edit(Banner $banner): JsonResponse
     {
-        $title = "Edit Banner";
-        return view('banner::edit', compact('banner', 'title'));
+        return response()->json([
+            'success' => true,
+            'data' => $banner
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -97,14 +103,22 @@ class BannerController extends Controller
             'note' => 'nullable|string',
             'status' => 'required|in:0,1',
         ]);
-    
+
         if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
         }
-    
+
         $banner = Banner::find($id);
+        if (!$banner) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Banner not found'
+            ], 404);
+        }
+
         $banner->name = $request->input('name');
         $banner->note = $request->input('note');
         $banner->status = $request->input('status');
@@ -116,15 +130,17 @@ class BannerController extends Controller
         
         $banner->save();
         
-        return redirect()->route('banners.index')->with('success', 'Banner updated successfully!');
+        return response()->json([
+            'success' => true,
+            'data' => $banner,
+            'message' => 'Banner updated successfully!'
+        ]);
     }
-    
-    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Banner $banner)
+    public function destroy(Banner $banner): JsonResponse
     {
         if ($banner->image && file_exists(public_path($banner->image))) {
             unlink(public_path($banner->image));
@@ -132,6 +148,18 @@ class BannerController extends Controller
 
         $banner->delete();
 
-        return redirect()->route('banners.index')->with('success', 'Banner deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Banner deleted successfully.'
+        ]);
+    }
+
+    public function getBanner(){
+        $banners = Banner::where('status', 1)->latest('id')->paginate(7);
+
+        return response()->json([
+            'success' => true,
+            'data' => $banners
+        ]);
     }
 }
