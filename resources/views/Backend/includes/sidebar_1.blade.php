@@ -136,7 +136,7 @@
                     </a>
                     <ul aria-expanded="false" class="collapse first-level">
                         <li class="sidebar-item">
-                            <a class="sidebar-link">
+                            <a class="sidebar-link" href="{{ route('bill.index') }}">
                                 <span class="sidebar-icon"></span>
                                 <span class="hide-menu">Bill</span>
                             </a>
