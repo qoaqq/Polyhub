@@ -10,6 +10,7 @@ use Modules\Attribute\Entities\Attribute;
 use Modules\AttributeValue\Entities\AttributeValue;
 use Modules\Category\Entities\Category;
 use Modules\Director\Entities\Director;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class Movie extends Model
 {
