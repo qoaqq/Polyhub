@@ -1701,8 +1701,7 @@
                     "url": "https://www.patreon.com/lcobucci",
                     "type": "patreon"
                 }
-            ],
-
+            ]
         },
         {
             "name": "lcobucci/jwt",
