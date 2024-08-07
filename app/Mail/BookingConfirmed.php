@@ -51,7 +51,7 @@ class BookingConfirmed extends Mailable
     public function content()
     {
         return new Content(
-            view: 'mails.booking_confirmed.blade',
+            view: 'mails.booking_confirmed',
         );
     }
 
