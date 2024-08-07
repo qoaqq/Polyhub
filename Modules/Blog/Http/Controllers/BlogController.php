@@ -83,9 +83,7 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        $title = "Detail Blog";
-        $blog = Blog::find($id);
-        return view('blog::show', compact('title','blog'));
+       
     }
 
     /**
