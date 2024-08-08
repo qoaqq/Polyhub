@@ -51,7 +51,7 @@ class BookingConfirmed extends Mailable
     public function content()
     {
         return new Content(
-            view: 'mails.booking_confirmed',
+            view: 'Mails.booking_confirmed',
         );
     }
 
@@ -67,7 +67,7 @@ class BookingConfirmed extends Mailable
 
     public function build()
     {
-        return $this->view('mails.booking_confirmed')
+        return $this->view('Mails.booking_confirmed')
         ->with([
             'bill' => $this->bill,
             'checkin' => $this->checkin,
