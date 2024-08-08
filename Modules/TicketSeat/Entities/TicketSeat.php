@@ -5,6 +5,12 @@ namespace Modules\TicketSeat\Entities;
 use Modules\Bill\Entities\Bill;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\Cinema\Entities\Cinema;
+use Modules\Movie\Entities\Movie;
+use Modules\Room\Entities\Room;
+use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\ShowingRelease\Entities\ShowingRelease;
 
 class TicketSeat extends Model
 {
@@ -26,11 +32,31 @@ class TicketSeat extends Model
         return $this->belongsTo(Bill::class);
     }
 
-    public function seat_show_time()
+    public function seat_showTime_status()
     {
-        
+        return $this->belongsTo(SeatShowtimeStatus::class, 'seat_showtime_status_id');
     }
-    
+
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class, 'movie_id');
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class, 'room_id');
+    }
+
+    public function cinema()
+    {
+        return $this->belongsTo(Cinema::class, 'cinema_id');
+    }
+
+    public function showingRelease()
+    {
+        return $this->belongsTo(ShowingRelease::class, 'showing_release_id');
+    }
+
     // protected static function newFactory()
     // {
     //     return \Modules\TicketSeat\Database\factories\TicketSeatFactory::new();

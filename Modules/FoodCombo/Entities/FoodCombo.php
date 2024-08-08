@@ -5,6 +5,7 @@ namespace Modules\FoodCombo\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 
 class FoodCombo extends Model
 {
@@ -33,6 +34,11 @@ class FoodCombo extends Model
             $sortDirection = 'desc';
         }
         return $query->orderBy('price', $sortDirection);
+    }
+
+    public function ticketFoodCombo()
+    {
+        return $this->belongsTo(TicketFoodCombo::class);
     }
     
 

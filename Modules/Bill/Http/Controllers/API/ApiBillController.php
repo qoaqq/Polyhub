@@ -4,9 +4,12 @@ namespace Modules\Bill\Http\Controllers\API;
 
 use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
+use App\Mail\BookingConfirmed;
 use Modules\Bill\Entities\Bill;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Modules\Checkin\Entities\Checkin;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
@@ -45,6 +48,7 @@ class ApiBillController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->user['user']['email']);
         $paymentMethod = $request->bill['paymentMethod'];
         
         switch ($paymentMethod) {
@@ -121,7 +125,7 @@ class ApiBillController extends Controller
                     $seatType = $seatDetails['seat_type'];
 
                     TicketSeat::create([
-                        'seat_showtime_status_id' => $seatDetails['id'], 
+                        'seat_showtime_status_id' => $seat['id'], 
                         'bill_id' => $bill->id, 
                         'movie_id' => $showingRelease['movie_id'],
                         'room_id' => $showingRelease['room_id'], 
@@ -141,6 +145,8 @@ class ApiBillController extends Controller
                     ]);
                 };
 
+                Mail::to($request->user['user']['email'])->send(new BookingConfirmed($bill, $checkin, $barcode));
+                
                 return response()->json([
                     'redirect_url' => $vnp_Url,
                     'data' => [

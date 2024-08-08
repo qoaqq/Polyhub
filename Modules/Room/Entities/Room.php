@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Cinema\Entities\Cinema;
 use Modules\Seat\Entities\Seat;
-use Modules\ShowingRelease\Entities\ShowingRelease;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class Room extends Model
 {
@@ -27,8 +27,10 @@ class Room extends Model
     {
         return $this->hasMany(Seat::class);
     }
-    public function showingReleases()
+
+    public function ticketSeat()
     {
-        return $this->hasMany(ShowingRelease::class);
+        return $this->hasMany(TicketSeat::class);
     }
+    
 }
