@@ -117,7 +117,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item d-flex align-items-center gap-3"
+                                                <a onclick="return confirm('do you want to delete this seat')" class="dropdown-item d-flex align-items-center gap-3"
                                                     href="{{ route('admin.seat.delete', [$row->id]) }}">
                                                     <i class="fs-4 ti ti-trash"></i>Delete
                                                 </a>

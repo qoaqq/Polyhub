@@ -5,11 +5,12 @@ namespace Modules\Seat\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Seat\Entities\Seat;
-use Modules\Seat\Entities\SeatType;
 use Modules\Seat\Http\Requests\CreateSeatRequest;
 use Modules\Seat\Http\Requests\UpdateSeatRequest;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\SeatType\Entities\SeatType;
 
 class SeatController extends Controller
 {
@@ -98,7 +99,7 @@ class SeatController extends Controller
             $seat_showing->status = $seat->status ? true : false;
             $seat_showing->save();
         }
-        return redirect()->route('admin.room.detail', [$request->room_id]);
+        return redirect()->route('admin.room.show', [$request->room_id]);
     }
 
     /**
@@ -108,7 +109,16 @@ class SeatController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->findOrFail($id)->delete();
-        return redirect()->route('admin.seat.index');   
+        $seat = $this->model->findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $seat->delete();
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->with('error','An error occurred while deleting the seat');
+        }
+        $seat->delete();
+        return redirect()->route('admin.room.show', [$seat->room->id]);   
     }
 }
