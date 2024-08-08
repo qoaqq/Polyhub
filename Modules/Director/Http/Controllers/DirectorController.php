@@ -69,9 +69,7 @@ class DirectorController extends Controller
      */
     public function show($id)
     {   
-        $title = "Detail Director";
-        $director = Director::find($id);
-        return view('director::show', compact('title','director'));
+        
     }
 
     /**

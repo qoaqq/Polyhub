@@ -90,9 +90,7 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $title = "Detail Movie";
-        $movie = Movie::find($id);
-        return view('movie::show', compact('movie','title'));
+        
     }
 
     /**
