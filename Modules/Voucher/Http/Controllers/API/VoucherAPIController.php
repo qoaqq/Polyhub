@@ -109,33 +109,43 @@ class VoucherAPIController extends Controller
         }
     }
     public function applyVoucher(Request $request)
-    {
-        // Validate request
-        $request->validate([
-            'code' => 'required|string',
-        ]);
+{
+    // Validate request
+    $request->validate([
+        'code' => 'required|string',
+    ]);
 
-        // Lấy code voucher từ request
-        $code = $request->input('code');
+    // Get voucher code from request
+    $code = $request->input('code');
 
-        // Tìm voucher theo code
-        $voucher = Voucher::where('code', $code)->first();
+    // Find voucher by code
+    $voucher = Voucher::where('code', $code)->first();
 
-        if (!$voucher) {
-            return response()->json(['message' => 'Voucher không hợp lệ.'], 400);
-        }
-
-        // Kiểm tra xem voucher có còn sử dụng được không
-        if ($voucher->usage_limit <= 0) {
-            return response()->json(['message' => 'Voucher đã hết lượt sử dụng.'], 400);
-        }
-
-        // Cập nhật số lượng usage_limit và used
-        $voucher->usage_limit -= 1;
-        $voucher->used += 1;
-        $voucher->save();
-
-        // Trả về phản hồi thành công
-        return response()->json(['message' => 'Voucher áp dụng thành công.']);
+    if (!$voucher) {
+        return response()->json(['status' => false, 'message' => 'Voucher không hợp lệ.'], 400);
     }
+
+    // Check if the voucher can still be used
+    if ($voucher->usage_limit <= 0) {
+        return response()->json(['status' => false, 'message' => 'Voucher đã hết lượt sử dụng.'], 400);
+    }
+
+    // Update usage_limit and used count
+    $voucher->usage_limit -= 1;
+    $voucher->used += 1;
+    $voucher->save();
+
+    // Return success response with voucher details
+    return response()->json([
+        'status' => true,
+        'message' => 'Voucher áp dụng thành công.',
+        'data' => [
+            'code' => $voucher->code,
+            'type' => $voucher->type, // Assuming the voucher has a 'type' field
+            'amount' => $voucher->amount, // Assuming the voucher has an 'amount' field
+            'status' => $voucher->status, // Assuming the voucher has a 'status' field
+        ],
+    ]);
+}
+
 }
