@@ -23,5 +23,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/seattypes', 'getSeatType');
         Route::get('/showingrelease/{movie_id}/movie', 'getShowingbyMovie');
         Route::get('/showingrelease/{id}/status', 'getStatusSeat');
+        
     });
 });

@@ -27,3 +27,5 @@ Route::get('top-bogs', [BlogController::class, 'getTopBlogs']);
 Route::get('getYearsAndCounts', [BlogController::class, 'getYearsAndCounts']);
 Route::get('getBlogsByYear/{year}', [BlogController::class, 'getBlogsByYear']);
 Route::get('searchBlogs', [BlogController::class, 'searchBlogs']);
+
+Route::get('blog-hot', [BlogController::class, 'bloghome1']);

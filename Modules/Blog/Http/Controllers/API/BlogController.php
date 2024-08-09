@@ -96,6 +96,16 @@ class BlogController extends Controller
         'data' => $blogs,
     ], 200);
     }
+    public function bloghome1()
+    {
+    // Get the 3 most recent blog posts
+    $blogs = Blog::orderBy('created_at', 'desc')->take(1)->get();
+    return response()->json([
+        'status' => true,
+        'message' => 'Lấy danh sách thành công',
+        'data' => $blogs,
+    ], 200);
+    }
 
 
      public function getLatestBlogs()
