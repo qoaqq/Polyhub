@@ -44,7 +44,6 @@
                         <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Title</th>
                                     <th>Short Description</th>
                                     <th>Image</th>
@@ -55,7 +54,6 @@
                             <tbody>
                                 @foreach ($blog as $bl)
                                     <tr>
-                                        <td><p class="fs-4 mb-0 text-truncate-2">{{ $bl->id }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $bl->title }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $bl->short_desc }}</p></td>
                                         <td><img src="{{ asset($bl->image) }}" id="tablenew" alt="" width="200px"></td>

@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="age">Age</label>
-                    <input type="number" class="form-control" id="age" name="age" placeholder="Enter Age" value="{{ $director->age }}" />
+                    <input type="number" class="form-control" id="age" name="age" placeholder="Enter Age" value="{{ $director->age }}" readonly />
                     @error('age')
                         <div class="text text-danger">{{ $message }}</div>
                     @enderror 
@@ -45,5 +45,21 @@
             </div>
         </form>
     </div>
+    
+    <script>
+    document.getElementById('date_of_birth').addEventListener('change', function() {
+        const dob = new Date(this.value);
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDifference = today.getMonth() - dob.getMonth();
+        
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        
+        document.getElementById('age').value = age;
+    });
+    </script>
+    
 </div>
 @endsection

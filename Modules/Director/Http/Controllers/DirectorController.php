@@ -46,21 +46,41 @@ class DirectorController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'age' => 'required|numeric|min:18|max:90',
-            'date_of_birth' => 'required|date',
-        ]);
-    
-        // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
-        if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-        Director::query()->create($request->all());
-        return redirect('/admin/director')->with('success', 'Director created successfully.');
+    // Validate các trường nhập vào
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'date_of_birth' => 'required|date',
+    ]);
+
+    // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
+    if ($validator->fails()) {
+        return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
     }
+
+    // Tính toán tuổi dựa trên ngày sinh
+    $dateOfBirth = $request->input('date_of_birth');
+    $age = \Carbon\Carbon::parse($dateOfBirth)->age;
+
+    // Kiểm tra điều kiện tuổi
+    if ($age < 18 || $age > 90) {
+        return redirect()->back()
+                    ->withErrors(['age' => 'The age must be between 18 and 90 years.'])
+                    ->withInput();
+    }
+
+    // Lưu trữ dữ liệu vào database
+    Director::create([
+        'name' => $request->input('name'),
+        'age' => $age,
+        'date_of_birth' => $dateOfBirth,
+    ]);
+
+    return redirect('/admin/director')->with('success', 'Director created successfully.');
+    }   
+
+
 
     /**
      * Show the specified resource.
@@ -92,25 +112,48 @@ class DirectorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'age' => 'required|numeric|min:18|max:90',
-            'date_of_birth' => 'required|date',
-        ]);
-    
-        // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
-        if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-        $director = Director::find($id);
-        $director->name = $request->input('name');
-        $director->age = $request->input('age');
-        $director->date_of_birth = $request->input('date_of_birth');
-        $director->save();
-        return redirect('/admin/director')->with('success', 'Director Edit Successfully!');
+    // Xác thực dữ liệu đầu vào
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'date_of_birth' => 'required|date',
+    ]);
+
+    // Nếu dữ liệu không hợp lệ, trả về thông báo lỗi và dữ liệu đã nhập trước đó
+    if ($validator->fails()) {
+        return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
     }
+
+    // Tìm đối tượng Director theo ID
+    $director = Director::find($id);
+
+    if (!$director) {
+        return redirect()->back()
+                    ->withErrors(['error' => 'Director not found'])
+                    ->withInput();
+    }
+
+    // Tính toán tuổi dựa trên ngày sinh
+    $dateOfBirth = $request->input('date_of_birth');
+    $age = \Carbon\Carbon::parse($dateOfBirth)->age;
+
+    // Kiểm tra điều kiện tuổi
+    if ($age < 18 || $age > 90) {
+        return redirect()->back()
+                    ->withErrors(['age' => 'The age must be between 18 and 90 years.'])
+                    ->withInput();
+    }
+
+    // Cập nhật thông tin director
+    $director->name = $request->input('name');
+    $director->age = $age; // Cập nhật tuổi được tính toán
+    $director->date_of_birth = $dateOfBirth;
+    $director->save();
+
+    return redirect('/admin/director')->with('success', 'Director updated successfully!');
+    }
+
 
     /**
      * Remove the specified resource from storage.

@@ -44,7 +44,6 @@
                         <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Duration</th>
@@ -58,7 +57,6 @@
                             <tbody>
                                 @foreach ($movie as $mo)
                                     <tr>
-                                        <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->id }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->name }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->description }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->duration}}</p></td>
