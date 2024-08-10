@@ -111,7 +111,9 @@ class ShowingReleaseController extends Controller
         $showSeats = SeatShowtimeStatus::with('seat')->where('showtime_id', $id)
         ->get();
         $groupedSeats = $showSeats->groupBy(function ($seatStatus) {
-            return $seatStatus->seat->row;
+            if($seatStatus->seat){
+                return $seatStatus->seat->row;
+            }
         });
         $title = "ShowingRelease Show";
         return view('showingrelease::show', compact('showingRelease', 'groupedSeats','title'));
@@ -182,12 +184,9 @@ class ShowingReleaseController extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
-
-
-    
     
     public function getShowingReleasesByMovie($movieId, $cinemaId) {
-        try {
+        try{
             $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
             $showingReleases = ShowingRelease::with(['movie', 'room'])
                 ->where('movie_id', $movieId)
