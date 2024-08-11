@@ -201,6 +201,24 @@ class MoviesController extends Controller
             'data' => $movies,
         ], 200);
     }
+    public function silder()
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+        $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
+
+        $movie = Movie::with('director', 'attributes', 'categories')
+                    ->where('premiere_date', '>', $currentDate)
+                    ->where('premiere_date', '<=', $currentDatePlus10Days)
+                    ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày công chiếu mới nhất
+                    ->first(); // Lấy bộ phim mới nhất
+
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movie,
+        ], 200);
+    }
+
     public function topMovies(){
         $currentMonth = Carbon::now()->month;
 
