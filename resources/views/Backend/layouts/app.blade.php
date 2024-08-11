@@ -80,7 +80,10 @@ tinymce.init({
     plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker code',
     toolbar: 'undo redo | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image media link | code',
     height: 400,
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+    content_style: `
+        body { font-family:Helvetica,Arial,sans-serif; font-size:14px; }
+        img { width: 500px; height: auto; }
+      `,
     image_caption: true,
     image_advtab: true,
     media_live_embeds: true,
@@ -94,44 +97,44 @@ tinymce.init({
         xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
         xhr.onload = function() {
-            if (xhr.status === 200) {
-                let response = JSON.parse(xhr.responseText);
-                let imageUrl = response.location; // URL của ảnh sau khi upload
-
-                // Gọi hàm success với URL của ảnh đã upload
-                success(imageUrl);
-            } else {
-                failure('Error uploading image: ' + xhr.statusText);
-            }
+          if (xhr.status === 200) {
+            let response = JSON.parse(xhr.responseText);
+            let imageUrl = response.location;
+            success(imageUrl);
+          } else {
+            failure('Error uploading image: ' + xhr.statusText);
+          }
         };
 
         xhr.onerror = function() {
-            failure('Network error while uploading image.');
+          failure('Network error while uploading image.');
         };
 
         xhr.send(formData);
-    },
-    file_picker_callback: function(callback, value, meta) {
+      },
+      file_picker_callback: function(callback, value, meta) {
         if (meta.filetype === 'image') {
-            let input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-            input.onchange = function() {
-                let file = this.files[0];
-                let reader = new FileReader();
+          let input = document.createElement('input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('accept', 'image/*');
+          input.onchange = function() {
+            let file = this.files[0];
+            let reader = new FileReader();
 
-                reader.onload = function(e) {
-                    let base64 = e.target.result; // Chuỗi base64 của ảnh
-
-                    // Gọi callback với base64 của ảnh
-                    callback(base64, { title: file.name });
-                };
-
-                reader.readAsDataURL(file); // Đọc file dưới dạng base64
+            reader.onload = function(e) {
+              let base64 = e.target.result;
+              callback(base64, { 
+                title: file.name,
+                width: '500px',
+                height: 'auto'
+              });
             };
-            input.click();
+
+            reader.readAsDataURL(file);
+          };
+          input.click();
         }
-    }
+      }
 });
     </script>
 </body>
