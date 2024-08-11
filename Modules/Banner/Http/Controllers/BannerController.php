@@ -24,7 +24,7 @@ class BannerController extends Controller
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
 
-        $banners = $query->latest('id')->paginate(10);
+        $banners = $query->latest('id')->paginate(5);
         return view('banner::index',compact('banners', 'title'));
     }
 

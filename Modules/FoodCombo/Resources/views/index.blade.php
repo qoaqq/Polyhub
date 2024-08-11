@@ -53,62 +53,59 @@
                                             <div class="ms-3 product-title">
                                                 <h6 class="fs-4 mb-0 text-truncate-2">{{ $foodCombo->name }}</h6>
                                             </div>
-                    </div>
-                    </td>
-                    <td>
-                        @if (!empty($foodCombo->avatar))
-                        <img src="{{asset($foodCombo->avatar)}}" id="tablenew" alt=""  class="img-fluid flex-shrink-0" width="150px" height="150px">
-                        @endif
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center text-truncate">
-                            <h6 class="mb-0 fw-light">{{ $foodCombo->description }}</h6>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex align-items-center text-truncate">
-                            <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} VND</h6>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown dropstart">
-                            <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="ti ti-dots-vertical fs-5"></i>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('foodcombos.show', $foodCombo->id) }}"><i
-                                            class="fs-4 ti ti-plus"></i>Detail</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('foodcombos.edit', $foodCombo->id) }}"><i
-                                            class="fs-4 ti ti-edit"></i>Edit</a>
-                                </li>
-                                <li>
-                                    <form action="{{ route('foodcombos.destroy', $foodCombo->id) }}" method="post" onsubmit="return confirm('Do you want to delete ?')">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
-                                            <i class="fs-4 ti ti-trash"></i>Delete
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tbody>
+                    
+                                        </td>
+                                    <td>
+                                        @if (!empty($foodCombo->avatar))
+                                        <img src="{{asset($foodCombo->avatar)}}" id="tablenew" alt=""  class="img-fluid flex-shrink-0" width="150px" height="150px">
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center text-truncate">
+                                            <h6 class="mb-0 fw-light">{{ $foodCombo->description }}</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center text-truncate">
+                                            <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} VND</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="ti ti-dots-vertical fs-5"></i>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('foodcombos.show', $foodCombo->id) }}"><i
+                                                            class="fs-4 ti ti-plus"></i>Detail</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('foodcombos.edit', $foodCombo->id) }}"><i
+                                                            class="fs-4 ti ti-edit"></i>Edit</a>
+                                                </li>
+                                                <li>
+                                                    <form action="{{ route('foodcombos.destroy', $foodCombo->id) }}" method="post" onsubmit="return confirm('Do you want to delete ?')">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
+                                                            <i class="fs-4 ti ti-trash"></i>Delete
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
                 </div>
-                <div class="d-flex align-items-center justify-content-between mt-4">
                     <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
                     <div class="mt-3">
                         {{$foodCombos->links('vendor.pagination.bootstrap-5') }}
                     </div>
-
-                </div>
             </div>
         </div>
     </div>
