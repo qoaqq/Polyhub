@@ -175,13 +175,19 @@ class MoviesController extends Controller
 
     public function image()
     {
-        $movie = Movie::with('director', 'attributes', 'categories')->paginate(6);
-        
-        // return KhachHangResource::collection($khachHangs);
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+        $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
+
+        $movies = Movie::with('director', 'attributes', 'categories')
+                    ->where('premiere_date', '>', $currentDate)
+                    ->where('premiere_date', '<=', $currentDatePlus10Days)
+                    ->orderBy('id', 'desc') 
+                    ->paginate(4);
+
         return response()->json([
             'status'=> true,
             'message'=>'Lấy danh sách thành công',
-            'data' => $movie,
+            'data' => $movies,
         ], 200);
     }
     public function upcoming()
@@ -206,7 +212,7 @@ class MoviesController extends Controller
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
         $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
 
-        $movie = Movie::with('director', 'attributes', 'categories')
+        $movie = Movie::with('director', 'categories','attributes.attributeValues')
                     ->where('premiere_date', '>', $currentDate)
                     ->where('premiere_date', '<=', $currentDatePlus10Days)
                     ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày công chiếu mới nhất
