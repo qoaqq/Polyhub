@@ -13,9 +13,19 @@ class BillController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bills = Bill::with(['ticketSeats', 'user'])->get();
+        $query = Bill::with(['ticketSeats', 'user']);
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $bills = $query->orderBy('created_at', 'desc')->paginate(5);
 
         // dd($bills);
         return view('bill::index',  compact('bills'));

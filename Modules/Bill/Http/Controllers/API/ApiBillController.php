@@ -103,11 +103,13 @@ class ApiBillController extends Controller
                     $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
                 }
 
-                $barcode = (new DNS1D())->getBarcodePNG($vnp_TxnRef, 'C39');
+                $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
+                $barcodeImage = file_get_contents($barcodeUrl);
+                $barcodeBase64 = base64_encode($barcodeImage);
 
                 $checkin = Checkin::create([
                     'name' => 'Check-in for bill ' . $vnp_TxnRef,
-                    'checkin_code' => $barcode,
+                    'checkin_code' => $barcodeBase64,
                     'type' => 'bill',
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -145,14 +147,14 @@ class ApiBillController extends Controller
                     ]);
                 };
 
-                Mail::to($request->user['user']['email'])->send(new BookingConfirmed($bill, $checkin, $barcode));
-                
+                Mail::to($request->user['user']['email'])->send(new BookingConfirmed($bill, $checkin, $barcodeBase64));
+
                 return response()->json([
                     'redirect_url' => $vnp_Url,
                     'data' => [
                         'bill' => $bill,
                         'checkin' => $checkin,
-                        'barcode' => $barcode
+                        'barcode' => $barcodeBase64
                     ]
                 ], 200);
             case 'momo':

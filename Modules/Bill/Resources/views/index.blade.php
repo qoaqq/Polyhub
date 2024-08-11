@@ -8,11 +8,10 @@
                     <h1 class="card-title" style="font-size: 1.5rem">Bill</h1>
                 </div>
                 <div class="d-flex align-items-center">
-                    <form class="position-relative me-3 w-100">
-                        <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-                        placeholder="Search">
-                        <i
-                        class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+                    <form action="{{ route('bill.index') }}" method="GET" class="position-relative me-3 w-100">
+                        <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" name="search"
+                            placeholder="Search" value="{{ request()->input('search') }}">
+                        <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                     </form>
                     <div class="dropdown">
                         <a href="#" class="btn border shadow-none px-3" id="dropdownMenuButton"
@@ -80,12 +79,11 @@
                                 </td>
                             </tr>
                             
-                            {{-- @include('category::partials.children_categories', ['categories' => $categories, 'parent_id' => $item->id, 'char' => '|---']) --}}
                         @endif
                     @endforeach
                 </tbody>
             </table>
-            {{-- {{ $categories->links('vendor.pagination.bootstrap-5') }} --}}
+            {{ $bills->links('vendor.pagination.bootstrap-5') }}
         </div>
     </div>
 @endsection

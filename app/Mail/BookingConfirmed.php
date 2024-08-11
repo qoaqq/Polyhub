@@ -16,19 +16,19 @@ class BookingConfirmed extends Mailable
 
     public $bill;
     public $checkin;
-    public $barcode;
+    public $barcodeBase64;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($bill, $checkin, $barcode)
+    public function __construct($bill, $checkin, $barcodeBase64)
     {
         //
         $this->bill = $bill;
         $this->checkin = $checkin;
-        $this->barcode = $barcode;
+        $this->barcodeBase64 = $barcodeBase64;
     }
 
     /**
@@ -71,7 +71,7 @@ class BookingConfirmed extends Mailable
         ->with([
             'bill' => $this->bill,
             'checkin' => $this->checkin,
-            'barcode' => $this->barcode,
+            'barcodeBase64' => $this->barcodeBase64,
         ]);
     }
 }
