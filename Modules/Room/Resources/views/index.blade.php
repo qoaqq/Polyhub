@@ -7,7 +7,7 @@
             <div class="card-body">
                 <div class="d-md-flex justify-content-between mb-9">
                     <div class="mb-9 mb-md-0">
-                        <h5 class="card-title">cinemas management</h5>
+                        <h5 class="card-title">rooms management</h5>
                     </div>
                     <div class="d-flex align-items-center">
                         {{-- filler --}}

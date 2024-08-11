@@ -73,18 +73,9 @@
                         <div class="col-1">
                             <div  class="seat p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
                                 <span class="dropdown dropstart">
-                                    <a href="#" class="text-muted" id="dropdownMenuButton"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="text-muted" aria-expanded="false">
                                         {{ $row->seat->column }}{{ $row->seat->row }}
                                     </a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li>
-                                            <a class="dropdown-item d-flex align-items-center gap-3"
-                                                href="{{ route('admin.seat.detail', [$row->seat_id]) }}">
-                                                <i class="fs-4 ti ti-edit"></i>update
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </span>
                             </div>
                         </div>
