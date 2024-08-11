@@ -166,7 +166,6 @@ class ShowingReleaseController extends Controller
         return response()->json($cinemas);
     }
     
-   // ShowingReleaseController.php
     public function getMoviesByCinema($cinemaId)
     {
         try {
@@ -182,18 +181,19 @@ class ShowingReleaseController extends Controller
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
-
-
-    
-    
+ 
     public function getShowingReleasesByMovie($movieId, $cinemaId) {
         try {
             $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
             $showingReleases = ShowingRelease::with(['movie', 'room'])
                 ->where('movie_id', $movieId)
                 ->whereIn('room_id', $rooms)
-                ->get();
-            return response()->json($showingReleases);
+                ->latest('id')
+                ->paginate(5);
+                return response()->json([
+                    'showingReleases' => $showingReleases->items(),
+                    'pagination' => $showingReleases->links('vendor.pagination.bootstrap-5')->toHtml()
+                ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
