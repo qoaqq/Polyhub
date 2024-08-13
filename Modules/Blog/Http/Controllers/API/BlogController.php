@@ -49,22 +49,33 @@ class BlogController extends Controller
      */
     public function show(string $id)
     {
-        $blog = Blog::find($id);
-        if (!$blog) {
-            $arr = [
-                'status'=>false,
-                'message'=>'Không tìm thấy bài viết này',
-                'data'=>[]
-            ];
-            return response()->json($arr,200);
-        }
-        $arr = [
-            'status'=>true,
-            'message'=>'Thông tin chi tiết bài viết',
-            'data'=>$blog
-        ];
-        return response()->json($arr,200);
+    $blog = Blog::find($id);
+    
+    if (!$blog) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Không tìm thấy bài viết này',
+            'data' => []
+        ], 200);
     }
+
+    // Lấy các bài viết cùng danh mục
+    $relatedBlogs = Blog::where('categories_id', $blog->categories_id)
+        ->where('id', '!=', $id) // Loại bỏ bài viết hiện tại
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Thông tin chi tiết bài viết',
+        'data' => [
+            'blog' => $blog,
+            'relatedBlogs' => $relatedBlogs
+        ]
+    ], 200);
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -224,5 +235,21 @@ class BlogController extends Controller
                 'total_pages' => ceil($total / $perPage),
             ]
         ], 200);
+    }
+
+    public function getRelatedPosts($id)
+    {
+    $post = Blog::find($id);
+
+    if (!$post) {
+        return response()->json(['error' => 'Post not found'], 404);
+    }
+
+    $relatedPosts = Blog::where('categories_id', $post->categories_id)
+        ->where('id', '!=', $id) // Exclude the current post
+        ->take(5)
+        ->get();
+
+    return response()->json($relatedPosts);
     }
 }
