@@ -173,23 +173,6 @@ class MoviesController extends Controller
     ], 200);
 }
 
-    public function image()
-    {
-        $currentDate = now(); // Lấy ngày và thời gian hiện tại
-        $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
-
-        $movies = Movie::with('director', 'attributes', 'categories')
-                    ->where('premiere_date', '>', $currentDate)
-                    ->where('premiere_date', '<=', $currentDatePlus10Days)
-                    ->orderBy('id', 'desc') 
-                    ->paginate(4);
-
-        return response()->json([
-            'status'=> true,
-            'message'=>'Lấy danh sách thành công',
-            'data' => $movies,
-        ], 200);
-    }
     public function upcoming()
     {
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
