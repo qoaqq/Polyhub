@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class BookingConfirmed extends Mailable
+class BookingConfirmed extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -29,6 +29,7 @@ class BookingConfirmed extends Mailable
         $this->bill = $bill;
         $this->checkin = $checkin;
         $this->barcodeBase64 = $barcodeBase64;
+        
     }
 
     /**

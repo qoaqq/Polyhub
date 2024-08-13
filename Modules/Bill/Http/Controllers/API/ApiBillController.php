@@ -5,6 +5,7 @@ namespace Modules\Bill\Http\Controllers\API;
 use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
 use App\Mail\BookingConfirmed;
+use App\Models\User;
 use Modules\Bill\Entities\Bill;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,7 @@ use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class ApiBillController extends Controller
 {
@@ -26,10 +28,10 @@ class ApiBillController extends Controller
     {
         $bills = Bill::all();
         return response()->json([
-            'status'=>true,
-            'message'=>'Lấy danh sách thành công',
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
             'data' => $bills,
-        ],200);
+        ], 200);
     }
 
     /**
@@ -46,11 +48,10 @@ class ApiBillController extends Controller
      * @param Request $request
      * @return Renderable
      */
+
     public function store(Request $request)
     {
-        // dd($request->user['user']['email']);
         $paymentMethod = $request->bill['paymentMethod'];
-        
         switch ($paymentMethod) {
             case 'vnpay':
                 $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
@@ -120,21 +121,21 @@ class ApiBillController extends Controller
                     'grand_total' => $request->bill['grandTotal'],
                     'checkin_id' => $checkin->id
                 ]);
-                
+
                 foreach ($request->ticket_seat['selectedSeats'] as $seat) {
                     $seatDetails = $seat['seat'];
                     $showingRelease = $request->ticket_seat['showingrelease'];
                     $seatType = $seatDetails['seat_type'];
 
                     TicketSeat::create([
-                        'seat_showtime_status_id' => $seat['id'], 
-                        'bill_id' => $bill->id, 
+                        'seat_showtime_status_id' => $seat['id'],
+                        'bill_id' => $bill->id,
                         'movie_id' => $showingRelease['movie_id'],
-                        'room_id' => $showingRelease['room_id'], 
+                        'room_id' => $showingRelease['room_id'],
                         'cinema_id' => $showingRelease['room']['cinema']['id'],
-                        'showing_release_id' => $showingRelease['id'], 
-                        'time_start' => $showingRelease['time_release'], 
-                        'price' => $seatType['price'] 
+                        'showing_release_id' => $showingRelease['id'],
+                        'time_start' => $showingRelease['time_release'],
+                        'price' => $seatType['price']
                     ]);
                 }
 
@@ -147,7 +148,15 @@ class ApiBillController extends Controller
                     ]);
                 };
 
-                Mail::to($request->user['user']['email'])->send(new BookingConfirmed($bill, $checkin, $barcodeBase64));
+                if (isset($request->user['user']['id'])) {
+                    $user_id = $request->user['user']['id'];
+                    $user = User::find($user_id);
+                    $user->points += 100;
+                    $user->save();
+                }
+
+                Mail::to($request->user['user']['email'])
+                    ->later(now()->addSeconds(10), new BookingConfirmed($bill, $checkin, $barcodeBase64));
 
                 return response()->json([
                     'redirect_url' => $vnp_Url,
@@ -158,24 +167,214 @@ class ApiBillController extends Controller
                     ]
                 ], 200);
             case 'momo':
-                // Giả lập thanh toán MoMo
-                $momoData = [
-                    'partnerCode' => 'YOUR_PARTNER_CODE',
-                    'accessKey' => 'YOUR_ACCESS_KEY',
-                    'requestId' => time(),
-                    'amount' => 1000000,
-                    'orderId' => time(),
-                    'orderInfo' => 'Payment for order',
-                    'returnUrl' => 'http://localhost:4200/home',
-                    'notifyUrl' => 'http://localhost:8000/api/momo/notify',
-                    'signature' => 'dummy_signature',
-                ];
+                // MoMo
+                $endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
 
-                $momoPayUrl = 'http://localhost:4200/momo-payment';
+                $partnerCode = 'MOMOBKUN20180529';
+                $accessKey = 'klm05TvNBzhg7h7j';
+                $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
 
-                
+                $orderInfo = "Thanh toán qua MoMo";
+                $amount = "10000";
+                $orderId = time() . "";
+                $returnUrl = "http://localhost:4200/confirmation";
+                $notifyurl = "http://localhost:4200/confirmation";
+                // Lưu ý: link notifyUrl không phải là dạng localhost
+                $bankCode = "SML";
 
-                return response()->json(['redirect_url' => $momoPayUrl]);
+                $requestId = time() . "";
+                $requestType = "payWithMoMoATM";
+                $extraData = "";
+                //before sign HMAC SHA256 signature
+                $rawHashArr =  array(
+                    'partnerCode' => $partnerCode,
+                    'accessKey' => $accessKey,
+                    'requestId' => $requestId,
+                    'amount' => $amount,
+                    'orderId' => $orderId,
+                    'orderInfo' => $orderInfo,
+                    'bankCode' => $bankCode,
+                    'returnUrl' => $returnUrl,
+                    'notifyUrl' => $notifyurl,
+                    'extraData' => $extraData,
+                    'requestType' => $requestType
+                );
+                // echo $serectkey;die;
+                $rawHash = "partnerCode=" . $partnerCode . "&accessKey=" . $accessKey . "&requestId=" . $requestId . "&bankCode=" . $bankCode . "&amount=" . $amount . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&returnUrl=" . $returnUrl . "&notifyUrl=" . $notifyurl . "&extraData=" . $extraData . "&requestType=" . $requestType;
+                $signature = hash_hmac("sha256", $rawHash, $secretKey);
+
+                $data =  array(
+                    'partnerCode' => $partnerCode,
+                    'accessKey' => $accessKey,
+                    'requestId' => $requestId,
+                    'amount' => $amount,
+                    'orderId' => $orderId,
+                    'orderInfo' => $orderInfo,
+                    'returnUrl' => $returnUrl,
+                    'bankCode' => $bankCode,
+                    'notifyUrl' => $notifyurl,
+                    'extraData' => $extraData,
+                    'requestType' => $requestType,
+                    'signature' => $signature
+                );
+                $result = $this->execPostRequest($endpoint, json_encode($data));
+                $jsonResult = json_decode($result, true);  // decode json
+
+                $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $request->user['user']['email'] . '&code=Code128&dpi=96';
+                $barcodeImage = file_get_contents($barcodeUrl);
+                $barcodeBase64 = base64_encode($barcodeImage);
+
+                $checkin = Checkin::create([
+                    'name' => 'Check-in for bill ' . $request->user['user']['email'],
+                    'checkin_code' => $barcodeBase64,
+                    'type' => 'bill',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                $bill = Bill::create([
+                    'user_id' => $request->bill['user_id'],
+                    'grand_total' => $request->bill['grandTotal'],
+                    'checkin_id' => $checkin->id
+                ]);
+
+                foreach ($request->ticket_seat['selectedSeats'] as $seat) {
+                    $seatDetails = $seat['seat'];
+                    $showingRelease = $request->ticket_seat['showingrelease'];
+                    $seatType = $seatDetails['seat_type'];
+
+                    TicketSeat::create([
+                        'seat_showtime_status_id' => $seat['id'],
+                        'bill_id' => $bill->id,
+                        'movie_id' => $showingRelease['movie_id'],
+                        'room_id' => $showingRelease['room_id'],
+                        'cinema_id' => $showingRelease['room']['cinema']['id'],
+                        'showing_release_id' => $showingRelease['id'],
+                        'time_start' => $showingRelease['time_release'],
+                        'price' => $seatType['price']
+                    ]);
+                }
+
+                foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
+                    TicketFoodCombo::create([
+                        'food_combo_id' => $selectedFoodCombos['id'],
+                        'bill_id' => $bill->id,
+                        'price' => $selectedFoodCombos['price'],
+                        'quantity' => $selectedFoodCombos['quantity']
+                    ]);
+                };
+
+                if (isset($request->user['user']['id'])) {
+                    $user_id = $request->user['user']['id'];
+                    $user = User::find($user_id);
+                    $user->points += 100;
+                    $user->save();
+                }
+
+                Mail::to($request->user['user']['email'])
+                    ->later(now()->addSeconds(10), new BookingConfirmed($bill, $checkin, $barcodeBase64));
+
+                if (isset($jsonResult['payUrl'])) {
+                    return response()->json([
+                        'redirect_url' => $jsonResult['payUrl'],
+                        'data' => [
+                            'bill' => $bill,
+                            'checkin' => $checkin,
+                            'barcode' => $barcodeBase64
+                        ]
+                    ], 200);
+                } else {
+                    return response()->json(['status' => 'error', 'message' => 'MoMo response missing payUrl'], 400);
+                }
+            case 'paypal':
+                $provider = new PayPalClient;
+                $provider->setApiCredentials(config('paypal'));
+                $paypalToken = $provider->getAccessToken();
+
+                $response = $provider->createOrder([
+                    "intent" => "CAPTURE",
+                    "application_context" => [
+                        "return_url" => "http://localhost:4200/confirmation",
+                        "cancel_url" => "http://localhost:4200/confirmation"
+                    ],
+                    "purchase_units" => [
+                        [
+                            "amount" => [
+                                "currency_code" => "USD",
+                                "value" => "100.00"
+                            ]
+                        ]
+                    ]
+                ]);
+
+                $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $request->user['user']['email'] . '&code=Code128&dpi=96';
+                $barcodeImage = file_get_contents($barcodeUrl);
+                $barcodeBase64 = base64_encode($barcodeImage);
+
+                $checkin = Checkin::create([
+                    'name' => 'Check-in for bill ' . $request->user['user']['email'],
+                    'checkin_code' => $barcodeBase64,
+                    'type' => 'bill',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                $bill = Bill::create([
+                    'user_id' => $request->bill['user_id'],
+                    'grand_total' => $request->bill['grandTotal'],
+                    'checkin_id' => $checkin->id
+                ]);
+
+                foreach ($request->ticket_seat['selectedSeats'] as $seat) {
+                    $seatDetails = $seat['seat'];
+                    $showingRelease = $request->ticket_seat['showingrelease'];
+                    $seatType = $seatDetails['seat_type'];
+
+                    TicketSeat::create([
+                        'seat_showtime_status_id' => $seat['id'],
+                        'bill_id' => $bill->id,
+                        'movie_id' => $showingRelease['movie_id'],
+                        'room_id' => $showingRelease['room_id'],
+                        'cinema_id' => $showingRelease['room']['cinema']['id'],
+                        'showing_release_id' => $showingRelease['id'],
+                        'time_start' => $showingRelease['time_release'],
+                        'price' => $seatType['price']
+                    ]);
+                }
+
+                foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
+                    TicketFoodCombo::create([
+                        'food_combo_id' => $selectedFoodCombos['id'],
+                        'bill_id' => $bill->id,
+                        'price' => $selectedFoodCombos['price'],
+                        'quantity' => $selectedFoodCombos['quantity']
+                    ]);
+                };
+
+                if (isset($request->user['user']['id'])) {
+                    $user_id = $request->user['user']['id'];
+                    $user = User::find($user_id);
+                    $user->points += 100;
+                    $user->save();
+                }
+
+                Mail::to($request->user['user']['email'])
+                    ->later(now()->addSeconds(10), new BookingConfirmed($bill, $checkin, $barcodeBase64));
+
+                if (isset($response['id']) && $response['id'] != null) {
+                    foreach ($response['links'] as $link) {
+                        if ($link['rel'] === 'approve') {
+                            return response()->json([
+                                'redirect_url' => $link['href'],
+                                'data' => [
+                                    'bill' => $bill,
+                                    'checkin' => $checkin,
+                                    'barcode' => $barcodeBase64
+                                ]
+                            ], 200);
+                        }
+                    }
+                }
             default:
                 return response()->json(['status' => 'error', 'message' => 'Unknown payment method'], 400);
         }
@@ -239,5 +438,28 @@ class ApiBillController extends Controller
         //
         Bill::destroy($id);
         return response()->json(null, 204);
+    }
+
+    public function execPostRequest($url, $data)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data)
+            )
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        return $result;
     }
 }
