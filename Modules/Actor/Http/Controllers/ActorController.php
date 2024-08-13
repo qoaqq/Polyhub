@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Storage;
 use Modules\Actor\Entities\Actor;
 use Modules\Movie\Entities\Movie;
+use Illuminate\Support\Facades\Facade;
 class ActorController extends Controller
 {
     /**
@@ -163,8 +164,32 @@ class ActorController extends Controller
         $title2 = 'List Actor';
         $movie = Movie::all();
         $page = $actor->paginate(4);
-        return view('actor::search', compact('title','title2','actor','movie','page'));
+       
+        return view('actor::search', compact('title','title2','movie','page'));
     }
+    public function filter(Request $request)
+    {
+        $gender = $request->input('gender', ''); // Lấy giá trị giới tính từ request
+    
+        // Tạo query để lọc dữ liệu theo giới tính
+        $actorsQuery = Actor::query();
+    
+        if ($gender) {
+            $actorsQuery->where('gender', $gender);
+        }
+    
+        // Phân trang kết quả
+        $page = $actorsQuery->paginate(4)->appends(['gender' => $gender]);
+    
+        $title = 'Actor';
+        $title2 = 'List Actor';
+        $movie = Movie::all();
+    
+        return view('actor::filter', compact('title', 'title2', 'page', 'movie'));
+    }
+    
+
+
     public function bin()
     {
         $listvalue = Actor::onlyTrashed();
