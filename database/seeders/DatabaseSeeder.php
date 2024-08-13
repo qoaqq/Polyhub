@@ -22,6 +22,7 @@ use Modules\Seat\Database\Seeders\SeatDatabaseSeeder;
 use Modules\SeatShowtimeStatus\Database\Seeders\SeatShowtimeStatusDatabaseSeeder;
 use Modules\SeatType\Database\Seeders\SeatTypeDatabaseSeeder;
 use Modules\ShowingRelease\Database\Seeders\ShowingReleaseDatabaseSeeder;
+use Modules\Voucher\Database\Seeders\VoucherDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -84,6 +85,7 @@ class DatabaseSeeder extends Seeder
             SeatShowtimeStatusDatabaseSeeder::class,
             FoodComboDatabaseSeeder::class,
             ActorDatabaseSeeder::class,
+            VoucherDatabaseSeeder::class,
         ]);
     }
 }
