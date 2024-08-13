@@ -101,11 +101,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mt-4">
+                
                         <div class="mt-3">
                             {{ $banners->links('vendor.pagination.bootstrap-5') }}
                         </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

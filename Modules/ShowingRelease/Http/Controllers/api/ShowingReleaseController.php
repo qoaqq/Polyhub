@@ -14,14 +14,11 @@ use Modules\ShowingRelease\Http\Requests\UpdateShowingReleaseRequest;
 
 class ShowingReleaseController extends Controller
 {
-/**
+    /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($movie_id)
-    {
-        
-    }
+    public function index($movie_id) {}
 
     /**
      * Show the form for creating a new resource.
@@ -52,8 +49,8 @@ class ShowingReleaseController extends Controller
         $showingRelease->date_release = Carbon::createFromFormat('Y-m-d', $request->date_release);
         $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
         $showingRelease->save();
-    
-        return response()->json(['data' => $showingRelease,'success' => 'Thêm thành công'], 201);
+
+        return response()->json(['data' => $showingRelease, 'success' => 'Thêm thành công'], 201);
     }
 
     /**
@@ -64,7 +61,7 @@ class ShowingReleaseController extends Controller
     public function show($showingReleaseId)
     {
         $showingRelease = ShowingRelease::with(['room', 'room.cinema.city', 'movie']) // Tải các quan hệ 'room' và 'room.city'
-        ->find($showingReleaseId);
+            ->find($showingReleaseId);
         return response()->json([
             'data' => $showingRelease,
         ]);
@@ -105,7 +102,7 @@ class ShowingReleaseController extends Controller
             $showingRelease->date_release =  $request->date_release;
             $showingRelease->time_release = Carbon::createFromFormat('H:i', $request->time_release);
             $showingRelease->save();
-            return response()->json(['data' => $showingRelease,'success' => 'Cập nhật thành công!']);
+            return response()->json(['data' => $showingRelease, 'success' => 'Cập nhật thành công!']);
         }
         return response()->json(['error' => 'Not Found'], 404);
     }
@@ -129,8 +126,8 @@ class ShowingReleaseController extends Controller
     {
         // Lấy toàn bộ ghế theo showtime_id
         $seats = SeatShowtimeStatus::where('showtime_id', $showtime_id)
-                                ->with('seat' ,'seat.seatType') // Sử dụng with() để tải quan hệ
-                                ->get();
+            ->with('seat', 'seat.seatType') // Sử dụng with() để tải quan hệ
+            ->get();
 
         return response()->json($seats);
     }
@@ -144,8 +141,8 @@ class ShowingReleaseController extends Controller
 
         // Tìm ghế theo showtime_id và seat_id
         $seat = SeatShowtimeStatus::where('showtime_id', $showtime_id)
-                                    ->where('seat_id', $seat_id)
-                                    ->first();
+            ->where('seat_id', $seat_id)
+            ->first();
 
         if (!$seat) {
             return response()->json(['message' => 'Seat not found'], 404);
@@ -160,17 +157,19 @@ class ShowingReleaseController extends Controller
 
     public function getSeatType()
     {
-       $SeatType = SeatType::all(); 
-    return response()->json($SeatType);
+        $SeatType = SeatType::all();
+        return response()->json($SeatType);
     }
 
     public function getShowingbyMovie($movie_id)
     {
         $today = Carbon::today();
         $tenDaysLater = $today->copy()->addDays(10); // Ngày sau 10 ngày từ hôm nay
+        $now = Carbon::now(); // Lấy thời gian hiện tại
 
         $query = ShowingRelease::where('movie_id', $movie_id)
             ->whereBetween('date_release', [$today, $tenDaysLater])
+            ->where('time_release', '>=', $now) // Chỉ lấy các suất chiếu từ giờ trở đi
             ->with(['room', 'room.cinema.city', 'movie'])
             ->get();
 
@@ -179,10 +178,12 @@ class ShowingReleaseController extends Controller
         ]);
     }
 
-    public function getStatusSeat($id) {
+
+    public function getStatusSeat($id)
+    {
         // Tìm ghế theo ID
         $seatStatus = SeatShowtimeStatus::where('id', $id)->first();
-    
+
         // Kiểm tra nếu ghế tồn tại
         if ($seatStatus) {
             // Trả về trạng thái của ghế dưới dạng true/false
@@ -193,4 +194,3 @@ class ShowingReleaseController extends Controller
         }
     }
 }
-

@@ -11,6 +11,6 @@
     <p>Grand Total: {{ $bill->grand_total }}</p>
     <p><strong>Checkin Details:</strong></p>
     <p>Name: {{ $checkin->name }}</p>
-    <p>Checkin Code: {!! DNS1D::getBarcodeHTML($checkin->checkin_code, 'C128') !!} </p>
+    <img src="data:image/png;base64,{{ $barcodeBase64 }}" alt="Checkin Barcode">
 </body>
 </html>

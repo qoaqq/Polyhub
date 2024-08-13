@@ -50,6 +50,12 @@
                                 <span class="hide-menu">Category</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('banners.index') }}" class="sidebar-link">
+                                <span class="sidebar-icon"></span>
+                                <span class="hide-menu">Banner</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
