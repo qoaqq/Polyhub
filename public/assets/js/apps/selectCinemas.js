@@ -1,9 +1,7 @@
-let a = document.getElementById('city-select');
-console.log(a);
 document.getElementById('city-select').addEventListener('change', function () {
     var cityId = this.value;
     var cinemaSelect = document.getElementById('cinemaSelect');
-    cinemaSelect.innerHTML = '<option value="">Chọn rạp chiếu phim</option>';
+    cinemaSelect.innerHTML = '<option value="">select cinema</option>';
     cinemaSelect.disabled = false;
     if (cityId) {
         fetch('/admin/cinema/city/' + cityId)

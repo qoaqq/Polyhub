@@ -2,14 +2,18 @@
 
 namespace Modules\Seat\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Room\Entities\Room;
 use Modules\Seat\Entities\Seat;
-use Modules\Seat\Entities\SeatType;
 use Modules\Seat\Http\Requests\CreateSeatRequest;
 use Modules\Seat\Http\Requests\UpdateSeatRequest;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Modules\SeatType\Entities\SeatType;
+use Modules\TicketSeat\Entities\TicketSeat;
 
 class SeatController extends Controller
 {
@@ -90,6 +94,16 @@ class SeatController extends Controller
     public function update(UpdateSeatRequest $request, $id)
     {
         $seat = $this->model->find($id);
+        // kiểm tra xem room đã cố người đặt vé chưa
+        $latestBookedTicketSeat = TicketSeat::where('room_id', $seat->room_id)
+        ->orderBy('time_start', 'desc')
+        ->first();
+        if($latestBookedTicketSeat){
+           if($latestBookedTicketSeat->time_start > Carbon::now()){
+            return redirect()->route('admin.seat.detail', [$id])
+            ->withErrors(['updateSeats' => 'this seat cannot be updated, please wait']);
+           };
+        }
         $seat->seat_type_id = $request->seat_type;
         $seat->status = $request->status;
         $seat->save();
@@ -98,7 +112,7 @@ class SeatController extends Controller
             $seat_showing->status = $seat->status ? true : false;
             $seat_showing->save();
         }
-        return redirect()->route('admin.room.detail', [$request->room_id]);
+        return redirect()->route('admin.room.show', [$request->room_id]);
     }
 
     /**
@@ -108,7 +122,16 @@ class SeatController extends Controller
      */
     public function destroy($id)
     {
-        $this->model->findOrFail($id)->delete();
-        return redirect()->route('admin.seat.index');   
+        $seat = $this->model->findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $seat->delete();
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->with('error','An error occurred while deleting the seat');
+        }
+        $seat->delete();
+        return redirect()->route('admin.room.show', [$seat->room->id]);   
     }
 }

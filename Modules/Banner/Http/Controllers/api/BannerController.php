@@ -163,7 +163,14 @@ class BannerController extends Controller
 
     public function getBanner(){
         $banners = Banner::where('status', 1)->latest('id')->paginate(7);
+        return response()->json([
+            'success' => true,
+            'data' => $banners
+        ]);
+    }
 
+    public function getHotBanner(){
+        $banners = Banner::where('status', 1)->take(3)->get();
         return response()->json([
             'success' => true,
             'data' => $banners

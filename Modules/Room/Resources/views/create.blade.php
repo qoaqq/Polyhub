@@ -4,14 +4,13 @@
         <div class="col-12">
             <div class="card mb-0">
                 <div class="border-bottom title-part-padding">
-                    <h4 class="card-title mb-0">update cinema</h4>
+                    <h4 class="card-title mb-0">Add new room</h4>
                 </div>
                 <div class="card-body">
                     {{-- content start --}}
                     <section class="container">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="mb-3">Add new room</h5>
                                 <form action="" method="POST">
                                     @csrf
                                     <div class="row">
@@ -22,6 +21,7 @@
                                         <div class="col input-group my-4">
                                             <span class="input-group-text">City</span>
                                             <select id="city-select" name="city_id" class="form-select">
+                                                <option value="">Select city</option>
                                                 @foreach ($cities as $city)
                                                     <option value="{{ $city->id }}">{{ $city->name }}</option>
                                                 @endforeach

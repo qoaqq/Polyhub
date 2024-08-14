@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="card mb-0">
                 <div class="border-bottom title-part-padding">
-                    <h4 class="card-title mb-0">update cinema</h4>
+                    <h4 class="card-title mb-0">add cinema</h4>
                 </div>
                 <div class="card-body">
                     {{-- content start --}}
@@ -24,6 +24,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">City</label>
                                         <select class="form-control form-select" name="city_id">
+                                            <option>select city</option>
                                             @foreach ($cities as $city)
                                                 <option value="{{ $city->id }}">{{ $city->name }}</option>
                                             @endforeach
