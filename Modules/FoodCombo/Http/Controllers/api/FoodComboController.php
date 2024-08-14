@@ -14,8 +14,8 @@ class FoodComboController extends Controller
 {
     public function index(Request $request)
     {
-        $foodCombos = FoodCombo::all();
-        return response()->json($foodCombos);
+        $foodCombos = FoodCombo::orderBy('id', 'desc')->take(3)->get();
+        return response()->json(['data' => $foodCombos]);
     }
 
     public function create()

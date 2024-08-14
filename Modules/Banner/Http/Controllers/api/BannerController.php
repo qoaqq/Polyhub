@@ -18,7 +18,14 @@ class BannerController extends Controller
     public function index(Request $request): JsonResponse
     {
         $banners = Banner::where('status', 1)->latest('id')->paginate(6);
+        $i = 45;
 
+        // Thay đổi giá trị của $i cho từng banner
+        $banners->getCollection()->transform(function ($banner) use (&$i) {
+            $banner->i = $i; // Thêm biến $i vào mỗi banner
+            $i++; // Tăng giá trị $i
+            return $banner;
+        });
         return response()->json([
             'success' => true,
             'data' => $banners

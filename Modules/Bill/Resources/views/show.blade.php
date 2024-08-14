@@ -63,9 +63,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="date_release">Barcode :</label>
                             <div>
-                                <div style="background-color: white; width: 517.4px;">
-                                    {!! DNS1D::getBarcodeHTML($checkin->checkin_code, 'C128', 0.2, 50) !!}
-                                </div>
+                                <img src="data:image/png;base64,{{ $checkin->checkin_code }}" alt="Checkin Barcode">
                             </div>
                         </div>
 

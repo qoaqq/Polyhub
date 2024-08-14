@@ -11,6 +11,6 @@
     <p>Grand Total: {{ $bill->grand_total }}</p>
     <p><strong>Checkin Details:</strong></p>
     <p>Name: {{ $checkin->name }}</p>
-    <p>Checkin Code: <img src="data:image/png;base64,{{ $barcode }}" /></p>
+    <img src="data:image/png;base64,{{ $barcodeBase64 }}" alt="Checkin Barcode">
 </body>
 </html>

@@ -50,6 +50,12 @@
                                 <span class="hide-menu">Category</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('banners.index') }}" class="sidebar-link">
+                                <span class="sidebar-icon"></span>
+                                <span class="hide-menu">Banner</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -142,9 +148,9 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link">
+                            <a class="sidebar-link" href="{{ route('voucher.list') }}">
                                 <span class="sidebar-icon"></span>
-                                <span class="hide-menu">Checkin</span>
+                                <span class="hide-menu">Voucher</span>
                             </a>
                         </li>
                     </ul>

@@ -9,9 +9,19 @@
                             <h5 class="card-title">{{ $title }}</h5>
                         </div>
                         <div class="d-flex align-items-center">
-                            <form class="position-relative me-3 w-100" method="GET">
+                            <form class="position-relative me-3 w-100" method="post" action=" {{ route('actor.filter') }} ">
+                                @csrf
+                                <select name="gender" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Genders</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </form>
+                            <form class="position-relative me-3 w-100" action="{{ route('actor.search') }}" method="post"
+                                onsubmit>
+                                @csrf
                                 <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-                                    placeholder="Search" name='q'>
+                                    placeholder="Search" name='text'>
                                 <i
                                     class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                             </form>
@@ -23,11 +33,11 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                            href="{{ route('attribute.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
+                                            href="{{ route('actor.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                            href="{{ route('attribute.bin') }}"><i class="fs-4 ti ti-edit"></i>Bin</a>
+                                            href="{{ route('actor.bin') }}"><i class="fs-4 ti ti-edit"></i>Bin</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
@@ -40,17 +50,24 @@
                     <div class="table-responsive overflow-x-auto latest-reviews-table">
                         <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
-                                <tr>
-                                    <th scope="col">ID
+                                <tr class="text-center">
 
-                                    </th>
-                                    <th scope="col">Movie
+                                    <th scope="col">ID
 
                                     </th>
                                     <th scope="col">Name
 
                                     </th>
-                                    <th></th>
+                                    <th scope="col">Gender
+
+                                    </th>
+                                    <th scope="col">Avatar
+
+                                    </th>
+                                    <th scope="col">Movies
+
+                                    </th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,35 +76,42 @@
 
                                         <td>
                                             <div class="d-flex align-items-center product text-truncate">
-
-                                                <div class=" product-title">
-                                                    <h6 class="fs-4 mb-0 text-truncate-2"> {{ $item->id }} </h6>
+                                                <div class="ms-3 product-title">
+                                                    <h6 class="fs-4 mb-0 text-truncate-2">
+                                                        {{ $item->id }}
+                                                    </h6>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center text-truncate">
+                                                <div class="ms-7">
+                                                    <h5 class="mb-1 fs-4"> {{ $item->name }}</h5>
 
-                                                <div class="">
-
-                                                    @forelse ($movie as $item2)
-                                                        @if ($item->movie_id == $item2->id)
-                                                            <h5 class="mb-1 fs-4"> {{ $item2->name }} </h5>
-                                                        @endif
-                                                    @empty
-                                                    @endforelse
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center product text-truncate">
+                                            <div class="d-flex align-items-center text-truncate">
+                                                <div class="ms-7">
+                                                    <h5 class="mb-1 fs-4"> {{ $item->gender }}</h5>
 
-                                                <div class="product-title">
-                                                    <h6 class="fs-4 mb-0 text-truncate-2"> {{ $item->name }} </h6>
                                                 </div>
                                             </div>
                                         </td>
+                                        <td>
+                                            <img src="{{ asset($item->avatar) }}" alt="" width="100px">
+                                        </td>
 
+                                        <td>
+
+                                            @foreach ($item->movies as $movie)
+                                                {{ $movie->name }}
+                                                @if (!$loop->last)
+                                                    , <br>
+                                                @endif
+                                            @endforeach
+                                        </td>
                                         <td>
                                             <div class="dropdown dropstart">
                                                 <a href="#" class="text-muted " id="dropdownMenuButton"
@@ -97,16 +121,17 @@
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="{{ route('attribute.show', $item->id) }}"><i
+                                                            href=" {{ route('actor.show', $item->id) }} "><i
                                                                 class="fs-4 ti ti-plus"></i>Detail</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3"
-                                                            href="{{ route('attribute.edit', $item->id) }}"><i
+                                                            href="{{ route('actor.edit', $item->id) }}"><i
                                                                 class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('attribute.delete', $item->id) }}"
+
+                                                        <form action="{{ route('actor.delete', $item->id) }}"
                                                             method="post">
                                                             @csrf
                                                             @method('delete')
@@ -122,28 +147,17 @@
                                             </div>
                                         </td>
                                     </tr>
-
                                 @empty
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                     <div class="mt-3">
-                        {{ $movie->links('vendor.pagination.bootstrap-5') }}
-                      </div>
+                        {{ $page->links('vendor.pagination.bootstrap-5') }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        function sortTable(column) {
-            const urlParams = new URLSearchParams(window.location.search);
-            let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
 
-            urlParams.set('sort', column);
-            urlParams.set('direction', direction);
-
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
-    </script>
 @endsection
