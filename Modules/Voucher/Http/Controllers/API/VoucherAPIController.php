@@ -147,5 +147,35 @@ class VoucherAPIController extends Controller
         ],
     ]);
 }
+public function getVoucherByName(Request $request)
+{
+    // Validate request
+    $request->validate([
+        'code' => 'required|string',
+    ]);
+
+    // Get voucher code from request
+    $code = $request->input('code');
+
+    // Find voucher by code
+    $voucher = Voucher::where('code', $code)->first();
+
+    if (!$voucher) {
+        return response()->json(['status' => false, 'message' => 'Voucher không hợp lệ.'], 400);
+    }
+
+    // Return voucher details without altering the usage count
+    return response()->json([
+        'status' => true,
+        'message' => 'Voucher found.',
+        'data' => [
+            'code' => $voucher->code,
+            'type' => $voucher->type,
+            'amount' => $voucher->amount,
+            'status' => $voucher->status,
+        ],
+    ]);
+}
+
 
 }

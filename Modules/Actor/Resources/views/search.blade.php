@@ -1,7 +1,5 @@
 @extends('Backend.layouts.app')
-
 @section('content')
-
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -9,14 +7,21 @@
                     <div class="d-md-flex justify-content-between mb-9">
                         <div class="mb-9 mb-md-0">
                             <h5 class="card-title">{{ $title }}</h5>
-                            <p class="card-subtitle mb-0">{{ $title2 }}</p>
                         </div>
                         <div class="d-flex align-items-center">
-                            <form class="position-relative me-3 w-100" onsubmit="true" method="post"
-                                action=" {{ route('actor.search') }} ">
+                            <form class="position-relative me-3 w-100" method="post" action=" {{ route('actor.filter') }} ">
                                 @csrf
-                                <input type="text" name="text" class="form-control search-chat py-2 ps-5"
-                                    id="text-srh" placeholder="Search">
+                                <select name="gender" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Genders</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </form>
+                            <form class="position-relative me-3 w-100" action="{{ route('actor.search') }}" method="post"
+                                onsubmit>
+                                @csrf
+                                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+                                    placeholder="Search" name='text'>
                                 <i
                                     class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                             </form>
@@ -27,8 +32,8 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
-                                                class="fs-4 ti ti-plus"></i>Add</a>
+                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                            href="{{ route('actor.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3"
@@ -43,12 +48,10 @@
                         </div>
                     </div>
                     <div class="table-responsive overflow-x-auto latest-reviews-table">
-                        <table class="table mb-0 align-middle text-nowrap">
+                        <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
-                                <tr>
-                                    <th class="ps-0">
-                                        #
-                                    </th>
+                                <tr class="text-center">
+
                                     <th scope="col">ID
 
                                     </th>
@@ -61,7 +64,7 @@
                                     <th scope="col">Avatar
 
                                     </th>
-                                    <th scope="col">Movie
+                                    <th scope="col">Movies
 
                                     </th>
                                     <th scope="col"></th>
@@ -70,12 +73,7 @@
                             <tbody>
                                 @forelse ($page as $item)
                                     <tr>
-                                        <td class="ps-0">
-                                            <div class="form-check mb-0 flex-shrink-0">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="flexCheckDefault1">
-                                            </div>
-                                        </td>
+
                                         <td>
                                             <div class="d-flex align-items-center product text-truncate">
                                                 <div class="ms-3 product-title">
@@ -102,17 +100,17 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <img src="{{ asset('/storage/actors/' . $item->avatar) }}" alt=""
-                                                width="100px">
+                                            <img src="{{ asset($item->avatar) }}" alt="" width="100px">
                                         </td>
-                                        </td>
+
                                         <td>
-                                            @forelse ($movie as $item2)
-                                                @if ($item->movie_id == $item2->id)
-                                                    <h5 class="mb-1 fs-4"> {{ $item2->name }} </h5>
+
+                                            @foreach ($item->movies as $movie)
+                                                {{ $movie->name }}
+                                                @if (!$loop->last)
+                                                    , <br>
                                                 @endif
-                                            @empty
-                                            @endforelse
+                                            @endforeach
                                         </td>
                                         <td>
                                             <div class="dropdown dropstart">
@@ -150,17 +148,21 @@
                                         </td>
                                     </tr>
                                 @empty
+                                   
+                                            <h6 class="fs-4 mb-0 text-truncate-2">
+                                                No result matching!
+                                            </h6>
+                                      
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between mt-10">
-                        <div class="mt-3">
-                            {{ $page->links('vendor.pagination.bootstrap-5') }}
-                        </div>
+                    <div class="mt-3">
+                        {{ $page->links('vendor.pagination.bootstrap-5') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 @endsection

@@ -88,53 +88,60 @@ tinymce.init({
     image_advtab: true,
     media_live_embeds: true,
     automatic_uploads: true,
-    images_upload_handler: function (blobInfo, success, failure) {
-        let formData = new FormData();
-        formData.append('file', blobInfo.blob(), blobInfo.filename());
+    init_instance_callback: function (editor) {
+  editor.on('NodeChange', function (e) {
+  // Xử lý kích thước ảnh khi nội dung thay đổi
+  editor.contentDocument.querySelectorAll('img').forEach(img => {
+  img.style.width = '500px'; // Kích thước cố định
+  img.style.height = 'auto';
+    });
+  });
+},
 
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', '/admin/blog/upload_image', true);
-        xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+setup: function (editor) {
+  editor.on('BeforeSetContent', function (e) {
+    // Xử lý kích thước ảnh trước khi thiết lập nội dung
+    e.content = e.content.replace(/<img([^>]+)>/g, function (match, p1) {
+      return `<img ${p1} style="width: 500px; height: auto;" />`;
+    });
+  });
+},
+file_picker_callback: function (callback, value, meta) {
+    if (meta.filetype === 'image') {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.onchange = function () {
+            var file = this.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
 
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            let response = JSON.parse(xhr.responseText);
-            let imageUrl = response.location;
-            success(imageUrl);
-          } else {
-            failure('Error uploading image: ' + xhr.statusText);
-          }
+            // Gửi yêu cầu AJAX tới server
+            fetch('/admin/blog/upload_image', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Chèn URL tuyệt đối vào nội dung và thêm style
+                callback(result.location, {
+                    alt: file.name,
+                    style: 'width: 500px; height: auto;'
+                });
+            })
+            .catch(error => {
+                console.error('Error uploading image:', error);
+            });
         };
-
-        xhr.onerror = function() {
-          failure('Network error while uploading image.');
-        };
-
-        xhr.send(formData);
-      },
-      file_picker_callback: function(callback, value, meta) {
-        if (meta.filetype === 'image') {
-          let input = document.createElement('input');
-          input.setAttribute('type', 'file');
-          input.setAttribute('accept', 'image/*');
-          input.onchange = function() {
-            let file = this.files[0];
-            let reader = new FileReader();
-
-            reader.onload = function(e) {
-              let base64 = e.target.result;
-              callback(base64, { 
-                title: file.name,
-                width: '500px',
-                height: 'auto'
-              });
-            };
-
-            reader.readAsDataURL(file);
-          };
-          input.click();
-        }
-      }
+        input.click();
+    }
+},
+    relative_urls: false,  // Tắt relative URLs
+    remove_script_host: false,  // Giữ lại hostname
+    document_base_url: 'http://localhost:8000/'
 });
     </script>
 </body>

@@ -36,7 +36,6 @@
                         <table class="table mb-0 align-middle text-nowrap table-bordered">
                             <thead class="text-dark fs-4">
                                 <tr>
-                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Age</th>
                                     <th>Date Of Birth</th>
@@ -46,7 +45,6 @@
                             <tbody>
                                 @foreach ($director as $dr)
                                     <tr>
-                                        <td><p class="fs-4 mb-0 text-truncate-2">{{ $dr->id }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $dr->name }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $dr->age }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $dr->date_of_birth }}</p></td>

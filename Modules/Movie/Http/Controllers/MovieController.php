@@ -29,6 +29,12 @@ class MovieController extends Controller
             $query->where('director_id', $request->director_id);
         }
 
+        if ($request->filled('categories_id')) {
+            $query->whereHas('categories', function($q) use ($request) {
+                $q->where('categories.id', $request->categories_id);
+            });
+        }
+
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where('name', 'like', '%' . $searchTerm . '%');

@@ -28,4 +28,8 @@ Route::get('getYearsAndCounts', [BlogController::class, 'getYearsAndCounts']);
 Route::get('getBlogsByYear/{year}', [BlogController::class, 'getBlogsByYear']);
 Route::get('searchBlogs', [BlogController::class, 'searchBlogs']);
 
+Route::get('getRelatedPosts/{id}/related', [BlogController::class, 'getRelatedPosts']);
+
+
 Route::get('blog-hot', [BlogController::class, 'bloghome1']);
+
