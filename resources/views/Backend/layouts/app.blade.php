@@ -89,11 +89,10 @@ tinymce.init({
     media_live_embeds: true,
     automatic_uploads: true,
     init_instance_callback: function (editor) {
-  editor.on('NodeChange', function (e) {
-  // Xử lý kích thước ảnh khi nội dung thay đổi
-  editor.contentDocument.querySelectorAll('img').forEach(img => {
-  img.style.width = '500px'; // Kích thước cố định
-  img.style.height = 'auto';
+      editor.on('NodeChange', function (e) {
+      editor.contentDocument.querySelectorAll('img').forEach(img => {
+      img.style.width = '500px'; // Kích thước cố định
+      img.style.height = 'auto';
     });
   });
 },
