@@ -165,8 +165,7 @@ class ShowingReleaseController extends Controller
     {
         $today = Carbon::today();
         $tenDaysLater = $today->copy()->addDays(10); // Ngày sau 10 ngày từ hôm nay
-        $now = Carbon::now(); // Lấy thời gian hiện tại
-
+        $now = Carbon::now('Asia/Ho_Chi_Minh'); // Đặt múi giờ phù hợp với cơ sở dữ liệu
         $query = ShowingRelease::where('movie_id', $movie_id)
             ->whereBetween('date_release', [$today, $tenDaysLater])
             ->where('time_release', '>=', $now) // Chỉ lấy các suất chiếu từ giờ trở đi
