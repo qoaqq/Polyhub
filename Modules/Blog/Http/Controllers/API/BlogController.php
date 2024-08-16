@@ -155,7 +155,7 @@ class BlogController extends Controller
     }
 
     public function getTopBlogs(){
-        $topBogs = Blog::with('category')->paginate(3);
+        $topBogs = Blog::with('category')->latest()->take(3)->get();;
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
