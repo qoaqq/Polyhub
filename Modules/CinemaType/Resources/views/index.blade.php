@@ -1,22 +1,29 @@
 @extends('Backend.layouts.app')
 
 @section('content')
+@if (session('success'))
+        <script>
+            window.onload = function() {
+                alert("{{ session('success') }}");
+            }
+        </script>
+@endif
 <div class="row">
     <div class="col-12">
         <div class="card mb-0">
             <div class="card-body">
                 <div class="d-md-flex justify-content-between mb-9">
                     <div class="mb-9 mb-md-0">
-                        <h5 class="card-title">cinemas management</h5>
+                        <h5 class="card-title">cinematype management</h5>
                     </div>
                     <div class="d-flex align-items-center">
                         {{-- filler --}}
-                        <form id="filter-form" class="position-relative me-3 w-100" method="GET" action="{{ route('admin.cinema.index') }}">
-                            <select name="city_id" class="form-select" onchange="this.form.submit()">
-                                <option value="">All Cities</option>
-                                {{-- @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" @if(request('city_id') == $city->id) selected @endif>{{ $city->name }}</option>
-                                @endforeach --}}
+                        <form id="filter-form" class="position-relative me-3 w-100" method="GET" action="{{ route('admin.cinematype.index') }}">
+                            <select name="cinema_id" class="form-select" onchange="this.form.submit()">
+                                <option value="">All Cinema</option>
+                                @foreach($cinemas as $cinema)
+                                    <option value="{{ $cinema->id }}" @if(request('cinema_id') == $cinema->id) selected @endif>{{ $cinema->name }}</option>
+                                @endforeach
                             </select>
                         </form>
                         {{-- seach --}}
@@ -27,7 +34,7 @@
                                 class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                         </form>
                         <div class="dropdown">
-                            <a href="{{ route('admin.cinema.create') }}" class="btn border shadow-none px-3"
+                            <a href="{{ route('admin.cinematype.create') }}" class="btn border shadow-none px-3"
                                 id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-dots-vertical fs-5"></i>
                             </a>

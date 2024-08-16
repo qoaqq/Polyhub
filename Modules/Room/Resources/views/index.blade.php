@@ -1,6 +1,20 @@
 @extends('Backend.layouts.app')
 
 @section('content')
+@if (session('success'))
+        <script>
+            window.onload = function() {
+                alert("{{ session('success') }}");
+            }
+        </script>
+@endif
+@if (session('error'))
+        <script>
+            window.onload = function() {
+                alert("{{ session('error') }}");
+            }
+        </script>
+@endif
 <div class="row">
     <div class="col-12">
         <div class="card mb-0">
