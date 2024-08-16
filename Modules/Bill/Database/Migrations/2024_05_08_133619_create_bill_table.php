@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->nullable();
+            $table->foreignId('user_id')->constrained(); 
             $table->foreignId('checkin_id')->constrained();
-            $table->decimal('grand_total');
+            $table->decimal('grand_total', 10, 2); 
             $table->timestamps();
         });
     }
