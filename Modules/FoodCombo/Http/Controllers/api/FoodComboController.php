@@ -15,6 +15,7 @@ class FoodComboController extends Controller
     public function index(Request $request)
     {
         $foodCombos = FoodCombo::all();
+
         return response()->json($foodCombos);
     }
 
@@ -79,5 +80,10 @@ class FoodComboController extends Controller
 
         $foodCombo->delete();
         return response()->json(['message' => 'Xóa thành công!']);
+    }
+
+    public function get3FoodComboo(){
+        $foodCombos = FoodCombo::orderBy('id', 'desc')->take(3)->get();
+        return response()->json(['data' => $foodCombos]);
     }
 }

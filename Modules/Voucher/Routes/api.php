@@ -15,5 +15,5 @@ use Modules\Voucher\Http\Controllers\API\VoucherAPIController;
 */
 Route::resource('voucher', VoucherAPIController::class);
 Route::get('voucher/{id}/amount', [VoucherAPIController::class, 'getAmountById']);
-Route::get('voucher/{id}/voucherdetail', [VoucherAPIController::class, 'getVoucherById']);
+Route::post('voucher/name', [VoucherAPIController::class, 'getVoucherByName']);
 Route::post('voucher/applyvoucher', [VoucherAPIController::class, 'applyVoucher']);

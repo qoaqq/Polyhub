@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/banners', function (Request $request) {
 });
 Route::apiResource('banners', BannerController::class);
 Route::get('banner-home', [BannerController::class, 'getBanner']);
+Route::get('hot-banner', [BannerController::class, 'getHotBanner']);

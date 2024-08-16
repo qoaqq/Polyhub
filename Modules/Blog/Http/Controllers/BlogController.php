@@ -161,27 +161,29 @@ class BlogController extends Controller
         $request->validate([
             'file' => 'required|image'
         ]);
-
+    
         $file = $request->file('file');
-
+    
         // Tính toán hash của file để kiểm tra trùng lặp
         $fileHash = md5_file($file->getRealPath());
         $extension = $file->getClientOriginalExtension();
-
+    
         // Đặt tên file với hash và phần mở rộng
         $fileName = $fileHash . '.' . $extension;
         $path = 'uploadcontent/' . $fileName;
-
+    
         // Kiểm tra nếu file đã tồn tại
         if (!Storage::disk('public')->exists($path)) {
             // Lưu file nếu chưa tồn tại
             $file->storeAs('uploadcontent', $fileName, 'public');
         }
-
+    
         // Tạo URL công khai cho ảnh
-        $url = Storage::url($path);
-
+        $url = url('storage/' . $path);
+    
         // Trả về URL của ảnh dưới dạng JSON
         return response()->json(['location' => $url]);
     }
+    
+
 }

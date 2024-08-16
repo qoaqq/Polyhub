@@ -1,30 +1,43 @@
-
 @extends('Backend.layouts.app')
- @section('content')
-     <div class="row">
-         <div class="col-12">
-             <div class="card mb-0">
-                 <div class="card-body">
-                     <div class="d-md-flex justify-content-between mb-9">
-                         <div class="mb-9 mb-md-0">
-                             <h5 class="card-title">{{ $title }}</h5>
-                         </div>
-                         <div class="d-flex align-items-center">
-                             <form class="position-relative me-3 w-100" method="GET">
-                                 <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
-                                     placeholder="Search" name='q'>
-                                 <i
-                                     class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
-                             </form>
-                             <div class="dropdown">
-                                 <a href="#" class="btn border shadow-none px-3" id="dropdownMenuButton"
-                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                     <i class="ti ti-dots-vertical fs-5"></i>
-                                 </a>
-                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="d-md-flex justify-content-between mb-9">
+                        <div class="mb-9 mb-md-0">
+                            <h5 class="card-title">{{ $title }}</h5>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <!-- resources/views/actor/filter.blade.php -->
+                            <form class="position-relative me-3 w-100" method="get" action="{{ route('actor.filter') }}">
+                                <select name="gender" class="form-select" onchange="this.form.submit()">
+                                    <option value="">All Genders</option>
+                                    <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>Female
+                                    </option>
+                                </select>
+                            </form>
+
+                            <form class="position-relative me-3 w-100" action="{{ route('actor.search') }}" method="get"
+                                onsubmit>
+                              
+
+                                <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh"
+                                    placeholder="Search" name='text'>
+                                <i
+                                    class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+                            </form>
+                            <div class="dropdown">
+                                <a href="#" class="btn border shadow-none px-3" id="dropdownMenuButton"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti ti-dots-vertical fs-5"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('actor.create') }}"><i
-                                                class="fs-4 ti ti-plus"></i>Add</a>
+                                        <a class="dropdown-item d-flex align-items-center gap-3"
+                                            href="{{ route('actor.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item d-flex align-items-center gap-3"
@@ -34,15 +47,15 @@
                                         <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
                                                 class="fs-4 ti ti-trash"></i>Delete</a>
                                     </li>
-                                 </ul>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="table-responsive overflow-x-auto latest-reviews-table">
-                         <table class="table mb-0 align-middle text-nowrap table-bordered">
-                             <thead class="text-dark fs-4">
-                                 <tr class="text-center">
-                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive overflow-x-auto latest-reviews-table">
+                        <table class="table mb-0 align-middle text-nowrap table-bordered">
+                            <thead class="text-dark fs-4">
+                                <tr class="text-center">
+
                                     <th scope="col">ID
 
                                     </th>
@@ -59,12 +72,12 @@
 
                                     </th>
                                     <th scope="col"></th>
-                                 </tr>
-                             </thead>
-                             <tbody>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 @forelse ($page as $item)
                                     <tr>
-                                       
+
                                         <td>
                                             <div class="d-flex align-items-center product text-truncate">
                                                 <div class="ms-3 product-title">
@@ -91,18 +104,17 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <img src="{{ asset( $item->avatar) }}" alt=""
-                                                width="100px">
+                                            <img src="{{ asset($item->avatar) }}" alt="" width="100px">
                                         </td>
-                                        
+
                                         <td>
-                                           
-                                            @foreach($item->movies as $movie)
-                                            {{ $movie->name }}
-                                            @if (!$loop->last)
-                                                ,
-                                            @endif
-                                        @endforeach
+
+                                            @foreach ($item->movies as $movie)
+                                                {{ $movie->name }}
+                                                @if (!$loop->last)
+                                                    , <br>
+                                                @endif
+                                            @endforeach
                                         </td>
                                         <td>
                                             <div class="dropdown dropstart">
@@ -141,27 +153,23 @@
                                     </tr>
                                 @empty
                                 @endforelse
-                     </tbody>
-                     </table>
-                 </div>
-                 <div class="d-flex align-items-center justify-content-between mt-4">
-                     <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
-                     {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3">
+                        {{ $page->links('vendor.pagination.bootstrap-5') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                 </div>
-             </div>
-         </div>
-     </div>
-     </div>
-     <script>
-         function sortTable(column) {
-             const urlParams = new URLSearchParams(window.location.search);
-             let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
 
-             urlParams.set('sort', column);
-             urlParams.set('direction', direction);
+    <script>
+        function submitForm() {
+            document.getElementById('genderForm').submit(); // Tự động submit form
 
-             window.location.href = window.location.pathname + '?' + urlParams.toString();
-         }
-     </script>
- @endsection
+        }
+    </script>
+
+@endsection

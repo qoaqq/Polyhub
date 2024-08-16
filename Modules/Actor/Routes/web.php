@@ -26,7 +26,8 @@ Route::middleware(['auth', 'isEmployee'])->group(function () {
             'update' => 'actor.update',
             'destroy' => 'actor.delete'
         ]);
-        Route::post('actor/search', 'ActorController@search')->name('actor.search');
+        Route::get('actor/search/Actor', 'ActorController@search')->name('actor.search');
+        Route::get('actor/filter/Actor', [ActorController::class, 'filter'])->name('actor.filter');
         Route::get('actor/up', 'ActorController@up')->name('actor.up');
         Route::get('actor/down', 'ActorController@down')->name('actor.down');
         Route::get('actor/bin/actor', 'ActorController@bin')->name('actor.bin');

@@ -22,9 +22,15 @@ class CinemaTypeController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
-    {
-        $cinemaTypes = $this->model->with('cinema')->paginate(10);
+    public function index(Request $request)
+    { 
+        $query = $this->model->with('cinema');
+        // logic for searching
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+        $cinemaTypes = $query->latest('id')->paginate(10);
         return view('cinematype::index', compact('cinemaTypes'));
     }
 

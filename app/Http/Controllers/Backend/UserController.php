@@ -19,9 +19,18 @@ class UserController extends Controller
         $title = "User management";
         $sort = $request->get('sort');
         $direction = $request->get('direction', 'desc');
-        $users = User::onlyAdmins()->search($request->get('q', ''))
-            ->sort($sort, $direction)->paginate();
-        $page = User::onlyAdmins()->paginate();
+        $currentUserId = auth()->id(); // Lấy ID của người dùng hiện tại
+
+        $users = User::onlyAdmins()
+            ->where('id', '!=', $currentUserId) // Loại trừ người dùng hiện tại
+            ->search($request->get('q', ''))
+            ->sort($sort, $direction)
+            ->paginate();
+
+        $page = User::onlyAdmins()
+            ->where('id', '!=', $currentUserId) // Loại trừ người dùng hiện tại
+            ->paginate();
+
         return view('Backend.user.admin.index', compact('title', 'users', 'page'));
     }
 
@@ -133,7 +142,7 @@ class UserController extends Controller
         return back();
     }
 
-    
+
     public function updateType(Request $request, $id)
     {
         $user = User::findOrFail($id);

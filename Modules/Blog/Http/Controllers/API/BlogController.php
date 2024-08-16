@@ -15,20 +15,16 @@ class BlogController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $perPage = $request->input('per_page', 5); // Số lượng bài viết mỗi trang
-        $page = $request->input('page', 1); // Trang hiện tại
-
-        $blogs = Blog::latest('id')->paginate($perPage);
+        $blogs = Blog::with('category')
+                 ->orderBy('created_at','desc')
+                 ->paginate(5);
 
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách thành công',
-            'data' => $blogs->items(), // Danh sách blog
-            'current_page' => $blogs->currentPage(), // Trang hiện tại
-            'total_pages' => $blogs->lastPage(), // Tổng số trang
-            'total' => $blogs->total(), // Tổng số bài viết
+            'data' => $blogs
         ], 200);
     }
 
@@ -49,22 +45,33 @@ class BlogController extends Controller
      */
     public function show(string $id)
     {
-        $blog = Blog::find($id);
-        if (!$blog) {
-            $arr = [
-                'status'=>false,
-                'message'=>'Không tìm thấy bài viết này',
-                'data'=>[]
-            ];
-            return response()->json($arr,200);
-        }
-        $arr = [
-            'status'=>true,
-            'message'=>'Thông tin chi tiết bài viết',
-            'data'=>$blog
-        ];
-        return response()->json($arr,200);
+    $blog = Blog::find($id);
+    
+    if (!$blog) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Không tìm thấy bài viết này',
+            'data' => []
+        ], 200);
     }
+
+    // Lấy các bài viết cùng danh mục
+    $relatedBlogs = Blog::where('categories_id', $blog->categories_id)
+        ->where('id', '!=', $id) // Loại bỏ bài viết hiện tại
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Thông tin chi tiết bài viết',
+        'data' => [
+            'blog' => $blog,
+            'relatedBlogs' => $relatedBlogs
+        ]
+    ], 200);
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -118,30 +125,27 @@ class BlogController extends Controller
         ], 200);
     }
 
-    public function getBlogByCategory(Request $request, $categoryId)
+    public function getBlogByCategory($categoryId)
     {
-        $perPage = $request->input('per_page', 5); // Số lượng bài viết mỗi trang
-        $page = $request->input('page', 1); // Trang hiện tại
-
-        $blogs = Blog::where('categories_id', $categoryId) // Lọc theo danh mục
-                     ->latest()
-                     ->paginate($perPage);
-
+        $blogs = Blog::with('category')
+        ->whereHas('category', function ($query) use ($categoryId) {
+            $query->where('categories.id', $categoryId);
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
         return response()->json([
-            'status' => true,
-            'message' => 'Lấy danh sách bài viết theo danh mục thành công',
-            'data' => $blogs->items(), // Danh sách blog
-            'current_page' => $blogs->currentPage(), // Trang hiện tại
-            'total_pages' => $blogs->lastPage(), // Tổng số trang
-            'total' => $blogs->total(), // Tổng số bài viết
+           'status'=> true,
+           'message'=>'Lấy danh sách thành công',
+           'data' => $blogs
         ], 200);
     }
 
-
     public function getAllCategory()
     {
-        $categories = Category::withCount('blogs')->get();
-        $allBlogs = Blog::count();
+        $categories = Category::withCount('blogs')
+        ->orderBy('created_at', 'desc')
+        ->get();
+        $allBlogs = Blog::get()->count();
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách thành công',
@@ -158,81 +162,25 @@ class BlogController extends Controller
            'data' => $topBogs,
         ], 200);
     }
-    public function getYearsAndCounts()
-    {
-        $years = Blog::selectRaw('YEAR(created_at) as year')
-                    ->groupBy('year')
-                    ->orderBy('year', 'desc')
-                    ->get();
 
-        $yearlyCounts = [];
-        foreach ($years as $year) {
-            $count = Blog::whereYear('created_at', $year->year)->count();
-            $yearlyCounts[] = [
-                'year' => $year->year,
-                'count' => $count
-            ];
+    public function search(Request $request)
+    {
+        $title = $request->get('title');
+        if(empty($title)){
+            $blog = Blog::with('category')
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
+        }else{
+            $blogs = Blog::with('category')->where('title', 'LIKE', '%'.$title.'%')
+            ->paginate(5);
         }
-
         return response()->json([
-            'status' => true,
-            'message' => 'Lấy danh sách năm và số lượng bài viết thành công',
-            'data' => $yearlyCounts
+           'status'=> true,
+           'message'=>'Tìm kiếm thành công',
+           'data' => $blogs,
+           'title' => $title
         ], 200);
     }
 
-    public function getBlogsByYear(Request $request, $year)
-    {
-        $page = $request->query('page', 1);
-        $perPage = $request->query('per_page', 5);
-
-        $blogsQuery = Blog::whereYear('created_at', $year);
-
-        $total = $blogsQuery->count();
-        $blogs = $blogsQuery->orderBy('created_at', 'desc')
-                            ->skip(($page - 1) * $perPage)
-                            ->take($perPage)
-                            ->get();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Lấy danh sách bài viết theo năm thành công',
-            'data' => [
-                'blogs' => $blogs,
-                'total' => $total,
-                'current_page' => $page,
-                'per_page' => $perPage,
-                'total_pages' => ceil($total / $perPage),
-            ]
-        ], 200);
-    }
-
-    public function searchBlogs(Request $request)
-    {
-        $searchTerm = $request->query('search', '');
-        $page = $request->query('page', 1);
-        $perPage = $request->query('per_page', 5);
-
-        // Tìm kiếm bài viết theo tên
-        $blogsQuery = Blog::where('title', 'like', '%' . $searchTerm . '%');
-
-        // Phân trang
-        $total = $blogsQuery->count();
-        $blogs = $blogsQuery->orderBy('created_at', 'desc')
-                            ->skip(($page - 1) * $perPage)
-                            ->take($perPage)
-                            ->get();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Tìm kiếm bài viết thành công',
-            'data' => [
-                'blogs' => $blogs,
-                'total' => $total,
-                'current_page' => $page,
-                'per_page' => $perPage,
-                'total_pages' => ceil($total / $perPage),
-            ]
-        ], 200);
-    }
+   
 }
