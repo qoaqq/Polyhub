@@ -168,17 +168,11 @@ class ShowingReleaseController extends Controller
         return response()->json($cinemas);
     }
     
-    public function getMoviesByCinema($cinemaId)
+    public function getAllMovies()
     {
         try {
-            $rooms = Room::where('cinema_id', $cinemaId)->pluck('id'); // Lấy danh sách room_id thuộc cinema
-            $movies = Movie::whereHas('showingReleases', function ($query) use ($rooms) {
-                $query->whereIn('room_id', $rooms); // Lọc phim thuộc các room này
-            })->get();
-            
+            $movies = Movie::all(); // Lấy tất cả các phim
             return response()->json($movies);
-        } catch (\Exception $e) {    
-            // Trả về mã lỗi và thông báo lỗi
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }

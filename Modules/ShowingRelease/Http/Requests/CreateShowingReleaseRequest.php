@@ -35,14 +35,30 @@ class CreateShowingReleaseRequest extends FormRequest
             $roomId = $this->input('room_id');
             $dateRelease = $this->input('date_release');
             $timeRelease = $this->input('time_release');
-
+            
+            if (!$dateRelease || !$timeRelease) {
+                return;
+            }
+    
+            // Lấy thời gian phát hành từ đầu vào và chuyển về múi giờ Asia/Ho_Chi_Minh
+            $timeReleaseDateTime = Carbon::createFromFormat('Y-m-d H:i', $dateRelease . ' ' . $timeRelease, 'Asia/Ho_Chi_Minh');
+            
+            // Tính toán thời gian tối thiểu (hiện tại + 6 giờ)
+            $minReleaseTime = Carbon::now('Asia/Ho_Chi_Minh')->addHours(6);
+    
+            // Kiểm tra nếu thời gian phát hành trước thời gian tối thiểu
+            if ($timeReleaseDateTime->lessThan($minReleaseTime)) {
+                $validator->errors()->add('time_release', 'Time release must be at least 6 hours later than the current time.');
+            }
+        
+            // Kiểm tra xem đã có lịch chiếu nào khác trong phòng vào ngày và giờ đó chưa
             $existingRelease = ShowingRelease::where('room_id', $roomId)
-                ->whereDate('date_release', Carbon::createFromFormat('Y-m-d', $dateRelease))
-                ->whereTime('time_release', Carbon::createFromFormat('H:i', $timeRelease))
+                ->whereDate('date_release', $dateRelease)
+                ->whereTime('time_release', $timeRelease)
                 ->first();
-
+        
             if ($existingRelease) {
-                $validator->errors()->add('time_release', 'Showing Release already exist in this room on the selected date and time.');
+                $validator->errors()->add('time_release', 'Showing Release already exists in this room on the selected date and time.');
             }
         });
     }
@@ -57,4 +73,3 @@ class CreateShowingReleaseRequest extends FormRequest
         return true;
     }
 }
-
