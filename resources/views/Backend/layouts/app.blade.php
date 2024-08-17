@@ -2,26 +2,25 @@
 <html lang="en" dir="ltr" data-bs-theme="dark" data-color-theme="Blue_Theme" data-layout="vertical">
 
 <head>
-  <!-- Required meta tags -->
-<meta charset="UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Favicon icon-->
-<script src="https://cdn.tiny.cloud/1/ucbbhja701oxqnbdgr0j3pabzgks4lk6simsn0047qsyv61m/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-<link
-  rel="shortcut icon"
-  type="image/png"
-  href="{{ asset('storage/images/logos/favicon.png') }}"
-/>
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/png" href="{{ asset('storage/images/logos/favicon.png') }}" />
 
-<!-- Core Css -->
-<link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}" />
+    <!-- Core Css -->
+    <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/libs/jvectormap/jquery-jvectormap.css') }}">
 
-  <title>Spike Bootstrap Admin</title>
-  <!-- jvectormap  -->
-  <link rel="stylesheet" href="{{ asset('assets/libs/jvectormap/jquery-jvectormap.css') }}">
+    <title>Spike Bootstrap Admin</title>
+
+    <!-- Import JS Files -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Đảm bảo jQuery được tải trước -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tiny.cloud/1/ucbbhja701oxqnbdgr0j3pabzgks4lk6simsn0047qsyv61m/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
     @include('Backend.components.preloader')

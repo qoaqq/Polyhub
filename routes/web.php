@@ -52,3 +52,5 @@ Route::controller(AuthController::class)->group(function () {
     });
     Route::get('/logout', 'logout')->name('auth.logout');
 });
+
+Route::get('/products-data', [BackendControllerBase::class, 'getProductsData']);

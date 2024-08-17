@@ -2,10 +2,11 @@
 
 namespace Modules\Bill\Http\Controllers\API;
 
+use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
 use App\Mail\BookingConfirmed;
-use App\Models\User;
 use Modules\Bill\Entities\Bill;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -13,9 +14,9 @@ use Illuminate\Support\Facades\Mail;
 use Modules\Checkin\Entities\Checkin;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class ApiBillController extends Controller
 {
@@ -461,4 +462,5 @@ class ApiBillController extends Controller
         curl_close($ch);
         return $result;
     }
+
 }

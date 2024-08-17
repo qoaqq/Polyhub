@@ -17,3 +17,5 @@ use Modules\Bill\Http\Controllers\BillController;
 Route::prefix('admin')->group(function() {
     Route::resource('bill', BillController::class);
 });
+
+Route::get('/print-bill/{id}', [BillController::class, 'printBill'])->name('print.bill');

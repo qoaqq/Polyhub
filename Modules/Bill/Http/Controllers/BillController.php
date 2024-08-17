@@ -2,10 +2,11 @@
 
 namespace Modules\Bill\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\Bill\Entities\Bill;
+use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
 
 class BillController extends Controller
 {
@@ -108,5 +109,20 @@ class BillController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function printBill($id)
+    {
+        $bill = Bill::findOrFail($id);
+        // dd($bill->checkin->checkin_code);die;
+        if (!$bill) {
+            abort(404, 'Bill not found');
+        }
+
+        // Tạo đối tượng PDF từ service container
+        $pdf = app('dompdf.wrapper');
+        $pdf->loadView('bill::pdf.bill', compact('bill'));
+
+        return $pdf->download('invoice.pdf');
     }
 }
