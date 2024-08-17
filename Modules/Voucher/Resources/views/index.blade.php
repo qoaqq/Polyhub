@@ -177,24 +177,12 @@
                      </tbody>
                      </table>
                  </div>
-                 <div class="d-flex align-items-center justify-content-between mt-4">
-                     <!-- Hiển thị phân trang và giữ nguyên các tham số tìm kiếm và sắp xếp -->
-                     {{ $page->appends(['q' => request()->get('q'), 'sort' => request()->get('sort'), 'direction' => request()->get('direction')])->links('vendor.pagination.bootstrap-5') }}
-
-                 </div>
+                 <div class="mt-3">
+                    {{ $page->links('vendor.pagination.bootstrap-5') }}
+                </div>
              </div>
          </div>
      </div>
      </div>
-     <script>
-         function sortTable(column) {
-             const urlParams = new URLSearchParams(window.location.search);
-             let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
-
-             urlParams.set('sort', column);
-             urlParams.set('direction', direction);
-
-             window.location.href = window.location.pathname + '?' + urlParams.toString();
-         }
-     </script>
+     
  @endsection
