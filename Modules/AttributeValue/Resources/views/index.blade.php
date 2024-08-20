@@ -26,14 +26,7 @@
                                             href="{{ route('attributevalue.create') }}"><i
                                                 class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
-                                    {{-- <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attributevalue.edit') }}"><i
-                                                class="fs-4 ti ti-edit"></i>Edit</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attributevalue.delete') }}"><i
-                                                class="fs-4 ti ti-trash"></i>Delete</a>
-                                    </li> --}}
+                                  
                                 </ul>
                             </div>
                         </div>
