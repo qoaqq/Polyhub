@@ -26,14 +26,7 @@
                                             href="{{ route('attributevalue.create') }}"><i
                                                 class="fs-4 ti ti-plus"></i>Add</a>
                                     </li>
-                                    {{-- <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attributevalue.edit') }}"><i
-                                                class="fs-4 ti ti-edit"></i>Edit</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('attributevalue.delete') }}"><i
-                                                class="fs-4 ti ti-trash"></i>Delete</a>
-                                    </li> --}}
+                                  
                                 </ul>
                             </div>
                         </div>
@@ -102,7 +95,17 @@
                                         </td>
                                         <td>
                                             <div class="product-reviews">
-                                                <img src="{{ asset($item->value) }}" alt="" width="100px">
+                                                @forelse ($listattr as $item2)
+                                                @if ($item->attribute_id == $item2->id)
+                                                    @if ($item2->name === 'Image')
+                                                        <img src="{{ asset($item->value) }}" alt="" width="100px">
+                                                    @else
+                                                        <h6>{{ $item->value }}</h6>
+                                                    @endif
+                                                @endif
+                                            @empty
+                                                <p>No value found</p>
+                                            @endforelse
 
                                             </div>
                                         </td>
@@ -156,14 +159,6 @@
         </div>
     </div>
     <script>
-        function sortTable(column) {
-            const urlParams = new URLSearchParams(window.location.search);
-            let direction = urlParams.get('direction') === 'asc' ? 'desc' : 'asc';
-
-            urlParams.set('sort', column);
-            urlParams.set('direction', direction);
-
-            window.location.href = window.location.pathname + '?' + urlParams.toString();
-        }
+        
     </script>
 @endsection
