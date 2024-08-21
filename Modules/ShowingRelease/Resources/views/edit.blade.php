@@ -56,9 +56,9 @@
                <div class="col-md-6 mb-3">
             <label class="form-label" for="date_release">Time</label>
             <input type="time" name="time_release" id="time_release" class="form-control"value="{{ \Carbon\Carbon::parse($show->time_release)->format('H:i') }}" required/>
-            {{-- @if ($errors->has('time_release'))
+            @if ($errors->has('time_release'))
                 <span class="error text-danger">{{ $errors->first('time_release') }}</span>
-            @endif --}}
+            @endif
           </div>
             </div>
             <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
