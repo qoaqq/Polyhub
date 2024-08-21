@@ -277,6 +277,13 @@ class ApiBillController extends Controller
                     $user = User::find($user_id);
                     $user->points += 100;
                     $user->save();
+                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                        ->orderBy('min_points', 'desc')
+                        ->first();
+                    if ($newRankMember) {
+                        $user->rank_member_id = $newRankMember->id;
+                    }
+                    $user->save();
                 }
 
                 Mail::to($request->user['user']['email'])
@@ -363,6 +370,13 @@ class ApiBillController extends Controller
                     $user_id = $request->user['user']['id'];
                     $user = User::find($user_id);
                     $user->points += 100;
+                    $user->save();
+                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                        ->orderBy('min_points', 'desc')
+                        ->first();
+                    if ($newRankMember) {
+                        $user->rank_member_id = $newRankMember->id;
+                    }
                     $user->save();
                 }
 
