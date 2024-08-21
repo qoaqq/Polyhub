@@ -2,6 +2,7 @@
 
 namespace Modules\RankMember\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -49,6 +50,8 @@ class RankMemberController extends Controller
         $rankmember = new RankMember();
         $rankmember->fill($request->except(['_token']));
         $rankmember->save();
+        User::where('points', '>=', $rankmember->min_points)
+        ->update(['rank_member_id' => $rankmember->id]);
         return redirect()->route('rankmember.index');
     }
 
@@ -86,9 +89,23 @@ class RankMemberController extends Controller
             'rank' => 'required|max:255',
             'min_points' => 'required|integer|min:0',
         ]);
-        $rankmember = RankMember::findOrFail($id);
-        $rankmember->fill($request->except(['_token']));
-        $rankmember->save();
+        $rankMember = RankMember::findOrFail($id);
+        $rankMember->fill($request->except(['_token']));
+        $rankMember->save();
+
+        User::where('rank_member_id', $id)
+        ->where('points', '>=', $rankMember->min_points)
+        ->update(['rank_member_id' => $id]);
+        $users = User::all();
+        foreach ($users as $user) {
+            $newRankMember = RankMember::where('min_points', '<=', $user->points)
+                                       ->orderBy('min_points', 'desc')
+                                       ->first();
+            if ($newRankMember) {
+                $user->rank_member_id = $newRankMember->id;
+                $user->save();
+            }
+        }
         return redirect()->route('rankmember.index');
     }
 
