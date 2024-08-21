@@ -2,10 +2,11 @@
 
 namespace Modules\Bill\Http\Controllers\API;
 
+use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Milon\Barcode\DNS1D;
 use Illuminate\Http\Request;
 use App\Mail\BookingConfirmed;
-use App\Models\User;
 use Modules\Bill\Entities\Bill;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
@@ -13,9 +14,10 @@ use Illuminate\Support\Facades\Mail;
 use Modules\Checkin\Entities\Checkin;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\RankMember\Entities\RankMember;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
-use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class ApiBillController extends Controller
 {
@@ -151,6 +153,13 @@ class ApiBillController extends Controller
                     $user_id = $request->user['user']['id'];
                     $user = User::find($user_id);
                     $user->points += 100;
+                    $user->save();
+                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                        ->orderBy('min_points', 'desc')
+                        ->first();
+                    if ($newRankMember) {
+                        $user->rank_member_id = $newRankMember->id;
+                    }
                     $user->save();
                 }
 
