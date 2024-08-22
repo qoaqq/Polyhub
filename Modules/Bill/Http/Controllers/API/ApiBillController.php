@@ -29,7 +29,10 @@ class ApiBillController extends Controller
     public function getBillByUser()
     {
         $user = Auth::user();
-        $bills = Bill::all()->where('user_id',$user->id)->load('user');
+        $bills = Bill::where('user_id', $user->id)
+             ->orderBy('created_at', 'desc')
+             ->with('user')
+             ->get();
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách thành công',
