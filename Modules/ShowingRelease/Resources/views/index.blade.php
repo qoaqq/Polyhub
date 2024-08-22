@@ -102,103 +102,110 @@
                 document.getElementById('showingReleaseTable').style.display = 'none';
             }
         });
+       document.getElementById('cinemaSelect').addEventListener('change', function() {
+        var cinemaId = this.value;
+        if (cinemaId) {
+            fetch(`/admin/movies`)
+                .then(response => response.json())
+                .then(movies => {
+                    if (Array.isArray(movies)) {
+                        var movieSelect = document.getElementById('movieSelect');
+                        movieSelect.innerHTML = '<option value="">Select Movie</option>';
+                        movies.forEach(movie => {
+                            movieSelect.innerHTML += `<option value="${movie.id}">${movie.name}</option>`;
+                        });
+                        movieSelect.disabled = false;
+                        document.getElementById('addButtonContainer').style.display = 'block';
 
-        document.getElementById('cinemaSelect').addEventListener('change', function() {
-            var cinemaId = this.value;
-            if (cinemaId) {
-                fetch(`/admin/movies/${cinemaId}`)
-                    .then(response => response.json())
-                    .then(movies => {
-                        if (Array.isArray(movies)) {
-                            var movieSelect = document.getElementById('movieSelect');
-                            movieSelect.innerHTML = '<option value="">Select Movie</option>';
-                            movies.forEach(movie => {
-                                movieSelect.innerHTML += `<option value="${movie.id}">${movie.name}</option>`;
-                            });
-                            movieSelect.disabled = false;
-                            document.getElementById('addButtonContainer').style.display = 'block';
-
-                            // Thiết lập URL cho nút Add với cinemaId
-                            var addLink = document.getElementById('addLink');
-                            addLink.href = `/admin/showingrelease/create/${cinemaId}`;
-                        } else {
-                            console.error('Dữ liệu không phải là mảng:', movies);
-                            document.getElementById('movieSelect').disabled = true;
-                            document.getElementById('addButtonContainer').style.display = 'none';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Có lỗi xảy ra:', error);
+                        // Thiết lập URL cho nút Add với cinemaId
+                        var addLink = document.getElementById('addLink');
+                        addLink.href = `/admin/showingrelease/create/${cinemaId}`;
+                    } else {
+                        console.error('Dữ liệu không phải là mảng:', movies);
                         document.getElementById('movieSelect').disabled = true;
                         document.getElementById('addButtonContainer').style.display = 'none';
-                    });
-            } else {
-                document.getElementById('movieSelect').disabled = true;
-                document.getElementById('movieSelect').innerHTML = '<option value="">Select Movie</option>';
-                document.getElementById('showingReleaseTable').style.display = 'none';
-                document.getElementById('addButtonContainer').style.display = 'none';
-            }
-        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Có lỗi xảy ra:', error);
+                    document.getElementById('movieSelect').disabled = true;
+                    document.getElementById('addButtonContainer').style.display = 'none';
+                });
+        } else {
+            document.getElementById('movieSelect').disabled = true;
+            document.getElementById('movieSelect').innerHTML = '<option value="">Select Movie</option>';
+            document.getElementById('showingReleaseTable').style.display = 'none';
+            document.getElementById('addButtonContainer').style.display = 'none';
+        }
+    });
+    document.getElementById('movieSelect').addEventListener('change', function() {
+        var movieId = this.value;
+        var cinemaId = document.getElementById('cinemaSelect').value;
+        var selectedMovieName = this.options[this.selectedIndex].text;
 
-        document.getElementById('movieSelect').addEventListener('change', function() {
-            var movieId = this.value;
-            var cinemaId = document.getElementById('cinemaSelect').value;
+        if (movieId && cinemaId) {
+            // Lưu tên phim và ID phim vào Local Storage
+            localStorage.setItem('selectedMovieName', selectedMovieName);
+            localStorage.setItem('selectedMovieId', movieId);
 
-            if (movieId && cinemaId) {
-                fetch(`/admin/showingreleases/${movieId}/${cinemaId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        var showingReleaseBody = document.getElementById('showingReleaseBody');
-                        showingReleaseBody.innerHTML = '';
-                        if (Array.isArray(data.showingReleases)) {
-                            data.showingReleases.forEach(showingRelease => {
-                                showingReleaseBody.innerHTML += `
-                                    <tr>
-                                        <td>${showingRelease.movie.name}</td>
-                                        <td><img src="${assetUrl}/${showingRelease.movie.photo.replace('storage/movies/', '')}" id="tablenew" alt="${showingRelease.movie.name}" height="150px" width="200px"></td>
-                                        <td>${showingRelease.room.name}</td>
-                                        <td>${new Date(showingRelease.time_release).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</td>
-                                        <td>${new Date(showingRelease.date_release).toLocaleDateString()}</td>
-                                        <td>
-                                            <div class="dropdown dropstart">
-                                                <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="ti ti-dots-vertical fs-5"></i>
-                                                </a>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/showingrelease/${showingRelease.id}"><i class="fs-4 ti ti-plus"></i>Detail</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/showingrelease/${showingRelease.id}/edit"><i class="fs-4 ti ti-edit"></i>Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <form action="/admin/showingrelease/${showingRelease.id}" method="post" onsubmit="return confirm('Do you want to delete ?')">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
-                                                                <i class="fs-4 ti ti-trash"></i>Delete
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                `;
-                            });
-                            document.getElementById('showingReleaseTable').style.display = 'block';
-                             // Chèn phân trang vào giao diện
-                             var paginationContainer = document.getElementById('paginationContainer');
-                            paginationContainer.innerHTML = data.pagination;
+            fetch(`/admin/showingreleases/${movieId}/${cinemaId}`)
+                .then(response => response.json())
+                .then(data => {
+                    var showingReleaseBody = document.getElementById('showingReleaseBody');
+                    showingReleaseBody.innerHTML = '';
+                    if (Array.isArray(data.showingReleases) && data.showingReleases.length > 0) {
+                        data.showingReleases.forEach(showingRelease => {
+                            showingReleaseBody.innerHTML += `
+                                <tr>
+                                    <td>${showingRelease.movie.name}</td>
+                                    <td><img src="${assetUrl}/${showingRelease.movie.photo.replace('storage/movies/', '')}" id="tablenew" alt="${showingRelease.movie.name}" height="150px" width="200px"></td>
+                                    <td>${showingRelease.room.name}</td>
+                                    <td>${new Date(showingRelease.time_release).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</td>
+                                    <td>${new Date(showingRelease.date_release).toLocaleDateString()}</td>
+                                    <td>
+                                        <div class="dropdown dropstart">
+                                            <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="ti ti-dots-vertical fs-5"></i>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/showingrelease/${showingRelease.id}"><i class="fs-4 ti ti-plus"></i>Detail</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/showingrelease/${showingRelease.id}/edit"><i class="fs-4 ti ti-edit"></i>Edit</a>
+                                                </li>
+                                                <li>
+                                                    <form action="/admin/showingrelease/${showingRelease.id}" method="post" onsubmit="return confirm('Do you want to delete ?')">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-3">
+                                                            <i class="fs-4 ti ti-trash"></i>Delete
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        document.getElementById('showingReleaseTable').style.display = 'block';
+                        // Hiển thị phân trang nếu có dữ liệu
+                        if (data.pagination) {
+                            document.getElementById('paginationContainer').innerHTML = data.pagination;
                         } else {
-                            console.error('Dữ liệu trả về không phải là mảng:', data.showingReleases);
+                            document.getElementById('paginationContainer').innerHTML = '';
                         }
-                    })
-                    .catch(error => console.error('Có lỗi xảy ra:', error));
-            } else {
-                console.error('movieId hoặc cinemaId không hợp lệ');
-            }
-        });
+                    } else {
+                        showingReleaseBody.innerHTML = '<tr><td colspan="6" class="text-center">No showing releases available.</td></tr>';
+                        document.getElementById('paginationContainer').innerHTML = ''; // Không hiển thị phân trang nếu không có dữ liệu
+                    }
+                })
+                .catch(error => console.error('Có lỗi xảy ra:', error));
+        } else {
+            console.error('movieId hoặc cinemaId không hợp lệ');
+        }
+    });
 
     </script>
 @endsection
