@@ -18,6 +18,7 @@ use Modules\RankMember\Entities\RankMember;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Illuminate\Support\Facades\Auth;
 
 class ApiBillController extends Controller
 {
@@ -25,13 +26,33 @@ class ApiBillController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function getBillByUser()
     {
-        $bills = Bill::all();
+        $user = Auth::user();
+        $bills = Bill::all()->where('user_id',$user->id)->load('user');
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách thành công',
             'data' => $bills,
+        ], 200);
+    }
+    
+    public function getBillDetail($id)
+    {
+        $bill = Bill::with([
+            'user',
+            'checkin',
+            'ticketFoodCombo.food_combo',
+            'ticketSeats.seat_showTime_status.seat.seatType', 
+            'ticketSeats.movie', 
+            'ticketSeats.room', 
+            'ticketSeats.cinema', 
+            'ticketSeats.showingRelease',
+        ])->find($id);
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy thành công',
+            'data' => $bill,
         ], 200);
     }
 
@@ -277,6 +298,13 @@ class ApiBillController extends Controller
                     $user = User::find($user_id);
                     $user->points += 100;
                     $user->save();
+                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                        ->orderBy('min_points', 'desc')
+                        ->first();
+                    if ($newRankMember) {
+                        $user->rank_member_id = $newRankMember->id;
+                    }
+                    $user->save();
                 }
 
                 Mail::to($request->user['user']['email'])
@@ -363,6 +391,13 @@ class ApiBillController extends Controller
                     $user_id = $request->user['user']['id'];
                     $user = User::find($user_id);
                     $user->points += 100;
+                    $user->save();
+                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                        ->orderBy('min_points', 'desc')
+                        ->first();
+                    if ($newRankMember) {
+                        $user->rank_member_id = $newRankMember->id;
+                    }
                     $user->save();
                 }
 

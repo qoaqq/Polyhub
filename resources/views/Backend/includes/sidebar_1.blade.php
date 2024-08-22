@@ -153,6 +153,18 @@
                                 <span class="hide-menu">Voucher</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('rankmember.index') }}">
+                                <span class="sidebar-icon"></span>
+                                <span class="hide-menu">Rank Member</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('seattype.list') }}">
+                                <span class="sidebar-icon"></span>
+                                <span class="hide-menu">Seat Type</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-item">
