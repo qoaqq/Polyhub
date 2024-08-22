@@ -156,29 +156,29 @@ class MoviesController extends Controller
     }
 
     public function home()
-{
-    $currentDate = now(); // Lấy ngày và thời gian hiện tại
-    $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+        $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
 
-    $movies = Movie::with('director', 'attributes', 'categories')
-                ->where('premiere_date', '<', $currentDate)
-                ->where('premiere_date', '>=', $tenDaysAgo)
-                ->orderBy('id', 'desc') 
-                ->paginate(8);
+        $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
+                    ->where('premiere_date', '<', $currentDate)
+                    ->where('premiere_date', '>=', $tenDaysAgo)
+                    ->orderBy('id', 'desc') 
+                    ->paginate(8);
 
-    return response()->json([
-        'status'=> true,
-        'message'=>'Lấy danh sách thành công',
-        'data' => $movies,
-    ], 200);
-}
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movies,
+        ], 200);
+    }
 
     public function upcoming()
     {
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
         $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
 
-        $movies = Movie::with('director', 'attributes', 'categories')
+        $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
                     ->where('premiere_date', '>', $currentDate)
                     ->where('premiere_date', '<=', $currentDatePlus10Days)
                     ->orderBy('id', 'desc') 
@@ -192,19 +192,26 @@ class MoviesController extends Controller
     }
     public function silder()
     {
-        $currentDate = now(); // Lấy ngày và thời gian hiện tại
-        $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
-        $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
+        $currentMonth = Carbon::now()->month;
 
-                    ->where('premiere_date', '>', $currentDate)
-                    ->where('premiere_date', '<=', $currentDatePlus10Days)
-                    ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày công chiếu mới nhất
-                    ->first(); // Lấy bộ phim mới nhất
-
+        // Truy vấn để lấy 10 phim có số lượng vé bán nhiều nhất trong tháng
+        $topSellingMovies = Movie::select('movies.*', 
+            DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
+            DB::raw('count(ticket_seats.id) as total_quantity'))
+            ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
+            ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
+            ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
+            ->with(['attributes.attributeValues']) // Tải trước mối quan hệ attributes và attributeValues
+            ->whereMonth('ticket_seats.created_at', $currentMonth)
+            ->groupBy('movies.id')
+            ->orderBy('total_quantity', 'desc')
+            ->take(10)
+            ->get();
+    
         return response()->json([
-            'status'=> true,
-            'message'=>'Lấy danh sách thành công',
-            'data' => $movie,
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
+            'data' => $topSellingMovies,
         ], 200);
     }
 
