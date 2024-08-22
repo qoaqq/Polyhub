@@ -78,8 +78,7 @@
                                         <td>
                                             <div class="d-flex align-items-center text-truncate">
                                                 <div class="ms-7">
-                                                    <h5 class="mb-1 fs-4"> {{ $item->price }}</h5>
-
+                                                    <h5 class="mb-1 fs-4"> {{ number_format($item->price, 0, ',', '.') . ' ₫' }}</h5>
                                                 </div>
                                             </div>
                                         </td>

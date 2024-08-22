@@ -45,7 +45,7 @@
                             <tr>
                                 <td>{{ $item->user->name }}</td>
                                 <td>{{ $item->user->email }}</td>
-                                <td>{{ $item->grand_total }}</td>
+                                <td>{{ number_format($item->grand_total, 0, ',', '.') . ' ₫' }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>{{ $item->updated_at }}</td>
                                 <td>

@@ -67,7 +67,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center text-truncate">
-                                            <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} VND</h6>
+                                            <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} ₫</h6>
                                         </div>
                                     </td>
                                     <td>
