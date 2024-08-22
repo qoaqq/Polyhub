@@ -18,7 +18,7 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::with('director', 'attributes', 'categories')
+        $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
                         ->orderBy('created_at', 'desc')
                         ->paginate(9);
         // return KhachHangResource::collection($khachHangs);
@@ -88,11 +88,11 @@ class MoviesController extends Controller
     {
         $title = $request->get('title');
         if(empty($title)){
-            $movie = Movie::with('director', 'attributes', 'categories')
+            $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
             ->orderBy('created_at', 'desc')
             ->paginate(9);
         }else{
-            $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')
+            $movies = Movie::with('director', 'attributes.attributeValues', 'categories')->where('name', 'LIKE', '%'.$title.'%')
             ->paginate(9);
         }
         return response()->json([
@@ -105,7 +105,7 @@ class MoviesController extends Controller
 
     public function getMovieByCategory($categoryId)
     {
-        $movies = Movie::with('director', 'attributes', 'categories')
+        $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
         ->whereHas('categories', function ($query) use ($categoryId) {
             $query->where('categories.id', $categoryId);
         })
