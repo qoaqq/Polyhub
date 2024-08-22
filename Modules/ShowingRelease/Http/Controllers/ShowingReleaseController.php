@@ -160,9 +160,19 @@ class ShowingReleaseController extends Controller
     public function destroy($id)
     {
         $showingRelease = ShowingRelease::find($id);
+
+        // Kiểm tra nếu showingrelease đã tồn tại trong bảng ticket_seats
+        $existsInTicketSeats = DB::table('ticket_seats')->where('showing_release_id', $id)->exists();
+
+        if ($existsInTicketSeats) {
+            return redirect()->route('showingrelease.index')->with('error', 'Cannot delete ShowingRelease as it is associated with a ticket.');
+        }
+
         $showingRelease->delete();
+
         return redirect()->route('showingrelease.index')->with('success', 'Deleted ShowingRelease Successfully!');
     }
+
     public function getCinemasByCity($cityId) {
         $cinemas = Cinema::where('city_id', $cityId)->get();
         return response()->json($cinemas);

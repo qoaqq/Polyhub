@@ -1,5 +1,13 @@
 @extends('Backend.layouts.app')
 @section('content')
+@if (session('success') || session('error'))
+<script>
+    window.onload = function() {
+        var message = "{{ session('success') ?: session('error') }}";
+        alert(message);
+    }
+</script>
+@endif
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
