@@ -29,4 +29,4 @@ Route::get('top-movie-in-month', [MoviesController::class, 'getTopMovies']);
 Route::get('home-movie', [MoviesController::class, 'home']);
 Route::get('upcoming-movie', [MoviesController::class, 'upcoming']);
 Route::get('top-movie', [MoviesController::class, 'silder']);
-Route::get('silder-movie', [MoviesController::class, 'silder']);
+// Route::get('silder-movie', [MoviesController::class, 'silder']);

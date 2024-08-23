@@ -5,6 +5,7 @@ namespace Modules\ShowingRelease\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\ShowingRelease\Entities\ShowingRelease;
 use Carbon\Carbon;
+use Modules\Movie\Entities\Movie;
 
 class CreateShowingReleaseRequest extends FormRequest
 {
@@ -32,6 +33,7 @@ class CreateShowingReleaseRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $movieId = $this->input('movie_id');
             $roomId = $this->input('room_id');
             $dateRelease = $this->input('date_release');
             $timeRelease = $this->input('time_release');
@@ -39,7 +41,14 @@ class CreateShowingReleaseRequest extends FormRequest
             if (!$dateRelease || !$timeRelease) {
                 return;
             }
-    
+            // Lấy thông tin phim từ movie_id
+            $movie = Movie::find($movieId);
+            
+            if (!$movie) {
+                $validator->errors()->add('movie_id', 'The selected movie does not exist.');
+                return;
+            }
+
             // Lấy thời gian phát hành từ đầu vào và chuyển về múi giờ Asia/Ho_Chi_Minh
             $timeReleaseDateTime = Carbon::createFromFormat('Y-m-d H:i', $dateRelease . ' ' . $timeRelease, 'Asia/Ho_Chi_Minh');
             
@@ -59,6 +68,12 @@ class CreateShowingReleaseRequest extends FormRequest
         
             if ($existingRelease) {
                 $validator->errors()->add('time_release', 'Showing Release already exists in this room on the selected date and time.');
+            }
+
+            // Kiểm tra premiere_date của phim
+            $premiereDate = $movie->premiere_date;
+            if ($premiereDate && Carbon::parse($premiereDate)->greaterThan(Carbon::parse($dateRelease))) {
+                $validator->errors()->add('date_release', 'The movie premiere date is in the future. Showing release date must be on or after the movie premiere date.');
             }
         });
     }

@@ -29,26 +29,17 @@ class UpdateShowingReleaseRequest extends FormRequest
                 $this->input('time_release') == $showingRelease->time_release) {
                 return;
             }
-    
             $roomId = $this->input('room_id');
             $dateRelease = $this->input('date_release');
-
-            // 
             $timeRelease = $this->input('time_release');
-            
             // Kiểm tra nếu thời gian phát hành ít nhất là 6 giờ so với thời gian hiện tại
             if ($dateRelease && $timeRelease) {
-
                 $releaseDateTime = Carbon::createFromFormat('Y-m-d H:i', $dateRelease . ' ' . $timeRelease, 'Asia/Ho_Chi_Minh');
-                // $releaseDateTime->setTimezone('Asia/Ho_Chi_Minh');
                 $minReleaseTime = Carbon::now('Asia/Ho_Chi_Minh')->addHours(6);
-                // dd($releaseDateTime, $minReleaseTime);
                 if ($releaseDateTime->lessThan($minReleaseTime)) {
-                    // Hoặc dùng: if ($releaseDateTime->lessThan($minReleaseTime))
                     $validator->errors()->add('time_release', 'Time release must be at least 6 hours greater than the current time.');
                 }
             }
-    
             // Kiểm tra xem đã có suất chiếu nào khác cùng thời điểm và phòng chưa
             if ($roomId && $dateRelease && $timeRelease) {
                 $existingRelease = ShowingRelease::where('room_id', $roomId)
