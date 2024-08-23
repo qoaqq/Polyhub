@@ -27,12 +27,17 @@ class ShowingReleaseDatabaseSeeder extends Seeder
         // Random time in the day
         $timeRelease = $faker->time($format = 'H:i:s', $max = '23:59:59');
 
-        for($i = 0 ; $i < 6 ; $i++){
+        for($i = 0 ; $i < 80 ; $i++){
             foreach ($movies as $movie) {
                 // Random date in 2024
-                $dateRelease = $faker->dateTimeBetween('now', '+10 days')->format('Y-m-d');
+                $startDate = max($movie->premiere_date, now()->format('Y-m-d'));
+                $dateRelease = $faker->dateTimeBetween($startDate, '+10 days')->format('Y-m-d');
                 // Random time in the day
-                $timeRelease = $faker->time($format = 'H:i:s', $max = '23:59:59');
+                $minutes = [0, 30]; // random giờ đẹp
+                $hour = $faker->numberBetween(0, 23);
+                $minute = $faker->randomElement($minutes);
+                $timeRelease = sprintf('%02d:%02d:00', $hour, $minute);
+
                 $room = Room::inRandomOrder()->first();
                 DB::table('showing_releases')->insert([
                     'movie_id' => $movie->id,
