@@ -40,7 +40,7 @@ class MovieController extends Controller
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
         
-        $movie = $query->latest('id')->paginate(2);
+        $movie = $query->latest('id')->paginate(5);
         
         return view('movie::index', compact('movie', 'director', 'title','categories'));
     }
@@ -168,6 +168,15 @@ class MovieController extends Controller
     public function destroy($id)
     {
         $movie = Movie::find($id);
+
+        // $hasShowing = $movie->showings()->exists();
+        // $hasBill = $movie->bills()->exists();
+        // $hasAttribute = $movie->attributes()->exists();
+    
+        // if ($hasAttribute) {
+        //     return redirect('/admin/movie')->with('error', 'Cannot delete the movie because it is linked with showings, bills, or attributes.');
+        // }
+
         $movie -> delete();
         return redirect('/admin/movie')->with('success', 'Deleted successfully !');
     }

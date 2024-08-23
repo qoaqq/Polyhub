@@ -72,7 +72,16 @@
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->duration}}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->premiere_date}}</p></td>
                                         <td><img src="{{asset($mo->photo)}}" id="tablenew" alt="" height="150px" width="200px"></td>
-                                        <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->director->name}}</p></td>
+                                        <td>
+                                            <p class="fs-4 mb-0 text-truncate-2">
+                                                @forelse ($director as $dr)
+                                                    @if ($mo->director_id == $dr->id)
+                                                        {{$dr->name}}
+                                                    @endif
+                                                @empty
+                                                @endforelse
+                                            </p>
+                                        </td>
                                         <td>
                                             <p class="fs-4 mb-0 text-truncate-2">
                                                 @foreach($mo->categories as $category)
