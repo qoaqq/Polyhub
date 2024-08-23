@@ -174,7 +174,7 @@ class MovieController extends Controller
         $hasAttribute = $movie->attributes()->exists();
     
         if ($hasTicketSeat||$hasShowingRelease||$hasAttribute) {
-            return redirect('/admin/movie')->with('error', 'Cannot delete the movie because it is linked with showingrelease, ticket, or attributes.');
+            return redirect('/admin/movie')->with('error', 'Cannot delete the movie because this movie had showingrelease, ticket, or attributes.');
         }
 
         $movie -> delete();

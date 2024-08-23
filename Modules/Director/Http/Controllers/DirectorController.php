@@ -163,6 +163,13 @@ class DirectorController extends Controller
     public function destroy($id)
     {
         $director = Director::find($id);
+
+        $hasMovie = $director->movies()->exists();
+
+        if ($hasMovie){
+            return redirect('/admin/director')->with('error', 'Cannot delete the movie because this director had movies');
+        }
+
         $director -> delete();
         return redirect('/admin/director')->with('success', 'Deleted Director Successfully!');
     }
