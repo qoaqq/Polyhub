@@ -60,5 +60,6 @@ class Movie extends Model
         return $this->belongsToMany(Actor::class, 'actor_movie');
     }
 
-
+    public function ticketseats(){
+        return $this->hasMany(TicketSeat::class);    }
 }

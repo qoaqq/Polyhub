@@ -169,13 +169,13 @@ class MovieController extends Controller
     {
         $movie = Movie::find($id);
 
-        // $hasShowing = $movie->showings()->exists();
-        // $hasBill = $movie->bills()->exists();
-        // $hasAttribute = $movie->attributes()->exists();
+        $hasShowingRelease = $movie->showingReleases()->exists(); 
+        $hasTicketSeat = $movie->ticketseats()->exists();
+        $hasAttribute = $movie->attributes()->exists();
     
-        // if ($hasAttribute) {
-        //     return redirect('/admin/movie')->with('error', 'Cannot delete the movie because it is linked with showings, bills, or attributes.');
-        // }
+        if ($hasTicketSeat||$hasShowingRelease||$hasAttribute) {
+            return redirect('/admin/movie')->with('error', 'Cannot delete the movie because it is linked with showingrelease, ticket, or attributes.');
+        }
 
         $movie -> delete();
         return redirect('/admin/movie')->with('success', 'Deleted successfully !');
