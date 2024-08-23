@@ -23,15 +23,7 @@ class ShowingReleaseDatabaseSeeder extends Seeder
         $faker = Faker::create();
         // Random date in 2024
         $dateRelease = $faker->dateTimeBetween('2024-01-01', '2024-12-31')->format('Y-m-d');
-
-        // Random time in the day
-        $hour = rand(9, 23); // Chuyển đổi giờ từ 24-26 thành 0-2
-        $minute = str_pad(rand(0, 59), 2, '0', STR_PAD_LEFT);
-        $second = str_pad(rand(0, 59), 2, '0', STR_PAD_LEFT);
-
-        $timeRelease = "{$hour}:{$minute}:{$second}";
-
-
+        
         for($i = 0 ; $i < 80 ; $i++){
             foreach ($movies as $movie) {
                 // Random date in 2024
@@ -39,7 +31,7 @@ class ShowingReleaseDatabaseSeeder extends Seeder
                 $dateRelease = $faker->dateTimeBetween($startDate, '+10 days')->format('Y-m-d');
                 // Random time in the day
                 $minutes = [0, 30]; // random giờ đẹp
-                $hour = $faker->numberBetween(0, 23);
+                $hour = $faker->numberBetween(9, 23);
                 $minute = $faker->randomElement($minutes);
                 $timeRelease = sprintf('%02d:%02d:00', $hour, $minute);
 
