@@ -51,6 +51,7 @@
                                             <a href="{{ route('foodcombos.index', ['search' => request()->get('search'), 'sort_field' => 'price', 'sort_direction' => 'desc']) }}"> ↓</a>
                                         </div>
                                     </th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -77,6 +78,16 @@
                                         <div class="d-flex align-items-center text-truncate">
                                             <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} ₫</h6>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('foodcombos.updateStatus', $foodCombo->id) }}" method="post">
+                                            @csrf
+                                            @method('patch')
+                                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                                <option value="1" {{ $foodCombo->status == 1 ? 'selected' : '' }}>Display</option>
+                                                <option value="0" {{ $foodCombo->status == 0 ? 'selected' : '' }}>Hide</option>
+                                            </select>
+                                        </form>
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">

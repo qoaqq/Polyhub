@@ -18,6 +18,7 @@ class CreateFoodComboRequest extends FormRequest
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status' => 'required|in:display,hide'
         ];
     }
 

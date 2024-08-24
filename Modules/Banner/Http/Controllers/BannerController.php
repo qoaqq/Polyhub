@@ -134,4 +134,18 @@ class BannerController extends Controller
 
         return redirect()->route('banners.index')->with('success', 'Banner deleted successfully.');
     }
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        $banner = Banner::findOrFail($id);
+
+        $request->validate([
+            'status' => 'required|in:0,1', 
+        ]);
+        $banner->status = $request->input('status');
+        $banner->save();
+        return redirect()->route('banners.index')->with('success', 'Banner status updated successfully.');
+    }
+
 }
