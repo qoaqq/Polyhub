@@ -14,7 +14,7 @@ class AddStatusToFoodCombosTable extends Migration
     public function up()
     {
         Schema::table('food_combos', function (Blueprint $table) {
-            $table->string('status');
+            $table->string('status')->default(true);
         });
     }
 
