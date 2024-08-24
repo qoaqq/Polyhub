@@ -16,6 +16,8 @@ use Modules\FoodCombo\Http\Controllers\FoodComboController;
 Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::resource('foodcombos', FoodComboController::class);
-        Route::patch('/food_combos/{id}/update-status', [FoodComboController::class, 'updateStatus'])->name('foodcombos.updateStatus');
+    });
+    Route::controller(FoodComboController::class)->group(function () {
+        Route::patch('foodcombos/{foodCombo}/status', 'updateStatus')->name('foodcombos.updateStatus');
     });
 });

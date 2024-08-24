@@ -83,10 +83,17 @@
                                         <form action="{{ route('foodcombos.updateStatus', $foodCombo->id) }}" method="post">
                                             @csrf
                                             @method('patch')
-                                            <select name="status" class="form-select" onchange="this.form.submit()">
-                                                <option value="1" {{ $foodCombo->status == 1 ? 'selected' : '' }}>Display</option>
-                                                <option value="0" {{ $foodCombo->status == 0 ? 'selected' : '' }}>Hide</option>
-                                            </select>
+                                            @if($foodCombo->status == 1)
+                                                <button type="submit" class="badge rounded-pill bg-success-subtle text-success border-success border">
+                                                    Display
+                                                </button>
+                                                <input type="hidden" name="status" value="0">
+                                            @else
+                                                <button type="submit" class="badge rounded-pill bg-danger-subtle text-danger border-danger border">
+                                                    Hide
+                                                </button>
+                                                <input type="hidden" name="status" value="1">
+                                            @endif
                                         </form>
                                     </td>
                                     <td>

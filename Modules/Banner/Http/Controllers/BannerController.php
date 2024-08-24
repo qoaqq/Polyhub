@@ -138,14 +138,10 @@ class BannerController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        $banner = Banner::findOrFail($id);
-
-        $request->validate([
-            'status' => 'required|in:0,1', 
-        ]);
-        $banner->status = $request->input('status');
-        $banner->save();
-        return redirect()->route('banners.index')->with('success', 'Banner status updated successfully.');
-    }
+    $banner = Banner::findOrFail($id);
+    $banner->status = $request->input('status');
+    $banner->save();
+    return redirect()->back()->with('success', 'Banner status updated successfully.');
+    }  
 
 }
