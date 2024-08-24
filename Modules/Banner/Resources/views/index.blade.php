@@ -62,10 +62,17 @@
                                             <form action="{{ route('banners.updateStatus', $banner->id) }}" method="post">
                                                 @csrf
                                                 @method('patch')
-                                                <select name="status" class="form-select" onchange="this.form.submit()">
-                                                    <option value="1" {{ $banner->status == 1 ? 'selected' : '' }} style="background-color: green; color: white;">Display</option>
-                                                    <option value="0" {{ $banner->status == 0 ? 'selected' : '' }} style="background-color: red; color: white;">Hide</option>
-                                                </select>
+                                                @if($banner->status == 1)
+                                                    <button type="submit" class="badge rounded-pill bg-success-subtle text-success border-success border">
+                                                        Display
+                                                    </button>
+                                                    <input type="hidden" name="status" value="0">
+                                                @else
+                                                    <button type="submit" class="badge rounded-pill bg-danger-subtle text-danger border-danger border">
+                                                        Hide
+                                                    </button>
+                                                    <input type="hidden" name="status" value="1">
+                                                @endif
                                             </form>
                                         </td>
                                         <td>
