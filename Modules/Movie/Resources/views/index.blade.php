@@ -1,12 +1,17 @@
 @extends('Backend.layouts.app')
 @section('content')
-    @if (session('success'))
-        <script>
-            window.onload = function() {
+@if (session('success') || session('error'))
+    <script>
+        window.onload = function() {
+            @if (session('success'))
                 alert("{{ session('success') }}");
-            }
-        </script>
-    @endif
+            @endif
+            @if (session('error'))
+                alert("{{ session('error') }}");
+            @endif
+        }
+    </script>
+@endif
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -72,7 +77,16 @@
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->duration}}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->premiere_date}}</p></td>
                                         <td><img src="{{asset($mo->photo)}}" id="tablenew" alt="" height="150px" width="200px"></td>
-                                        <td><p class="fs-4 mb-0 text-truncate-2">{{ $mo->director->name}}</p></td>
+                                        <td>
+                                            <p class="fs-4 mb-0 text-truncate-2">
+                                                @forelse ($director as $dr)
+                                                    @if ($mo->director_id == $dr->id)
+                                                        {{$dr->name}}
+                                                    @endif
+                                                @empty
+                                                @endforelse
+                                            </p>
+                                        </td>
                                         <td>
                                             <p class="fs-4 mb-0 text-truncate-2">
                                                 @foreach($mo->categories as $category)
@@ -89,9 +103,6 @@
                                                     <i class="ti ti-dots-vertical fs-5"></i>
                                                 </a>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/movie/{{$mo->id}}"><i class="fs-4 ti ti-plus"></i>Detail</a>
-                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/movie/{{ $mo->id }}/edit"><i class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>
