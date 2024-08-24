@@ -37,28 +37,7 @@
                     <div class="text text-danger">{{ $message }}</div>
                     @enderror 
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label" for="director_id">Director</label>
-                    <select class="form-select" id="director_id" name='director_id' required>
-                        <option value="0"></option>
-                        @foreach($director as $id=>$name)
-                        <option 
-                        @if ($movie->director_id == $id) selected @endif 
-                        value="{{$id}}">{{$name}}</option>
-                        @endforeach 
-                    </select>  
-                    @error('director_id')
-                    <div class="text text-danger">{{ $message }}</div>
-                    @enderror 
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label" for="photo">Choose Photo</label>
-                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
-                    @error('photo')
-                    <div class="text text-danger">{{ $message }}</div>
-                    @enderror 
-                </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-12 mb-3">
                     <label class="form-label" for="categories">Categories</label>
                     <select class="form-select" id="categories" name="categories[]" multiple required>
                         @foreach ($categories as $category)
@@ -73,6 +52,28 @@
                         @endforeach
                     </select>
                     @error('categories')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror 
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="photo">Choose Photo</label>
+                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                        <img src="{{ asset( $movie->photo) }}" width="180px" height="200px" alt="">
+                    @error('photo')
+                    <div class="text text-danger">{{ $message }}</div>
+                    @enderror 
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="director_id">Director</label>
+                    <select class="form-select" id="director_id" name='director_id' required>
+                        <option value="0"></option>
+                        @foreach($director as $id=>$name)
+                        <option 
+                        @if ($movie->director_id == $id) selected @endif 
+                        value="{{$id}}">{{$name}}</option>
+                        @endforeach 
+                    </select>  
+                    @error('director_id')
                     <div class="text text-danger">{{ $message }}</div>
                     @enderror 
                 </div>        
