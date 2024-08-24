@@ -97,6 +97,23 @@
                                                 @endforeach
                                             </p>
                                         </td>
+                                        <td class="text-center">
+                                            <form action="{{ route('movie.active', [$mo->id]) }}" method="post">
+                                              @csrf
+                                              @method('patch')
+                                              @if($mo->activated)
+                                                  <button type="submit" class="badge rounded-pill bg-success-subtle text-success border-success border" data-bs-toggle="tooltip">
+                                                      Confirmed
+                                                  </button>
+                                                  <input type="hidden" name="is_active" value="0">
+                                              @else
+                                                  <button type="submit" class="badge rounded-pill bg-danger-subtle text-danger border-danger border" data-bs-toggle="tooltip">
+                                                      Cancelled
+                                                  </button>
+                                                  <input type="hidden" name="is_active" value="1">
+                                              @endif
+                                          </form>
+                                          </td>
                                         <td>
                                             <div class="dropdown dropstart">
                                                 <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
