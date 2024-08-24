@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col-md-12 mb-3">
             <label class="form-label" for="validationCustom03">Description</label>
-            <textarea name="description" id="description" class="form-control" value=""  required/>{{ $foodCombo->description }}</textarea>
+            <textarea name="description" id="description" class="form-control" value="">{{ $foodCombo->description }}</textarea>
             @if ($errors->has('description'))
             <span class="error text-danger">{{ $errors->first('description') }}</span>
           @endif
