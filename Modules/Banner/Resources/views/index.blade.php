@@ -59,13 +59,14 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center text-truncate">
-                                                <h6 class="mb-0 fw-light">
-                                                    {!! $banner->status 
-                                                        ? '<span class="badge bg-success">Display</span>' 
-                                                        : '<span class="badge bg-danger">Hide</span>' !!}
-                                                </h6>
-                                            </div>
+                                            <form action="{{ route('banners.updateStatus', $banner->id) }}" method="post">
+                                                @csrf
+                                                @method('patch')
+                                                <select name="status" class="form-select" onchange="this.form.submit()">
+                                                    <option value="1" {{ $banner->status == 1 ? 'selected' : '' }} style="background-color: green; color: white;">Display</option>
+                                                    <option value="0" {{ $banner->status == 0 ? 'selected' : '' }} style="background-color: red; color: white;">Hide</option>
+                                                </select>
+                                            </form>
                                         </td>
                                         <td>
                                             <div class="dropdown dropstart">

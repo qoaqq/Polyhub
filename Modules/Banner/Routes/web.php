@@ -16,5 +16,7 @@ use Modules\Banner\Http\Controllers\BannerController;
 Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::resource('banners', BannerController::class);
+        Route::patch('banners/{id}/update-status', [BannerController::class, 'updateStatus'])->name('banners.updateStatus');
+
     });
 });
