@@ -189,17 +189,22 @@ class ShowingReleaseController extends Controller
     }
     
     public function getShowingReleasesByMovie($movieId, $cinemaId) {
-        try{
+        try {
+            $date = request()->query('date'); // Lấy ngày từ tham số truy vấn
             $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
-            $showingReleases = ShowingRelease::with(['movie', 'room'])
+            $query = ShowingRelease::with(['movie', 'room'])
                 ->where('movie_id', $movieId)
-                ->whereIn('room_id', $rooms)
-                ->latest('id')
-                ->paginate(5);
-                return response()->json([
-                    'showingReleases' => $showingReleases->items(),
-                    'pagination' => $showingReleases->links('vendor.pagination.bootstrap-5')->toHtml()
-                ]);
+                ->whereIn('room_id', $rooms);
+            if ($date) {
+                $query->whereDate('date_release', $date);
+            }
+            // Phân trang với 5 bản ghi mỗi trang
+            $showingReleases = $query->latest('id')->paginate(5);
+            
+            return response()->json([
+                'showingReleases' => $showingReleases->items(),
+                'pagination' => $showingReleases->appends(request()->query())->links('vendor.pagination.bootstrap-5')->toHtml()
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
