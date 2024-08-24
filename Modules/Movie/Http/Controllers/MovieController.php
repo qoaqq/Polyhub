@@ -180,4 +180,13 @@ class MovieController extends Controller
         $movie -> delete();
         return redirect('/admin/movie')->with('success', 'Deleted successfully !');
     }
+
+    public function toggleActivation(Request $request, $id)
+    {
+        $movie = Movie::findOrFail($id);
+        $movie->activated = $request->input('is_active');
+        $movie->save();
+        return redirect('/admin/movie');
+    }    
 }
+
