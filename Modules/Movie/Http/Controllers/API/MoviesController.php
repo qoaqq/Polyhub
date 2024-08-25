@@ -212,6 +212,7 @@ class MoviesController extends Controller
             ->whereMonth('ticket_seats.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
+            ->where('movies.activated', 1)
             ->take(10)
             ->get();
     
