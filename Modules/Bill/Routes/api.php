@@ -20,3 +20,7 @@ Route::middleware('auth:api')->get('/bill', function (Request $request) {
 });
 
 Route::apiResource('bill', ApiBillController::class);
+
+Route::post('vnPayCheckMail', [ApiBillController::class, 'vnPayCheckMail']);
+Route::post('momoCheckMail', [ApiBillController::class, 'momoCheckMail']);
+Route::post('paypalCheckMail', [ApiBillController::class, 'paypalCheckMail']);
