@@ -19,6 +19,7 @@ class MoviesController extends Controller
     public function index()
     {
         $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
+                        ->where('activated', true)
                         ->orderBy('created_at', 'desc')
                         ->paginate(9);
         // return KhachHangResource::collection($khachHangs);
@@ -89,10 +90,12 @@ class MoviesController extends Controller
         $title = $request->get('title');
         if(empty($title)){
             $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
+            ->where('activated', true)
             ->orderBy('created_at', 'desc')
             ->paginate(9);
         }else{
             $movies = Movie::with('director', 'attributes.attributeValues', 'categories')->where('name', 'LIKE', '%'.$title.'%')
+            ->where('activated', true)
             ->paginate(9);
         }
         return response()->json([
@@ -110,6 +113,7 @@ class MoviesController extends Controller
             $query->where('categories.id', $categoryId);
         })
         ->orderBy('created_at', 'desc')
+        ->where('activated', true)
         ->paginate(9);
         return response()->json([
            'status'=> true,
@@ -123,7 +127,7 @@ class MoviesController extends Controller
         $categories = Category::withCount('movies')
         ->orderBy('created_at', 'desc')
         ->get();
-        $allMovies = Movie::get()->count();
+        $allMovies = Movie::where('activated', true)->get()->count();
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
@@ -208,6 +212,7 @@ class MoviesController extends Controller
             ->whereMonth('ticket_seats.created_at', $currentMonth)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
+            ->where('movies.activated', 1)
             ->take(10)
             ->get();
     
