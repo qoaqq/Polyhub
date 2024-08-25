@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Modules\Checkin\Entities\Checkin;
+use Modules\RankMember\Entities\RankMember;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
@@ -299,6 +300,13 @@ class ApiBillController extends Controller
                 $user = User::find($user_id);
                 $user->points += 100;
                 $user->save();
+                $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                    ->orderBy('min_points', 'desc')
+                    ->first();
+                if ($newRankMember) {
+                    $user->rank_member_id = $newRankMember->id;
+                }
+                $user->save();
             }
 
             $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
@@ -377,6 +385,13 @@ class ApiBillController extends Controller
                 $user = User::find($user_id);
                 $user->points += 100;
                 $user->save();
+                $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                    ->orderBy('min_points', 'desc')
+                    ->first();
+                if ($newRankMember) {
+                    $user->rank_member_id = $newRankMember->id;
+                }
+                $user->save();
             }
 
             $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
@@ -454,6 +469,13 @@ class ApiBillController extends Controller
                 $user_id = $request->user['user']['id'];
                 $user = User::find($user_id);
                 $user->points += 100;
+                $user->save();
+                $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                    ->orderBy('min_points', 'desc')
+                    ->first();
+                if ($newRankMember) {
+                    $user->rank_member_id = $newRankMember->id;
+                }
                 $user->save();
             }
 
