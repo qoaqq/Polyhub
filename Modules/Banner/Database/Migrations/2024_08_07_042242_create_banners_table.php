@@ -18,7 +18,7 @@ class CreateBannersTable extends Migration
             $table->string('name'); // Tên của banner
             $table->string('image'); // Đường dẫn ảnh
             $table->text('note')->nullable(); // Ghi chú, có thể để trống
-            $table->integer('status');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

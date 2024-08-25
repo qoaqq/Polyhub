@@ -44,22 +44,6 @@
               <img id="avatar-preview" class="form-control mt-2" src="#" alt="Preview" style="display: none; width: 150px; height: 150px;"/>
           </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="form-label" for="status">Status</label>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="display" name="status" value="display" {{ old('status') === 'display' ? 'checked' : '' }}>
-                <label class="form-check-label" for="display">Display</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="hide" name="status" value="hide" {{ old('status') === 'hide' ? 'checked' : '' }}>
-                <label class="form-check-label" for="hide">Hide</label>
-            </div>
-            @if ($errors->has('status'))
-                <span class="error text-danger">{{ $errors->first('status') }}</span>
-            @endif
-        </div>
-    </div>
         <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
           Submit form
         </button>

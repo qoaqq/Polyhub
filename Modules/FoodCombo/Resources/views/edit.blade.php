@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col-md-12 mb-3">
             <label class="form-label" for="validationCustom03">Description</label>
-            <textarea name="description" id="description" class="form-control" value=""  required/>{{ $foodCombo->description }}</textarea>
+            <textarea name="description" id="description" class="form-control" value="">{{ $foodCombo->description }}</textarea>
             @if ($errors->has('description'))
             <span class="error text-danger">{{ $errors->first('description') }}</span>
           @endif
@@ -45,22 +45,6 @@
               @endif
           </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Status</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" id="display" name="status" value="1" {{ old('status', $foodCombo->status) == '1' ? 'checked' : '' }}>
-                <label class="form-check-label" for="display">Display</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" id="hide" name="status" value="0" {{ old('status', $foodCombo->status) == '0' ? 'checked' : '' }}>
-                <label class="form-check-label" for="hide">Hide</label>
-            </div>
-            @if ($errors->has('status'))
-                <span class="error text-danger">{{ $errors->first('status') }}</span>
-            @endif
-        </div>
-    </div>
         <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
           Submit form
         </button>
