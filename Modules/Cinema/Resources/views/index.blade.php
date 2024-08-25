@@ -1,6 +1,20 @@
 @extends('Backend.layouts.app')
 
 @section('content')
+@if (session('success'))
+        <script>
+            window.onload = function() {
+                alert("{{ session('success') }}");
+            }
+        </script>
+@endif
+@if (session('error'))
+        <script>
+            window.onload = function() {
+                alert("{{ session('error') }}");
+            }
+        </script>
+@endif
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -72,9 +86,13 @@
                                                             class="fs-4 ti ti-edit"></i>Detail</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item d-flex align-items-center gap-3"
-                                                        href="{{ route('admin.cinema.destroy', [$cinema->id]) }}"><i
-                                                            class="fs-4 ti ti-trash"></i>Delete</a>
+                                                    <form action="/admin/cinema/{{ $cinema->id }}" method="post">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button type="submit" class="dropdown-item d-flex align-items-center gap-3"
+                                                        onclick="return confirm('do you want to delete this cinema')" href="{{ route('admin.cinema.destroy', [$cinema->id]) }}">
+                                                        <i class="fs-4 ti ti-trash"></i>Delete</button>
+                                                    </form>
                                                 </li>
                                             </ul>
                                         </div>

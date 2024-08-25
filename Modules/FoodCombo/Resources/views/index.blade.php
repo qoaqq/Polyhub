@@ -1,5 +1,13 @@
 @extends('Backend.layouts.app')
 @section('content')
+@if (session('success') || session('error'))
+<script>
+    window.onload = function() {
+        var message = "{{ session('success') ?: session('error') }}";
+        alert(message);
+    }
+</script>
+@endif
     <div class="row">
         <div class="col-12">
             <div class="card mb-0">
@@ -43,6 +51,7 @@
                                             <a href="{{ route('foodcombos.index', ['search' => request()->get('search'), 'sort_field' => 'price', 'sort_direction' => 'desc']) }}"> ↓</a>
                                         </div>
                                     </th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -67,8 +76,25 @@
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center text-truncate">
-                                            <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} VND</h6>
+                                            <h6 class="mb-0 fw-light">{{ number_format($foodCombo->price, 0, ',', '.') }} ₫</h6>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('foodcombos.updateStatus', $foodCombo->id) }}" method="post">
+                                            @csrf
+                                            @method('patch')
+                                            @if($foodCombo->status == 1)
+                                                <button type="submit" class="badge rounded-pill bg-success-subtle text-success border-success border">
+                                                    Display
+                                                </button>
+                                                <input type="hidden" name="status" value="0">
+                                            @else
+                                                <button type="submit" class="badge rounded-pill bg-danger-subtle text-danger border-danger border">
+                                                    Hide
+                                                </button>
+                                                <input type="hidden" name="status" value="1">
+                                            @endif
+                                        </form>
                                     </td>
                                     <td>
                                         <div class="dropdown dropstart">

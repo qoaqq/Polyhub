@@ -74,7 +74,7 @@
                             <div  class="seat p-1 border {{ $row->seat->seat_type_id == 1 ? 'border-success' : '' }} {{ $row->seat->seat_type_id == 2 ? 'border-danger' : '' }} {{ $row->seat->seat_type_id == 3 ? 'bg-danger' : '' }} {{ $row->status == 1 ? 'placed' : '' }}">
                                 <span class="dropdown dropstart">
                                     <a href="#" class="text-muted" aria-expanded="false">
-                                        {{ $row->seat->column }}{{ $row->seat->row }}
+                                        {{ strtoupper($row->seat->row) }}{{ $row->seat->column }}
                                     </a>
                                 </span>
                             </div>

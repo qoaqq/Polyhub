@@ -78,4 +78,11 @@ class FoodComboController extends Controller
     return redirect()->route('foodcombos.index')->with('success', 'Deleted FoodCombo Successfully!');
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+    $foodCombo = FoodCombo::findOrFail($id);
+    $foodCombo->status = $request->input('status');
+    $foodCombo->save();
+    return redirect()->back()->with('success', 'Food combo status updated successfully.');
+    }  
 }

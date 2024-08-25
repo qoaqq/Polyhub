@@ -13,7 +13,7 @@ use Modules\Voucher\Http\Controllers\VoucherController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::middleware(['auth', 'isEmployee'])->group(function () {
 Route::prefix('admin')->group(function() {
     //Route::get('/', 'voucherController@index');
     Route::resource('voucher',VoucherController::class)->names([
@@ -27,4 +27,5 @@ Route::prefix('admin')->group(function() {
     ]);
     Route::get('voucher/bin/voucher', 'VoucherController@bin')->name('voucher.bin');
    
+});
 });

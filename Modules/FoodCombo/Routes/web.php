@@ -17,4 +17,7 @@ Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::resource('foodcombos', FoodComboController::class);
     });
+    Route::controller(FoodComboController::class)->group(function () {
+        Route::patch('foodcombos/{foodCombo}/status', 'updateStatus')->name('foodcombos.updateStatus');
+    });
 });

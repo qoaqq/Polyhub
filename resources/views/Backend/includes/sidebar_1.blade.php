@@ -5,7 +5,6 @@
     <!-- ---------------------------------- -->
     <div class="brand-logo d-flex align-items-center justify-content-between">
         <a href="{{ route('admin.index') }}" class="text-nowrap logo-img">
-            <img src="{{ asset('storage/images/logos/logo-light.svg') }}" class="dark-logo" alt="Logo-Dark" />
             <img src="{{ asset('storage/images/logos/logo-dark.svg') }}" class="light-logo" alt="Logo-light" />
         </a>
         <a href="javascript:void(0)" class="sidebartoggler ms-auto text-decoration-none fs-5 d-block d-xl-none">
@@ -151,6 +150,18 @@
                             <a class="sidebar-link" href="{{ route('voucher.list') }}">
                                 <span class="sidebar-icon"></span>
                                 <span class="hide-menu">Voucher</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('rankmember.index') }}">
+                                <span class="sidebar-icon"></span>
+                                <span class="hide-menu">Rank Member</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('seattype.list') }}">
+                                <span class="sidebar-icon"></span>
+                                <span class="hide-menu">Seat Type</span>
                             </a>
                         </li>
                     </ul>

@@ -18,4 +18,8 @@ Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::resource('/movie', MovieController::class);
     });
+
+    Route::controller(MovieController::class)->group(function () {
+        Route::patch('movie/{movie}/active', 'toggleActivation')->name('movie.active');
+    });
 });

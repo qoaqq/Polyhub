@@ -5,7 +5,7 @@ namespace Modules\Director\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Modules\Movie\Entities\Movie;
 
 class Director extends Model
 {
@@ -20,6 +20,10 @@ class Director extends Model
     protected static function newFactory()
     {
         return \Modules\Director\Database\factories\DirectorFactory::new();
+    }
+
+    public function movies(){
+        return $this->hasMany(Movie::class); 
     }
 
     /**

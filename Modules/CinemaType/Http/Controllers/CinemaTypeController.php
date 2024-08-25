@@ -24,14 +24,19 @@ class CinemaTypeController extends Controller
      */
     public function index(Request $request)
     { 
+        $cinemas = Cinema::all();
         $query = $this->model->with('cinema');
+        if ($request->filled('cinema_id')) {
+            $query->where('cinema_id', $request->cinema_id);
+        }
         // logic for searching
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
+
         $cinemaTypes = $query->latest('id')->paginate(10);
-        return view('cinematype::index', compact('cinemaTypes'));
+        return view('cinematype::index', compact('cinemaTypes', 'cinemas'));
     }
 
     /**
@@ -53,7 +58,7 @@ class CinemaTypeController extends Controller
     {
         $data = $request->all();
         $this->model->create($data);
-        return redirect()->route('admin.cinematype.index');
+        return redirect()->route('admin.cinematype.index')->with('success', 'Create cinematype Successfully!');
     }
 
     /**
@@ -88,7 +93,7 @@ class CinemaTypeController extends Controller
     {
         $data = $request->all();
         $this->model->find($id)->update($data);
-        return redirect()->route('admin.cinematype.index');
+        return redirect()->route('admin.cinematype.index')->with('success', 'Update cinematype Successfully!');
     }
 
     /**
@@ -99,6 +104,6 @@ class CinemaTypeController extends Controller
     public function destroy($id)
     {
         $this->model->find($id)->delete();
-        return redirect()->back(); 
+        return redirect()->back()->with('success', 'Delete cinematype Successfully!'); 
     }
 }

@@ -103,7 +103,7 @@
                                 <span class="dropdown dropstart">
                                     <a href="#" class="text-muted" id="dropdownMenuButton"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        {{ $row->column }}{{ $row->row }}
+                                        {{ strtoupper($row->row) }}{{ $row->column }}
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li>

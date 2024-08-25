@@ -30,6 +30,19 @@
                     <img src="{{ asset($foodCombo->avatar) }}" alt="{{ $foodCombo->name }}" class="img-fluid" id="avatar-preview">
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Status</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="display" value="1" {{ $foodCombo->status == 1 ? 'checked' : '' }} disabled>
+                        <label class="form-check-label" for="display">Display</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="hide" value="0" {{ $foodCombo->status == 0 ? 'checked' : '' }} disabled>
+                        <label class="form-check-label" for="hide">Hide</label>
+                    </div>
+                </div>
+            </div>
             <a href="{{ route('foodcombos.index') }}" class="btn btn-secondary mt-3 rounded-pill px-4">Back</a>
         </form>
     </div>

@@ -15,7 +15,8 @@ class FoodCombo extends Model
         'name',
         'description',
         'price',
-        'avatar'
+        'avatar',
+        
     ];
 
     use SoftDeletes;
