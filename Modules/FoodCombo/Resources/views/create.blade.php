@@ -36,14 +36,30 @@
         </div>
         <div class="row">
           <div class="col-md-4 mb-3">
-              <label for="formFile" class="form-label">Avatar</label>
+              <label for="avatar" class="form-label">Avatar</label>
               <input type="file" class="form-control" id="avatar" accept="image/*" onchange="previewImage(event)" name="avatar">
               @if ($errors->has('avatar'))
-              <span class="error text-danger">{{ $errors->first('avatar') }}</span>
-            @endif
-              <img id="avatar-preview" class="form-control" src="#" alt="Preview" style="display: none;"/>
+                  <span class="error text-danger">{{ $errors->first('avatar') }}</span>
+              @endif
+              <img id="avatar-preview" class="form-control mt-2" src="#" alt="Preview" style="display: none; width: 150px; height: 150px;"/>
           </div>
       </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="status">Status</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="display" name="status" value="display" {{ old('status') === 'display' ? 'checked' : '' }}>
+                <label class="form-check-label" for="display">Display</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="hide" name="status" value="hide" {{ old('status') === 'hide' ? 'checked' : '' }}>
+                <label class="form-check-label" for="hide">Hide</label>
+            </div>
+            @if ($errors->has('status'))
+                <span class="error text-danger">{{ $errors->first('status') }}</span>
+            @endif
+        </div>
+    </div>
         <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
           Submit form
         </button>
@@ -51,4 +67,23 @@
       </form>
     </div>
   </div>
+
+  <script>
+    function previewImage(event) {
+    var input = event.target;
+    var file = input.files[0];
+    var preview = document.getElementById('avatar-preview');
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = '#';
+        preview.style.display = 'none';
+    }
+}
+</script>
 @endsection

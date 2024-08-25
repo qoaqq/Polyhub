@@ -9,16 +9,6 @@
         <form class="needs-validation" action="{{ route('showingrelease.update', $show->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <!-- Hiển thị thông báo lỗi ở đầu form -->
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="movie_id">Movies</label>

@@ -33,6 +33,9 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="formFile">Choose Image</label>
                     <input class="form-control" type="file" id="formFile" name="image">
+                    <div>
+                        <img src="{{ asset( $blog->image) }}" width="180px" alt="">
+                    </div>
                     @error('image')
                     <div class="text text-danger">{{ $message }}</div>
                     @enderror 

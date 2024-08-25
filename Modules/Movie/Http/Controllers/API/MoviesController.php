@@ -143,6 +143,7 @@ class MoviesController extends Controller
             ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
             ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
             ->whereMonth('ticket_seats.created_at', $currentMonth)
+            ->where('movies.activated', 1)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
             ->take(10)
@@ -163,6 +164,7 @@ class MoviesController extends Controller
         $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
                     ->where('premiere_date', '<', $currentDate)
                     ->where('premiere_date', '>=', $tenDaysAgo)
+                    ->where('activated', 1)
                     ->orderBy('id', 'desc') 
                     ->paginate(8);
 
@@ -181,6 +183,7 @@ class MoviesController extends Controller
         $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
                     ->where('premiere_date', '>', $currentDate)
                     ->where('premiere_date', '<=', $currentDatePlus10Days)
+                    ->where('activated', 1)
                     ->orderBy('id', 'desc') 
                     ->paginate(8);
 
@@ -215,26 +218,4 @@ class MoviesController extends Controller
         ], 200);
     }
 
-    public function topMovies(){
-        $currentMonth = Carbon::now()->month;
-
-        // Truy vấn để lấy 10 phim có số lượng vé bán nhiều nhất trong tháng
-        $topSellingMovies = Movie::select('movies.*', 
-            DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
-            DB::raw('count(ticket_seats.id) as total_quantity'))
-            ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
-            ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
-            ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
-            ->whereMonth('ticket_seats.created_at', $currentMonth)
-            ->groupBy('movies.id')
-            ->orderBy('total_quantity', 'desc')
-            ->take(8)
-            ->get();
-
-            return response()->json([
-                'status'=> true,
-                'message'=>'Lấy danh sách thành công',
-                'data' => $topSellingMovies,
-             ], 200);
-    }
 }
