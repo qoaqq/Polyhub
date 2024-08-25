@@ -32,6 +32,7 @@ class FoodComboDatabaseSeeder extends Seeder
                 'name' => $combo['name'],
                 'description' => $combo['description'],
                 'price' => $combo['price'],
+                'status' => '1',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
