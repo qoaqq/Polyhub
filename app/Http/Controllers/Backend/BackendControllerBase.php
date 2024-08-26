@@ -159,6 +159,7 @@ class BackendControllerBase extends Controller
                 'ticket_seats.created_at',
                 'seats.column as seatColumn', 'seats.row as seatRow', 'seat_types.name as seatType')
         ->orderBy('ticket_seats.created_at', 'desc')
+        ->limit(5)
         ->get();
 
         return response()->json($bookedMovies);
