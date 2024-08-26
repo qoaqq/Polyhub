@@ -15,7 +15,6 @@ use Modules\Checkin\Entities\Checkin;
 use Modules\RankMember\Entities\RankMember;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\RankMember\Entities\RankMember;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
