@@ -173,7 +173,7 @@
 
         
         <div class="card-body">
-          <div class="table-responsive overflow-x-auto products-tabel">
+          <div class="table-responsive overflow-x-auto products-tabel8">
             <table class="table text-nowrap customize-table mb-0 align-middle">
               <thead class="text-dark fs-4">
                 <tr>
@@ -216,7 +216,7 @@
                     <h5 class="card-title">Latest Detail Purchasers</h5>
                 </div>
             </div>
-            <div class="table-responsive overflow-x-auto latest-reviews-table">
+            <div class="table-responsive overflow-x-auto latest-reviews-table1">
                 <table class="table mb-0 align-middle text-nowrap">
                     <thead class="text-dark fs-4">
                         <tr>

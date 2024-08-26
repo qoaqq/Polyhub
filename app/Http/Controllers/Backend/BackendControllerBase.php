@@ -134,6 +134,7 @@ class BackendControllerBase extends Controller
         $cityData = DB::table('users')
         ->select(DB::raw('city, COUNT(*) as count'))
         ->whereNotNull('city')
+        ->where('user_type','=','client')
         ->groupBy('city')
         ->orderBy('count', 'desc')
         ->limit(3)
