@@ -215,7 +215,7 @@ class MoviesController extends Controller
     ->groupBy('movies.id', 'directors.name') // Nhóm theo cả director_name
     ->orderBy('total_quantity', 'desc')
     ->where('movies.activated', 1)
-    ->take(10)
+    ->take(8)
     ->get();
     
         return response()->json([
