@@ -595,7 +595,7 @@ $(function () {
             })
             .join("");
 
-        $(".latest-reviews-table tbody").html(rows);
+        $(".latest-reviews-table1 tbody").html(rows);
     });
 
     function getStatusBadgeClass(status) {
@@ -638,7 +638,7 @@ $(function () {
                 tableBody += "</td>";
                 tableBody += "</tr>";
             });
-            $(".products-tabel tbody").html(tableBody);
+            $(".products-tabel8 tbody").html(tableBody);
         }
     ).fail(function () {
         alert("Error fetching data");
