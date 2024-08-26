@@ -491,7 +491,7 @@ $(function () {
         .then((data) => {
             document.querySelector(
                 ".voucherUsageData"
-            ).textContent = `Coupons used: ${data.used}/${data.total}`;
+            ).textContent = `Voucher used: ${data.used}/${data.total}`;
         })
         .catch((error) => console.error("Error:", error));
 
