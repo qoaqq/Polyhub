@@ -50,12 +50,12 @@
             <div class="card-body">
               <a href="../dark/index.html" class="">
                 <img
-                  src="../assets/images/logos/logo-dark.svg"
+                  src="{{ asset('storage/images/logos/logo-dark.svg')}}"
                   class="light-logo"
                   alt="Logo-Dark"
                 />
                 <img
-                  src="../assets/images/logos/logo-light.svg"
+                  src="{{ asset('storage/images/logos/logo-light.svg')}}"
                   class="dark-logo"
                   alt="Logo-light"
                 />
