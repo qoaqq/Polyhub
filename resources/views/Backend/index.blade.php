@@ -1,5 +1,6 @@
 @extends('Backend.layouts.app')
 @section('content')
+@if (Auth::check() && (Auth::user()->user_type == 'admin' || Auth::user()->user_type == 'supper'))
   <div class="row">
     <div class="col-lg-6 d-flex align-items-stretch">
       <div class="card w-100">
@@ -239,4 +240,5 @@
       </div>
     </div>
   </div>
+  @endif
 @endsection
