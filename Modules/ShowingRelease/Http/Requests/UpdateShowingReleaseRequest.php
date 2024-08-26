@@ -42,14 +42,18 @@ class UpdateShowingReleaseRequest extends FormRequest
             }
             // Kiểm tra xem đã có suất chiếu nào khác cùng thời điểm và phòng chưa
             if ($roomId && $dateRelease && $timeRelease) {
-                $existingRelease = ShowingRelease::where('room_id', $roomId)
-                    ->whereDate('date_release', $dateRelease)
-                    ->whereTime('time_release', $timeRelease)
-                    ->where('id', '<>', $showingRelease->id)
-                    ->first();
-    
-                if ($existingRelease) {
-                    $validator->errors()->add('time_release', 'Showing Release already exists in this room on the selected date and time.');
+                // Kiểm tra nếu phòng đã thay đổi
+                if ($showingRelease->room_id == $roomId) {
+                    // Kiểm tra trùng lặp trong cùng phòng
+                    $existingRelease = ShowingRelease::where('room_id', $roomId)
+                        ->whereDate('date_release', $dateRelease)
+                        ->whereTime('time_release', $timeRelease)
+                        ->where('id', '<>', $showingRelease->id)
+                        ->first();
+            
+                    if ($existingRelease) {
+                        $validator->errors()->add('time_release', 'Showing Release already exists in this room on the selected date and time.');
+                    }
                 }
             }
         });

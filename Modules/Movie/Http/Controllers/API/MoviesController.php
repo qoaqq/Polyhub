@@ -202,19 +202,21 @@ class MoviesController extends Controller
         $currentMonth = Carbon::now()->month;
 
         // Truy vấn để lấy 10 phim có số lượng vé bán nhiều nhất trong tháng
-        $topSellingMovies = Movie::select('movies.*', 
-            DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
-            DB::raw('count(ticket_seats.id) as total_quantity'))
-            ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
-            ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
-            ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
-            ->with(['attributes.attributeValues']) // Tải trước mối quan hệ attributes và attributeValues
-            ->whereMonth('ticket_seats.created_at', $currentMonth)
-            ->groupBy('movies.id')
-            ->orderBy('total_quantity', 'desc')
-            ->where('movies.activated', 1)
-            ->take(10)
-            ->get();
+      $topSellingMovies = Movie::select('movies.*', 
+    DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
+    DB::raw('count(ticket_seats.id) as total_quantity'),
+    'directors.name as director_name') // Thêm trường tên đạo diễn
+    ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
+    ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
+    ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
+    ->leftJoin('directors', 'movies.director_id', '=', 'directors.id') // Join bảng directors
+    ->with(['attributes.attributeValues']) // Tải trước mối quan hệ attributes và attributeValues
+    ->whereMonth('ticket_seats.created_at', $currentMonth)
+    ->groupBy('movies.id', 'directors.name') // Nhóm theo cả director_name
+    ->orderBy('total_quantity', 'desc')
+    ->where('movies.activated', 1)
+    ->take(8)
+    ->get();
     
         return response()->json([
             'status' => true,

@@ -85,20 +85,6 @@ document.getElementById('movieSelect')?.addEventListener('change', function() {
     localStorage.setItem('selectedMovieName', movieName);
 });
 
-// Các sự kiện khác vẫn giữ nguyên
-document.getElementById('city_id')?.addEventListener('change', function() {
-    var cityId = this.value;
-    fetch(`/admin/cinemas/${cityId}`)
-        .then(response => response.json())
-        .then(data => {
-            var cinemaSelect = document.getElementById('cinema_id');
-            cinemaSelect.innerHTML = '<option value="0">--Select cinema--</option>';
-            data.forEach(cinema => {
-                cinemaSelect.innerHTML += `<option value="${cinema.id}">${cinema.name}</option>`;
-            });
-        });
-});
-
 document.getElementById('cinema_id')?.addEventListener('change', function() {
     var cinemaId = this.value;
     fetch(`/admin/rooms/${cinemaId}`)
