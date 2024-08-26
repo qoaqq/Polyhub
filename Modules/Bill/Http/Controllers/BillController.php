@@ -125,4 +125,5 @@ class BillController extends Controller
 
         return $pdf->download('invoice.pdf');
     }
+    
 }

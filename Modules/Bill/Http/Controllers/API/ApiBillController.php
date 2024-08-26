@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Modules\Checkin\Entities\Checkin;
+use Modules\RankMember\Entities\RankMember;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\RankMember\Entities\RankMember;
@@ -76,7 +77,9 @@ class ApiBillController extends Controller
 
     public function store(Request $request)
     {
+        // dd(223222);
         $paymentMethod = $request->bill['paymentMethod'];
+        // dd($request->bill['paymentMethod']);
         switch ($paymentMethod) {
             case 'vnpay':
                 $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
@@ -88,7 +91,7 @@ class ApiBillController extends Controller
                 $vnp_OrderInfo = "Payment success";
                 $vnp_OrderType = "PolyHub";
                 $vnp_Amount = $request->bill['grandTotal'] * 100;
-                $vnp_Locale = "US";
+                $vnp_Locale = "VN";
                 $vnp_BankCode = "NCB";
                 $vnp_IpAddr = $request->ip();
 
@@ -129,75 +132,8 @@ class ApiBillController extends Controller
                     $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
                 }
 
-                $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
-                $barcodeImage = file_get_contents($barcodeUrl);
-                $barcodeBase64 = base64_encode($barcodeImage);
+                return response()->json(['status' => 'success'], 200);
 
-                $checkin = Checkin::create([
-                    'name' => 'Check-in for bill ' . $vnp_TxnRef,
-                    'checkin_code' => $barcodeBase64,
-                    'type' => 'bill',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                $bill = Bill::create([
-                    'user_id' => $request->bill['user_id'],
-                    'grand_total' => $request->bill['grandTotal'],
-                    'checkin_id' => $checkin->id
-                ]);
-
-                foreach ($request->ticket_seat['selectedSeats'] as $seat) {
-                    $seatDetails = $seat['seat'];
-                    $showingRelease = $request->ticket_seat['showingrelease'];
-                    $seatType = $seatDetails['seat_type'];
-
-                    TicketSeat::create([
-                        'seat_showtime_status_id' => $seat['id'],
-                        'bill_id' => $bill->id,
-                        'movie_id' => $showingRelease['movie_id'],
-                        'room_id' => $showingRelease['room_id'],
-                        'cinema_id' => $showingRelease['room']['cinema']['id'],
-                        'showing_release_id' => $showingRelease['id'],
-                        'time_start' => $showingRelease['time_release'],
-                        'price' => $seatType['price']
-                    ]);
-                }
-
-                foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
-                    TicketFoodCombo::create([
-                        'food_combo_id' => $selectedFoodCombos['id'],
-                        'bill_id' => $bill->id,
-                        'price' => $selectedFoodCombos['price'],
-                        'quantity' => $selectedFoodCombos['quantity']
-                    ]);
-                };
-
-                if (isset($request->user['user']['id'])) {
-                    $user_id = $request->user['user']['id'];
-                    $user = User::find($user_id);
-                    $user->points += 100;
-                    $user->save();
-                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
-                        ->orderBy('min_points', 'desc')
-                        ->first();
-                    if ($newRankMember) {
-                        $user->rank_member_id = $newRankMember->id;
-                    }
-                    $user->save();
-                }
-
-                Mail::to($request->user['user']['email'])
-                    ->later(now()->addSeconds(10), new BookingConfirmed($bill, $checkin, $barcodeBase64));
-
-                return response()->json([
-                    'redirect_url' => $vnp_Url,
-                    'data' => [
-                        'bill' => $bill,
-                        'checkin' => $checkin,
-                        'barcode' => $barcodeBase64
-                    ]
-                ], 200);
             case 'momo':
                 // MoMo
                 $endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
@@ -252,75 +188,9 @@ class ApiBillController extends Controller
                 $result = $this->execPostRequest($endpoint, json_encode($data));
                 $jsonResult = json_decode($result, true);  // decode json
 
-                $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $request->user['user']['email'] . '&code=Code128&dpi=96';
-                $barcodeImage = file_get_contents($barcodeUrl);
-                $barcodeBase64 = base64_encode($barcodeImage);
-
-                $checkin = Checkin::create([
-                    'name' => 'Check-in for bill ' . $request->user['user']['email'],
-                    'checkin_code' => $barcodeBase64,
-                    'type' => 'bill',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                $bill = Bill::create([
-                    'user_id' => $request->bill['user_id'],
-                    'grand_total' => $request->bill['grandTotal'],
-                    'checkin_id' => $checkin->id
-                ]);
-
-                foreach ($request->ticket_seat['selectedSeats'] as $seat) {
-                    $seatDetails = $seat['seat'];
-                    $showingRelease = $request->ticket_seat['showingrelease'];
-                    $seatType = $seatDetails['seat_type'];
-
-                    TicketSeat::create([
-                        'seat_showtime_status_id' => $seat['id'],
-                        'bill_id' => $bill->id,
-                        'movie_id' => $showingRelease['movie_id'],
-                        'room_id' => $showingRelease['room_id'],
-                        'cinema_id' => $showingRelease['room']['cinema']['id'],
-                        'showing_release_id' => $showingRelease['id'],
-                        'time_start' => $showingRelease['time_release'],
-                        'price' => $seatType['price']
-                    ]);
-                }
-
-                foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
-                    TicketFoodCombo::create([
-                        'food_combo_id' => $selectedFoodCombos['id'],
-                        'bill_id' => $bill->id,
-                        'price' => $selectedFoodCombos['price'],
-                        'quantity' => $selectedFoodCombos['quantity']
-                    ]);
-                };
-
-                if (isset($request->user['user']['id'])) {
-                    $user_id = $request->user['user']['id'];
-                    $user = User::find($user_id);
-                    $user->points += 100;
-                    $user->save();
-                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
-                        ->orderBy('min_points', 'desc')
-                        ->first();
-                    if ($newRankMember) {
-                        $user->rank_member_id = $newRankMember->id;
-                    }
-                    $user->save();
-                }
-
-                Mail::to($request->user['user']['email'])
-                    ->later(now()->addSeconds(10), new BookingConfirmed($bill, $checkin, $barcodeBase64));
-
                 if (isset($jsonResult['payUrl'])) {
                     return response()->json([
                         'redirect_url' => $jsonResult['payUrl'],
-                        'data' => [
-                            'bill' => $bill,
-                            'checkin' => $checkin,
-                            'barcode' => $barcodeBase64
-                        ]
                     ], 200);
                 } else {
                     return response()->json(['status' => 'error', 'message' => 'MoMo response missing payUrl'], 400);
@@ -346,77 +216,11 @@ class ApiBillController extends Controller
                     ]
                 ]);
 
-                $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $request->user['user']['email'] . '&code=Code128&dpi=96';
-                $barcodeImage = file_get_contents($barcodeUrl);
-                $barcodeBase64 = base64_encode($barcodeImage);
-
-                $checkin = Checkin::create([
-                    'name' => 'Check-in for bill ' . $request->user['user']['email'],
-                    'checkin_code' => $barcodeBase64,
-                    'type' => 'bill',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                $bill = Bill::create([
-                    'user_id' => $request->bill['user_id'],
-                    'grand_total' => $request->bill['grandTotal'],
-                    'checkin_id' => $checkin->id
-                ]);
-
-                foreach ($request->ticket_seat['selectedSeats'] as $seat) {
-                    $seatDetails = $seat['seat'];
-                    $showingRelease = $request->ticket_seat['showingrelease'];
-                    $seatType = $seatDetails['seat_type'];
-
-                    TicketSeat::create([
-                        'seat_showtime_status_id' => $seat['id'],
-                        'bill_id' => $bill->id,
-                        'movie_id' => $showingRelease['movie_id'],
-                        'room_id' => $showingRelease['room_id'],
-                        'cinema_id' => $showingRelease['room']['cinema']['id'],
-                        'showing_release_id' => $showingRelease['id'],
-                        'time_start' => $showingRelease['time_release'],
-                        'price' => $seatType['price']
-                    ]);
-                }
-
-                foreach ($request->ticket_seat['selectedFoodCombos'] as $selectedFoodCombos) {
-                    TicketFoodCombo::create([
-                        'food_combo_id' => $selectedFoodCombos['id'],
-                        'bill_id' => $bill->id,
-                        'price' => $selectedFoodCombos['price'],
-                        'quantity' => $selectedFoodCombos['quantity']
-                    ]);
-                };
-
-                if (isset($request->user['user']['id'])) {
-                    $user_id = $request->user['user']['id'];
-                    $user = User::find($user_id);
-                    $user->points += 100;
-                    $user->save();
-                    $newRankMember = RankMember::where('min_points', '<=',  $user->points)
-                        ->orderBy('min_points', 'desc')
-                        ->first();
-                    if ($newRankMember) {
-                        $user->rank_member_id = $newRankMember->id;
-                    }
-                    $user->save();
-                }
-
-                Mail::to($request->user['user']['email'])
-                    ->later(now()->addSeconds(10), new BookingConfirmed($bill, $checkin, $barcodeBase64));
-
                 if (isset($response['id']) && $response['id'] != null) {
                     foreach ($response['links'] as $link) {
                         if ($link['rel'] === 'approve') {
                             return response()->json([
                                 'redirect_url' => $link['href'],
-                                'data' => [
-                                    'bill' => $bill,
-                                    'checkin' => $checkin,
-                                    'barcode' => $barcodeBase64
-                                ]
                             ], 200);
                         }
                     }
@@ -509,4 +313,256 @@ class ApiBillController extends Controller
         return $result;
     }
 
+    public function vnPayCheckMail(Request $request)
+    {
+        $data = $request->all();
+        $vnp_ResponseCode = $data['responseCode'] ?? null;
+
+        if ($vnp_ResponseCode === "00") {
+            $vnp_TxnRef = uniqid();
+
+            if (isset($request->user['user']['id'])) {
+                $user_id = $request->user['user']['id'];
+                $user = User::find($user_id);
+                $user->points += 100;
+                $user->save();
+                $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                    ->orderBy('min_points', 'desc')
+                    ->first();
+                if ($newRankMember) {
+                    $user->rank_member_id = $newRankMember->id;
+                }
+                $user->save();
+            }
+
+            $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
+            $barcodeImage = file_get_contents($barcodeUrl);
+            $barcodeBase64 = base64_encode($barcodeImage);
+
+            $checkin = Checkin::create([
+                'name' => 'Check-in for bill ' . $vnp_TxnRef,
+                'checkin_code' => $barcodeBase64,
+                'type' => 'bill',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $bill = Bill::create([
+                'user_id' => $request->user['id'],
+                'grand_total' => $request->grandTotal,
+                'checkin_id' => $checkin->id
+            ]);
+
+            foreach ($request->selectedSeats as $seat) {
+                $seatDetails = $seat['seat'];
+                $showingRelease = $request->showingRelease;
+                $seatType = $seatDetails['seat_type'];
+
+                TicketSeat::create([
+                    'seat_showtime_status_id' => $seat['id'],
+                    'bill_id' => $bill->id,
+                    'movie_id' => $showingRelease['movie_id'],
+                    'room_id' => $showingRelease['room_id'],
+                    'cinema_id' => $showingRelease['room']['cinema']['id'],
+                    'showing_release_id' => $showingRelease['id'],
+                    'time_start' => $showingRelease['time_release'],
+                    'price' => $seatType['price']
+                ]);
+            }
+
+            foreach ($request->selectedFoodCombos as $selectedFoodCombos) {
+                TicketFoodCombo::create([
+                    'food_combo_id' => $selectedFoodCombos['id'],
+                    'bill_id' => $bill->id,
+                    'price' => $selectedFoodCombos['price'],
+                    'quantity' => $selectedFoodCombos['quantity']
+                ]);
+            };
+
+            Mail::to($request->user['email'])
+            ->later(now()->addSeconds(2), new BookingConfirmed($bill, $checkin, $barcodeBase64));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Xử lý thành công',
+                'data' => [
+                    'bill' => $bill,
+                    'checkin' => $checkin,
+                    'barcode' => $barcodeBase64
+                ]
+            ], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Dữ liệu không hợp lệ'], 400);
+        }
+    }
+
+    public function momoCheckMail(Request $request)
+    {
+        $data = $request->all();
+        $momo_ResponseCode = $data['responseCode'] ?? null;
+        // Log::info('Dữ liệu nhận được từ frontend:', $data);
+
+
+        if ($momo_ResponseCode === "Success") {
+            $vnp_TxnRef = uniqid();
+
+            if (isset($request->user['user']['id'])) {
+                $user_id = $request->user['user']['id'];
+                $user = User::find($user_id);
+                $user->points += 100;
+                $user->save();
+                $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                    ->orderBy('min_points', 'desc')
+                    ->first();
+                if ($newRankMember) {
+                    $user->rank_member_id = $newRankMember->id;
+                }
+                $user->save();
+            }
+
+            $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
+            $barcodeImage = file_get_contents($barcodeUrl);
+            $barcodeBase64 = base64_encode($barcodeImage);
+
+            $checkin = Checkin::create([
+                'name' => 'Check-in for bill ' . $vnp_TxnRef,
+                'checkin_code' => $barcodeBase64,
+                'type' => 'bill',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $bill = Bill::create([
+                'user_id' => $request->user['id'],
+                'grand_total' => $request->grandTotal,
+                'checkin_id' => $checkin->id
+            ]);
+
+            foreach ($request->selectedSeats as $seat) {
+                $seatDetails = $seat['seat'];
+                $showingRelease = $request->showingRelease;
+                $seatType = $seatDetails['seat_type'];
+
+                TicketSeat::create([
+                    'seat_showtime_status_id' => $seat['id'],
+                    'bill_id' => $bill->id,
+                    'movie_id' => $showingRelease['movie_id'],
+                    'room_id' => $showingRelease['room_id'],
+                    'cinema_id' => $showingRelease['room']['cinema']['id'],
+                    'showing_release_id' => $showingRelease['id'],
+                    'time_start' => $showingRelease['time_release'],
+                    'price' => $seatType['price']
+                ]);
+            }
+
+            foreach ($request->selectedFoodCombos as $selectedFoodCombos) {
+                TicketFoodCombo::create([
+                    'food_combo_id' => $selectedFoodCombos['id'],
+                    'bill_id' => $bill->id,
+                    'price' => $selectedFoodCombos['price'],
+                    'quantity' => $selectedFoodCombos['quantity']
+                ]);
+            };
+
+            Mail::to($request->user['email'])
+                ->later(now()->addSeconds(2), new BookingConfirmed($bill, $checkin, $barcodeBase64));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Xử lý thành công',
+                'data' => [
+                    'bill' => $bill,
+                    'checkin' => $checkin,
+                    'barcode' => $barcodeBase64
+                ]
+            ], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Dữ liệu không hợp lệ'], 400);
+        }
+    }
+
+    public function paypalCheckMail(Request $request)
+    {
+        $data = $request->all();
+        $paypal_ResponseCode = $data['responseCode'] ?? null;
+        Log::info('Dữ liệu nhận được từ frontend:', $data);
+
+
+        if ($paypal_ResponseCode) {
+            $vnp_TxnRef = uniqid();
+
+            if (isset($request->user['user']['id'])) {
+                $user_id = $request->user['user']['id'];
+                $user = User::find($user_id);
+                $user->points += 100;
+                $user->save();
+                $newRankMember = RankMember::where('min_points', '<=',  $user->points)
+                    ->orderBy('min_points', 'desc')
+                    ->first();
+                if ($newRankMember) {
+                    $user->rank_member_id = $newRankMember->id;
+                }
+                $user->save();
+            }
+
+            $barcodeUrl = 'https://barcode.tec-it.com/barcode.ashx?data=' . $vnp_TxnRef . '&code=Code128&dpi=96';
+            $barcodeImage = file_get_contents($barcodeUrl);
+            $barcodeBase64 = base64_encode($barcodeImage);
+
+            $checkin = Checkin::create([
+                'name' => 'Check-in for bill ' . $vnp_TxnRef,
+                'checkin_code' => $barcodeBase64,
+                'type' => 'bill',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $bill = Bill::create([
+                'user_id' => $request->user['id'],
+                'grand_total' => $request->grandTotal,
+                'checkin_id' => $checkin->id
+            ]);
+
+            foreach ($request->selectedSeats as $seat) {
+                $seatDetails = $seat['seat'];
+                $showingRelease = $request->showingRelease;
+                $seatType = $seatDetails['seat_type'];
+
+                TicketSeat::create([
+                    'seat_showtime_status_id' => $seat['id'],
+                    'bill_id' => $bill->id,
+                    'movie_id' => $showingRelease['movie_id'],
+                    'room_id' => $showingRelease['room_id'],
+                    'cinema_id' => $showingRelease['room']['cinema']['id'],
+                    'showing_release_id' => $showingRelease['id'],
+                    'time_start' => $showingRelease['time_release'],
+                    'price' => $seatType['price']
+                ]);
+            }
+
+            foreach ($request->selectedFoodCombos as $selectedFoodCombos) {
+                TicketFoodCombo::create([
+                    'food_combo_id' => $selectedFoodCombos['id'],
+                    'bill_id' => $bill->id,
+                    'price' => $selectedFoodCombos['price'],
+                    'quantity' => $selectedFoodCombos['quantity']
+                ]);
+            };
+
+            Mail::to($request->user['email'])
+                ->later(now()->addSeconds(2), new BookingConfirmed($bill, $checkin, $barcodeBase64));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Xử lý thành công',
+                'data' => [
+                    'bill' => $bill,
+                    'checkin' => $checkin,
+                    'barcode' => $barcodeBase64
+                ]
+            ], 200);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Dữ liệu không hợp lệ'], 400);
+        }
+    }
 }

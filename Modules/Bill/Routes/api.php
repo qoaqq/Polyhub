@@ -24,4 +24,9 @@ Route::prefix('admin')->group(function () {
 Route::middleware('auth:api')->get('/bill', function (Request $request) {
     return $request->user();
 });
-Route::apiResource('/bill', ApiBillController::class);
+
+Route::apiResource('bill', ApiBillController::class);
+
+Route::post('vnPayCheckMail', [ApiBillController::class, 'vnPayCheckMail']);
+Route::post('momoCheckMail', [ApiBillController::class, 'momoCheckMail']);
+Route::post('paypalCheckMail', [ApiBillController::class, 'paypalCheckMail']);
