@@ -511,7 +511,7 @@ $(function () {
                 anchor.href = "javascript:void(0)";
 
                 const img = document.createElement("img");
-                img.src = `/storage/images/profile/${purchaser.avatar}`;
+                img.src = `/storage/${purchaser.avatar}`;
                 img.className = "rounded-circle border border-2 border-white";
                 img.width = 40;
                 img.height = 40;
@@ -552,7 +552,7 @@ $(function () {
                 </td>
                 <td>
                     <div class="d-flex align-items-center text-truncate">
-                        <img src="/storage/images/profile/${
+                        <img src="/storage/${
                             movie.customer_avatar
                         }" alt="" class="img-fluid rounded-circle flex-shrink-0" width="32" height="32">
                         <div class="ms-7">
