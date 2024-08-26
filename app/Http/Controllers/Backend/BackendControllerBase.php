@@ -91,8 +91,8 @@ class BackendControllerBase extends Controller
     public function getVoucherUsageData()
     {
         $usedVouchers = DB::table('vouchers')
-            ->where('used', true)
-            ->count();
+            ->where('used', ">", 0)
+            ->sum('used');
 
         $totalVouchers = DB::table('vouchers')
             ->count();

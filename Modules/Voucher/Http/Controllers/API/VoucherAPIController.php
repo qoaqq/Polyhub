@@ -119,7 +119,10 @@ class VoucherAPIController extends Controller
     $code = $request->input('code');
 
     // Find voucher by code
-    $voucher = Voucher::where('code', $code)->first();
+    $voucher = Voucher::where('code', $code)
+    ->where('status', 'Active')
+    ->first();
+
 
     if (!$voucher) {
         return response()->json(['status' => false, 'message' => 'Voucher không hợp lệ.'], 400);
