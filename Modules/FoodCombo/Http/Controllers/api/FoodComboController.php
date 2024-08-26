@@ -14,8 +14,7 @@ class FoodComboController extends Controller
 {
     public function index(Request $request)
     {
-        $foodCombos = FoodCombo::all();
-
+        $foodCombos = FoodCombo::where('status', 1)->get();
         return response()->json($foodCombos);
     }
 

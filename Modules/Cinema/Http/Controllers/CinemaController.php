@@ -9,6 +9,7 @@ use Modules\Cinema\Entities\Cinema;
 use Modules\Cinema\Http\Requests\CreateCinemaRequest;
 use Modules\Cinema\Http\Requests\UpdateCinemaRequest;
 use Modules\City\Entities\City;
+use Modules\Room\Entities\Room;
 
 class CinemaController extends Controller
 {
@@ -60,7 +61,7 @@ class CinemaController extends Controller
         if(isset($data['city_page'])){
         return redirect()->route('admin.city.show', [$data['city_id']]);
         }
-        return redirect()->route('admin.cinema.index');
+        return redirect()->route('admin.cinema.index')->with('success', 'Create cinema Successfully!');
     }
 
     /**
@@ -96,7 +97,7 @@ class CinemaController extends Controller
     {
         $data = $request->all();
         $this->model->find($id)->update($data);
-        return redirect()->route('admin.cinema.index');
+        return redirect()->route('admin.cinema.index')->with('success', 'Update cinema Successfully!');
     }
 
     /**
@@ -106,8 +107,14 @@ class CinemaController extends Controller
      */
     public function destroy($id)
     {
+        // nếu còn room trong cinema thì không được xoá
+        $rooms = Room::where('cinema_id', $id)->first();
+        if ($rooms) {
+            return redirect()->route('admin.cinema.index')->with('error', 'Cinema has rooms. Cannot delete!');
+        }
         $this->model->findOrFail($id)->delete();
-        return redirect()->back();
+        return redirect()->route('admin.cinema.index')->with('success', 'Delete cinema Successfully!');
+    
     }
 
     public function getCinemasByCity($cityId)

@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bills', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained(); 
-            $table->foreignId('checkin_id')->constrained();
-            $table->decimal('grand_total', 10, 2); 
-            $table->timestamps();
+        Schema::table('movies', function (Blueprint $table) {
+            $table->boolean('activated')->default(true);
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bills');
+        Schema::table('movies', function (Blueprint $table) {
+            
+        });
     }
 };

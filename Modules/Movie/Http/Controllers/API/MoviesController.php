@@ -18,7 +18,8 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movie = Movie::with('director', 'attributes', 'categories')
+        $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
+                        ->where('activated', true)
                         ->orderBy('created_at', 'desc')
                         ->paginate(9);
         // return KhachHangResource::collection($khachHangs);
@@ -88,11 +89,13 @@ class MoviesController extends Controller
     {
         $title = $request->get('title');
         if(empty($title)){
-            $movie = Movie::with('director', 'attributes', 'categories')
+            $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
+            ->where('activated', true)
             ->orderBy('created_at', 'desc')
             ->paginate(9);
         }else{
-            $movies = Movie::with('director', 'attributes', 'categories')->where('name', 'LIKE', '%'.$title.'%')
+            $movies = Movie::with('director', 'attributes.attributeValues', 'categories')->where('name', 'LIKE', '%'.$title.'%')
+            ->where('activated', true)
             ->paginate(9);
         }
         return response()->json([
@@ -105,11 +108,12 @@ class MoviesController extends Controller
 
     public function getMovieByCategory($categoryId)
     {
-        $movies = Movie::with('director', 'attributes', 'categories')
+        $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
         ->whereHas('categories', function ($query) use ($categoryId) {
             $query->where('categories.id', $categoryId);
         })
         ->orderBy('created_at', 'desc')
+        ->where('activated', true)
         ->paginate(9);
         return response()->json([
            'status'=> true,
@@ -123,7 +127,7 @@ class MoviesController extends Controller
         $categories = Category::withCount('movies')
         ->orderBy('created_at', 'desc')
         ->get();
-        $allMovies = Movie::get()->count();
+        $allMovies = Movie::where('activated', true)->get()->count();
         return response()->json([
            'status'=> true,
            'message'=>'Lấy danh sách thành công',
@@ -143,6 +147,7 @@ class MoviesController extends Controller
             ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
             ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
             ->whereMonth('ticket_seats.created_at', $currentMonth)
+            ->where('movies.activated', 1)
             ->groupBy('movies.id')
             ->orderBy('total_quantity', 'desc')
             ->take(10)
@@ -156,31 +161,33 @@ class MoviesController extends Controller
     }
 
     public function home()
-{
-    $currentDate = now(); // Lấy ngày và thời gian hiện tại
-    $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
+    {
+        $currentDate = now(); // Lấy ngày và thời gian hiện tại
+        $tenDaysAgo = now()->subDays(10); // Lấy ngày và thời gian của 10 ngày trước
 
-    $movies = Movie::with('director', 'attributes', 'categories')
-                ->where('premiere_date', '<', $currentDate)
-                ->where('premiere_date', '>=', $tenDaysAgo)
-                ->orderBy('id', 'desc') 
-                ->paginate(8);
+        $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
+                    ->where('premiere_date', '<', $currentDate)
+                    ->where('premiere_date', '>=', $tenDaysAgo)
+                    ->where('activated', 1)
+                    ->orderBy('id', 'desc') 
+                    ->paginate(8);
 
-    return response()->json([
-        'status'=> true,
-        'message'=>'Lấy danh sách thành công',
-        'data' => $movies,
-    ], 200);
-}
+        return response()->json([
+            'status'=> true,
+            'message'=>'Lấy danh sách thành công',
+            'data' => $movies,
+        ], 200);
+    }
 
     public function upcoming()
     {
         $currentDate = now(); // Lấy ngày và thời gian hiện tại
         $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
 
-        $movies = Movie::with('director', 'attributes', 'categories')
+        $movies = Movie::with('director', 'attributes.attributeValues', 'categories')
                     ->where('premiere_date', '>', $currentDate)
                     ->where('premiere_date', '<=', $currentDatePlus10Days)
+                    ->where('activated', 1)
                     ->orderBy('id', 'desc') 
                     ->paginate(8);
 
@@ -192,42 +199,30 @@ class MoviesController extends Controller
     }
     public function silder()
     {
-        $currentDate = now(); // Lấy ngày và thời gian hiện tại
-        $currentDatePlus10Days = now()->addDays(10); // Lấy ngày hiện tại cộng thêm 10 ngày
-        $movie = Movie::with('director', 'attributes.attributeValues', 'categories')
-
-                    ->where('premiere_date', '>', $currentDate)
-                    ->where('premiere_date', '<=', $currentDatePlus10Days)
-                    ->orderBy('premiere_date', 'desc') // Sắp xếp theo ngày công chiếu mới nhất
-                    ->first(); // Lấy bộ phim mới nhất
-
-        return response()->json([
-            'status'=> true,
-            'message'=>'Lấy danh sách thành công',
-            'data' => $movie,
-        ], 200);
-    }
-
-    public function topMovies(){
         $currentMonth = Carbon::now()->month;
 
         // Truy vấn để lấy 10 phim có số lượng vé bán nhiều nhất trong tháng
-        $topSellingMovies = Movie::select('movies.*', 
-            DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
-            DB::raw('count(ticket_seats.id) as total_quantity'))
-            ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
-            ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
-            ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
-            ->whereMonth('ticket_seats.created_at', $currentMonth)
-            ->groupBy('movies.id')
-            ->orderBy('total_quantity', 'desc')
-            ->take(8)
-            ->get();
-
-            return response()->json([
-                'status'=> true,
-                'message'=>'Lấy danh sách thành công',
-                'data' => $topSellingMovies,
-             ], 200);
+      $topSellingMovies = Movie::select('movies.*', 
+    DB::raw('GROUP_CONCAT(categories.name) as cate_names'), 
+    DB::raw('count(ticket_seats.id) as total_quantity'),
+    'directors.name as director_name') // Thêm trường tên đạo diễn
+    ->join('ticket_seats', 'movies.id', '=', 'ticket_seats.movie_id')
+    ->leftJoin('category_movie', 'category_movie.movie_id', '=', 'movies.id')
+    ->leftJoin('categories', 'category_movie.category_id', '=', 'categories.id')
+    ->leftJoin('directors', 'movies.director_id', '=', 'directors.id') // Join bảng directors
+    ->with(['attributes.attributeValues']) // Tải trước mối quan hệ attributes và attributeValues
+    ->whereMonth('ticket_seats.created_at', $currentMonth)
+    ->groupBy('movies.id', 'directors.name') // Nhóm theo cả director_name
+    ->orderBy('total_quantity', 'desc')
+    ->where('movies.activated', 1)
+    ->take(8)
+    ->get();
+    
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy danh sách thành công',
+            'data' => $topSellingMovies,
+        ], 200);
     }
+
 }

@@ -97,7 +97,7 @@ class SeatController extends Controller
         // kiểm tra xem room đã cố người đặt vé chưa
         $latestBookedTicketSeat = TicketSeat::where('room_id', $seat->room_id)
         ->orderBy('time_start', 'desc')
-        ->first();
+        ->first();  
         if($latestBookedTicketSeat){
            if($latestBookedTicketSeat->time_start > Carbon::now()){
             return redirect()->route('admin.seat.detail', [$id])

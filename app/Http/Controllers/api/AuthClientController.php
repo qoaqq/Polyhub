@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Storage;
-
+use Modules\Bill\Entities\Bill;
 class AuthClientController extends Controller
 {
     public function signup(Request $request)
@@ -84,7 +84,15 @@ class AuthClientController extends Controller
         $user = Auth::user()->load('rankMember'); // Tải thông tin rank
         return response()->json($user);
     }
-
+    public function getBill(){
+        $user = Auth::user();
+        $bill = Bill::where('user_id', $user->id)->orderBy('created_at','desc')->get();
+        
+        return response()->json([
+            'success' => true,
+            'data' => $bill
+        ], 200);
+    }
 
     public function updateUser(Request $request)
     {

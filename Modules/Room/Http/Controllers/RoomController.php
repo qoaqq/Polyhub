@@ -2,6 +2,7 @@
 
 namespace Modules\Room\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,6 +12,7 @@ use Modules\City\Entities\City;
 use Modules\Room\Entities\Room;
 use Modules\Room\Http\Requests\CreateRoomRequest;
 use Modules\Room\Http\Requests\UpdateRoomRequest;
+use Modules\ShowingRelease\Entities\ShowingRelease;
 
 class RoomController extends Controller
 {
@@ -87,7 +89,7 @@ class RoomController extends Controller
         }
 
         DB::table('seats')->insert($seats);
-        return redirect()->route('admin.room.index');
+        return redirect()->route('admin.room.index')->with('success', 'Add room Successfully!');
     }
 
     /**
@@ -123,7 +125,7 @@ class RoomController extends Controller
     {
         $data = $request->all();
         $this->model->findOrFail($id)->update($data);
-        return redirect()->route('admin.room.index');
+        return redirect()->route('admin.room.index')->with('success', 'Update room Successfully!');
     }
 
     /**
@@ -133,7 +135,17 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
+        // logic nếu còn xuất chiếu tại phòng thì không được xoá phòng
+        $showingRelease = ShowingRelease::where('room_id', $id)
+        ->orderBy('date_release', 'desc')
+        ->first();
+        if($showingRelease){
+            if($showingRelease->date_release > Carbon::now()) {
+                return redirect()->route('admin.room.index')->with('error', 'Cannot delete room while showing release is scheduled.');
+            }
+        }
+        
         $this->model->findOrFail($id)->delete();
-        return redirect()->route('admin.room.index');
+        return redirect()->route('admin.room.index')->with('success', 'Delete room Successfully!');
     }
 }

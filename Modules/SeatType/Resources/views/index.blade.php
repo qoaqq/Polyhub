@@ -15,26 +15,6 @@
                                 <i
                                     class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
                             </form>
-                            <div class="dropdown">
-                                <a href="#" class="btn border shadow-none px-3" id="dropdownMenuButton"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="ti ti-dots-vertical fs-5"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3"
-                                            href="{{ route('seattype.create') }}"><i class="fs-4 ti ti-plus"></i>Add</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href=""><i
-                                                class="fs-4 ti ti-edit"></i>Bin</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-3" href="#"><i
-                                                class="fs-4 ti ti-trash"></i>Delete</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                     <div class="table-responsive overflow-x-auto latest-reviews-table">
@@ -78,8 +58,7 @@
                                         <td>
                                             <div class="d-flex align-items-center text-truncate">
                                                 <div class="ms-7">
-                                                    <h5 class="mb-1 fs-4"> {{ $item->price }}</h5>
-
+                                                    <h5 class="mb-1 fs-4"> {{ number_format($item->price, 0, ',', '.') . ' ₫' }}</h5>
                                                 </div>
                                             </div>
                                         </td>

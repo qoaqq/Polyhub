@@ -17,4 +17,7 @@ Route::middleware(['auth', 'isEmployee'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::resource('banners', BannerController::class);
     });
+    Route::controller(BannerController::class)->group(function () {
+        Route::patch('banners/{banner}/status', 'updateStatus')->name('banners.updateStatus');
+    });
 });

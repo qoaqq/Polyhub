@@ -59,13 +59,21 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center text-truncate">
-                                                <h6 class="mb-0 fw-light">
-                                                    {!! $banner->status 
-                                                        ? '<span class="badge bg-success">Display</span>' 
-                                                        : '<span class="badge bg-danger">Hide</span>' !!}
-                                                </h6>
-                                            </div>
+                                            <form action="{{ route('banners.updateStatus', $banner->id) }}" method="post">
+                                                @csrf
+                                                @method('patch')
+                                                @if($banner->status == 1)
+                                                    <button type="submit" class="badge rounded-pill bg-success-subtle text-success border-success border">
+                                                        Display
+                                                    </button>
+                                                    <input type="hidden" name="status" value="0">
+                                                @else
+                                                    <button type="submit" class="badge rounded-pill bg-danger-subtle text-danger border-danger border">
+                                                        Hide
+                                                    </button>
+                                                    <input type="hidden" name="status" value="1">
+                                                @endif
+                                            </form>
                                         </td>
                                         <td>
                                             <div class="dropdown dropstart">

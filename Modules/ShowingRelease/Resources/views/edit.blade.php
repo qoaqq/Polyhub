@@ -9,20 +9,10 @@
         <form class="needs-validation" action="{{ route('showingrelease.update', $show->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <!-- Hiển thị thông báo lỗi ở đầu form -->
-            @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="movie_id">Movies</label>
-                    <select name="movie_id" id="movie_id" class="form-control select-movie mt-2" required>
+                    <select name="movie_id" id="movie_id" class="form-control select-movie mt-2">
                         <option value="0">--Select movies--</option>
                         @foreach($movie as $id => $name)
                             <option value="{{ $id }}" {{ $show->movie_id == $id ? 'selected' : '' }}>{{ $name }}</option>
@@ -34,7 +24,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="room_id">Room</label>
-                    <select name="room_id" id="room_id" class="form-control select-room mt-2" required>
+                    <select name="room_id" id="room_id" class="form-control select-room mt-2" >
                         <option value="0">--Select room--</option>
                         @foreach($rooms as $id => $name)
                             <option value="{{ $id }}" {{ $show->room_id == $id ? 'selected' : '' }}>{{ $name }}</option>
@@ -48,17 +38,17 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="date_release">Date</label>
-                    <input type="date" name="date_release" id="date_release" class="form-control" value="{{ $show->date_release }}" required>
+                    <input type="date" name="date_release" id="date_release" class="form-control" value="{{ $show->date_release }}">
                     @if ($errors->has('date_release'))
                     <span class="error text-danger">{{ $errors->first('date_release') }}</span>
                     @endif
                 </div>
                <div class="col-md-6 mb-3">
             <label class="form-label" for="date_release">Time</label>
-            <input type="time" name="time_release" id="time_release" class="form-control"value="{{ \Carbon\Carbon::parse($show->time_release)->format('H:i') }}" required/>
-            {{-- @if ($errors->has('time_release'))
+            <input type="time" name="time_release" id="time_release" class="form-control"value="{{ \Carbon\Carbon::parse($show->time_release)->format('H:i') }}">
+            @if ($errors->has('time_release'))
                 <span class="error text-danger">{{ $errors->first('time_release') }}</span>
-            @endif --}}
+            @endif
           </div>
             </div>
             <button class="btn btn-primary mt-3 rounded-pill px-4" type="submit">
@@ -70,19 +60,6 @@
 </div>
 
 <script>
-document.getElementById('cinema_id').addEventListener('change', function() {
-    var cinemaId = this.value;
-    fetch(`/admin/rooms/${cinemaId}`)
-        .then(response => response.json())
-        .then(data => {
-            var roomSelect = document.getElementById('room_id');
-            roomSelect.innerHTML = '<option value="0">--Select room--</option>';
-            data.forEach(room => {
-                roomSelect.innerHTML += `<option value="${room.id}">${room.name}</option>`;
-            });
-        });
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     var cinemaSelect = document.getElementById('cinema_id');
     if (cinemaSelect) {

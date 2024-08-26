@@ -160,42 +160,51 @@ class ShowingReleaseController extends Controller
     public function destroy($id)
     {
         $showingRelease = ShowingRelease::find($id);
+
+        // Kiểm tra nếu showingrelease đã tồn tại trong bảng ticket_seats
+        $existsInTicketSeats = DB::table('ticket_seats')->where('showing_release_id', $id)->exists();
+
+        if ($existsInTicketSeats) {
+            return redirect()->route('showingrelease.index')->with('error', 'Cannot delete ShowingRelease as it is associated with a ticket.');
+        }
+
         $showingRelease->delete();
+
         return redirect()->route('showingrelease.index')->with('success', 'Deleted ShowingRelease Successfully!');
     }
+
     public function getCinemasByCity($cityId) {
         $cinemas = Cinema::where('city_id', $cityId)->get();
         return response()->json($cinemas);
     }
     
-    public function getMoviesByCinema($cinemaId)
+    public function getAllMovies()
     {
         try {
-            $rooms = Room::where('cinema_id', $cinemaId)->pluck('id'); // Lấy danh sách room_id thuộc cinema
-            $movies = Movie::whereHas('showingReleases', function ($query) use ($rooms) {
-                $query->whereIn('room_id', $rooms); // Lọc phim thuộc các room này
-            })->get();
-            
+            $movies = Movie::all(); // Lấy tất cả các phim
             return response()->json($movies);
-        } catch (\Exception $e) {    
-            // Trả về mã lỗi và thông báo lỗi
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }
     }
     
     public function getShowingReleasesByMovie($movieId, $cinemaId) {
-        try{
+        try {
+            $date = request()->query('date'); // Lấy ngày từ tham số truy vấn
             $rooms = Room::where('cinema_id', $cinemaId)->pluck('id');
-            $showingReleases = ShowingRelease::with(['movie', 'room'])
+            $query = ShowingRelease::with(['movie', 'room'])
                 ->where('movie_id', $movieId)
-                ->whereIn('room_id', $rooms)
-                ->latest('id')
-                ->paginate(5);
-                return response()->json([
-                    'showingReleases' => $showingReleases->items(),
-                    'pagination' => $showingReleases->links('vendor.pagination.bootstrap-5')->toHtml()
-                ]);
+                ->whereIn('room_id', $rooms);
+            if ($date) {
+                $query->whereDate('date_release', $date);
+            }
+            // Phân trang với 5 bản ghi mỗi trang
+            $showingReleases = $query->latest('id')->paginate(5);
+            
+            return response()->json([
+                'showingReleases' => $showingReleases->items(),
+                'pagination' => $showingReleases->appends(request()->query())->links('vendor.pagination.bootstrap-5')->toHtml()
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Có lỗi xảy ra'], 500);
         }

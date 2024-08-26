@@ -15,6 +15,12 @@ use Modules\Bill\Http\Controllers\API\ApiBillController;
 |
 */
 
+Route::prefix('admin')->group(function () {
+    Route::controller(ApiBillController::class)->group(function () {
+        Route::get('/getBill', 'getBillByUser')->middleware('auth:api');
+        Route::get('/getBillDetail/{id}', 'getBillDetail');
+    });
+});
 Route::middleware('auth:api')->get('/bill', function (Request $request) {
     return $request->user();
 });

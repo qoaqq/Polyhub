@@ -15,9 +15,11 @@ use Modules\Checkin\Entities\Checkin;
 use Modules\RankMember\Entities\RankMember;
 use Modules\TicketSeat\Entities\TicketSeat;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\RankMember\Entities\RankMember;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Modules\TicketFoodCombo\Entities\TicketFoodCombo;
 use Modules\SeatShowtimeStatus\Entities\SeatShowtimeStatus;
+use Illuminate\Support\Facades\Auth;
 
 class ApiBillController extends Controller
 {
@@ -25,13 +27,36 @@ class ApiBillController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function getBillByUser()
     {
-        $bills = Bill::all();
+        $user = Auth::user();
+        $bills = Bill::where('user_id', $user->id)
+             ->orderBy('created_at', 'desc')
+             ->with('user')
+             ->get();
         return response()->json([
             'status' => true,
             'message' => 'Lấy danh sách thành công',
             'data' => $bills,
+        ], 200);
+    }
+    
+    public function getBillDetail($id)
+    {
+        $bill = Bill::with([
+            'user',
+            'checkin',
+            'ticketFoodCombo.food_combo',
+            'ticketSeats.seat_showTime_status.seat.seatType', 
+            'ticketSeats.movie', 
+            'ticketSeats.room', 
+            'ticketSeats.cinema', 
+            'ticketSeats.showingRelease',
+        ])->find($id);
+        return response()->json([
+            'status' => true,
+            'message' => 'Lấy thành công',
+            'data' => $bill,
         ], 200);
     }
 

@@ -25,6 +25,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/signup', 'signup');
         Route::get('/user', 'getUser')->middleware('auth:api');
         Route::put('/user', 'updateUser')->middleware('auth:api');
+        Route::get('/getbill','getBill')->middleware('auth:api');
     });
 
     //Statistical

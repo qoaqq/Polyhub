@@ -59,16 +59,22 @@
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $bl->title }}</p></td>
                                         <td><p class="fs-4 mb-0 text-truncate-2">{{ $bl->short_desc }}</p></td>
                                         <td><img src="{{ asset($bl->image) }}" id="tablenew" alt="" width="200px"></td>
-                                        <td><p class="fs-4 mb-0 text-truncate-2">{{ $bl->category->name }}</p></td>
+                                        <td>
+                                            <p class="fs-4 mb-0 text-truncate-2">
+                                                @forelse ($category as $ca)
+                                                    @if ($bl->categories_id == $ca->id)
+                                                        {{$ca->name}}
+                                                    @endif
+                                                @empty
+                                                @endforelse
+                                            </p>
+                                        </td>
                                         <td>
                                             <div class="dropdown dropstart">
                                                 <a href="#" class="text-muted " id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="ti ti-dots-vertical fs-5"></i>
                                                 </a>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/blog/{{ $bl->id }}"><i class="fs-4 ti ti-plus"></i>Detail</a>
-                                                    </li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3" href="/admin/blog/{{ $bl->id }}/edit"><i class="fs-4 ti ti-edit"></i>Edit</a>
                                                     </li>

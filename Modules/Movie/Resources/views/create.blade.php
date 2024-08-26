@@ -39,6 +39,7 @@
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="director_id">Director</label>
                     <select class="form-select" id="director_id" name="director_id" required>
+                        <option value="0"></option>
                         @foreach($director as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
